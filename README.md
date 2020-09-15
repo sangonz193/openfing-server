@@ -15,7 +15,10 @@ Para levantar el proyecto, es necesario tener instalado [Node.js](https://nodejs
 -   Para acceder al Playground de GraphQL, acceder desde el navegador a la url anterior agregando `v1/graphql` al final. Por ejemplo, si `PORT=5000` entonces acceder a http://localhost:5000/v1/graphql
 
 ## Datos de prueba
-`// TODO: add datos de prueba`
+
+Al momento solo se puede hacer a mano desde la instalación de PostgreSQL.
+
+`// TODO: agregar datos de prueba`
 
 ## License
 
