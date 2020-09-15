@@ -6,7 +6,6 @@
 		"start:dev": "node -r ./scripts/babel ./src",
 		"start:dev:watch": "nodemon",
 		"generate-files": "node -r ./scripts/babel ./scripts/generate-files",
-		"generate-files:watch": "node -r ./scripts/babel ./scripts/generate-files -w",
 		"build": "babel src --out-dir dist --copy-files --extensions '.ts,.js'",
 		"deploy": "node -r ./scripts/babel ./scripts/deploy",
 		"postinstall": "patch-package",

@@ -4,7 +4,7 @@ dist
 tmp
 scratches
 .env*
-!.env.example
+!.env*.example
 .history
 src/logs
 _files
