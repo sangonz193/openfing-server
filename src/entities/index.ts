@@ -8,7 +8,7 @@ import { CourseEdition } from "./CourseEdition";
 import { Faq } from "./Faq";
 import { User } from "./User";
 import { UserRole } from "./UserRole";
-import { UserToUserRoles } from "./UserToUserRole";
+import { UserToUserRole } from "./UserToUserRole";
 
 export const entities = [
 	User,
