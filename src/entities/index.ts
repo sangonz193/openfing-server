@@ -8,7 +8,7 @@ import { CourseEdition } from "./CourseEdition";
 import { Faq } from "./Faq";
 import { User } from "./User";
 import { UserRole } from "./UserRole";
-import { UserToUserRole } from "./UserToUserRole";
+import { UserToUserRoles } from "./UserToUserRole";
 
 export const entities = [
 	User,
@@ -21,5 +21,6 @@ export const entities = [
 	CourseClassVideoFormat,
 	Faq,
 	UserRole,
+	
 	UserToUserRole,
 ];
