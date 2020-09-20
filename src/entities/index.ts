@@ -21,6 +21,5 @@ export const entities = [
 	CourseClassVideoFormat,
 	Faq,
 	UserRole,
-	
 	UserToUserRole,
 ];
