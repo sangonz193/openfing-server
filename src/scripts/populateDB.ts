@@ -231,12 +231,12 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 		userRoleId: adminUserRole.id,
 	});
 
-	class EntityToCreate<T extends { id: number }> {
+	class EntityToCreate<T extends { id: number | string }> {
 		private nextId = 1;
 		public entities: T[] = [];
 
 		public add = (t: T) => {
-			t.id = this.nextId++;
+			if (typeof t.id === "number") t.id = this.nextId++;
 			this.entities.push(t);
 		};
 	}
@@ -255,18 +255,16 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			faq.content =
 				"A través del <a href='https://es-la.facebook.com/openfing'>Facebook</a>, <a href='https://www.instagram.com/openfing'>Instagram</a> y del correo <a href='mailto:open@fing.edu.uy'>open@fing.edu.uy</a>";
 
-		// TODO: check id generation
-		faqsToCreate.add({
-			id: 1,
-			...getFaqRepository(writeDb).create({
+		faqsToCreate.add(
+			getFaqRepository(writeDb).create({
 				title: faq.title,
 				content: faq.content,
 				isHtml: faq.content.includes("<"),
 				position: index,
 				createdById: user.id,
 				updatedById: user.id,
-			}),
-		});
+			})
+		);
 	});
 
 	if (!fs.existsSync(appConfig.COURSE_ICONS_PATH)) fs.mkdirSync(appConfig.COURSE_ICONS_PATH, { recursive: true });
@@ -557,7 +555,9 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			SafeOmit<DefaultTypedEntitySchemaTypeArg, "columns"> & { columns: { id: PrimaryColumn } }
 		>
 	>(
-		entityToCreate: EntityRow<T>["id"] extends number ? EntityToCreate<EntityRow<T> & { id: number }> : never,
+		entityToCreate: EntityRow<T>["id"] extends number | string
+			? EntityToCreate<EntityRow<T> & { id: number | string }>
+			: never,
 		repository: TypedRepository<T>,
 		keys: Array<[string, string]>
 	) => ({
@@ -680,9 +680,6 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 						.catch(reject);
 				});
 			});
-			await writeDb.query(
-				`SELECT setval(pg_get_serial_sequence('${toCreate.repository.metadata.schema}.${toCreate.repository.metadata.tableName}', 'id'), max(id)) FROM ${toCreate.repository.metadata.schema}.${toCreate.repository.metadata.tableName}; `
-			);
 		} catch (e) {
 			trueLog("error");
 			trueLog(e);

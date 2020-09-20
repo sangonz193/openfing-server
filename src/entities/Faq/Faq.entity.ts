@@ -5,9 +5,8 @@ import { Faq as FaqType, FaqColumns, FaqRelations } from "./Faq.entity.types";
 export const faqColumns: FaqColumns = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	title: {

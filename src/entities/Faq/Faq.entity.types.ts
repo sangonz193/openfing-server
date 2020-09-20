@@ -1,7 +1,7 @@
 import { Column, EntityRow, PrimaryColumn, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import { UserToFaq_created, UserToFaq_deleted, UserToFaq_updated } from "../User/User.entity.types";
 
-export type Faq_id = PrimaryColumn<{ name: "id"; type: "integer"; entity: Faq }>;
+export type Faq_id = PrimaryColumn<{ name: "id"; type: "uuid"; entity: Faq }>;
 export type Faq_title = Column<{ name: "title"; type: "varchar" }>;
 export type Faq_content = Column<{ name: "content"; type: "text" }>;
 export type Faq_isHtml = Column<{ name: "is_html"; type: "boolean" }>;

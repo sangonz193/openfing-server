@@ -2,7 +2,7 @@ import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
 import { Faq, FaqRow } from "../../entities/Faq/Faq.entity.types";
 
-export type SaveFaqData = SafeOmit<FaqRow, "id">;
+export type SaveFaqData = FaqRow;
 
 export type CreateFaqData = SafeOmit<
 	FaqRow,

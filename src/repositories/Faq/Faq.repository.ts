@@ -1,5 +1,6 @@
 import { Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import { Faq, faqColumns } from "../../entities/Faq";
 import { FaqRepository } from "./Faq.repository.types";
@@ -20,7 +21,8 @@ export const getFaqRepository = (connection: Connection): FaqRepository => {
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
+			id: data.id ?? getUuid(),
+			createdAt: data.createdAt === undefined ? new Date() : data.createdAt,
 			updatedAt: data.updatedAt || null,
 			deletedAt: data.deletedAt || null,
 			updatedById: data.updatedById || null,
