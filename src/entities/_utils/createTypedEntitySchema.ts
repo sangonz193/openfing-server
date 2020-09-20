@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ColumnType, EntitySchema } from "typeorm";
 import { RelationType } from "typeorm/metadata/types/RelationTypes";
 

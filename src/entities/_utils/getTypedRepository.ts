@@ -4,4 +4,5 @@ import { TypedEntitySchema } from "./createTypedEntitySchema";
 import { TypedRepository } from "./TypedRepository";
 
 export const getTypedRepository = <T extends TypedEntitySchema>(schema: T, conn: Connection): TypedRepository<T> =>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	conn.getRepository(schema) as any;
