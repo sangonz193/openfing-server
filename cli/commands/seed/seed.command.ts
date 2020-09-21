@@ -6,6 +6,7 @@ import { createConnection, getRepository } from "typeorm";
 import { CommandModule } from "yargs";
 
 import { fs } from "../../_utils/fs";
+import { fsExists } from "../../_utils/fsExists";
 import { hashPassword } from "../../../src/_helpers/hashPassword";
 import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
 import { _fs } from "../../../src/_utils/fs";
@@ -62,6 +63,8 @@ const command: CommandModule<{}, {}> = {
 		await Promise.all(
 			entities.map(async (entityToCopy) => {
 				const dumpFilePath = path.resolve(__dirname, "data", entityToCopy.options.name + ".json");
+
+				if (!(await fsExists(dumpFilePath))) return;
 
 				const { records } = require(dumpFilePath) as { records: Array<Record<string, unknown>> };
 
