@@ -16,9 +16,7 @@ Para levantar el proyecto, es necesario tener instalado [Node.js](https://nodejs
 
 ## Datos de prueba
 
-Al momento solo se puede hacer a mano desde la instalación de PostgreSQL.
-
-`// TODO: agregar datos de prueba`
+Una vez realizados los pasos para levantar el proyecto, se puede correr el comando `node cli seed` para insertar datos de prueba en las tablas de la base de datos. El comando ELIMINARÁ cualquier tipo de información previa, contenida en las tablas generadas por el servidor. Usar solo para pruebas de desarrollo.
 
 ## License
 
