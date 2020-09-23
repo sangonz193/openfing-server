@@ -9,6 +9,7 @@ const schema = gql`
 
 	type Mutation {
 		_: Void
+		backupDb(secret: String!): Void
 	}
 
 	type GenericError {

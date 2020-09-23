@@ -7,6 +7,7 @@ import { entities } from "./entities";
 const { env } = process;
 const {
 	FILES_URL,
+	DATABASE_BACKUP_REPO_PATH,
 	ACCESS_TOKEN_SECRET,
 	ACCESS_TOKEN_DURATION,
 	REFRESH_TOKEN_SECRET,
@@ -74,6 +75,8 @@ export const appConfig = {
 
 	FILES_PATH,
 	FILES_URL,
+
+	DATABASE_BACKUP_REPO_PATH,
 
 	ASSETS_PATH,
 	ASSETS_URL,

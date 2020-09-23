@@ -53,6 +53,7 @@ import Faq_deletedByResolver from "../resolvers/Faq/deletedBy.resolver";
 import Faq_updatedByResolver from "../resolvers/Faq/updatedBy.resolver";
 import GenericError__Resolver from "../resolvers/GenericError/_.resolver";
 import Mutation__Resolver from "../resolvers/Mutation/_.resolver";
+import Mutation_backupDbResolver from "../resolvers/Mutation/backupDb.resolver";
 import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
 import NotFoundError__Resolver from "../resolvers/NotFoundError/_.resolver";
@@ -165,6 +166,7 @@ export const resolvers: Resolvers = {
 	},
 	Mutation: {
 		_: Mutation__Resolver,
+		backupDb: Mutation_backupDbResolver,
 		createCourse: Mutation_createCourseResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
 	},
