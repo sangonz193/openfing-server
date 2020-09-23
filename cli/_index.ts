@@ -15,7 +15,7 @@ import { spawnStdio } from "./_utils/spawnStdio";
 		],
 		{
 			stdio: spawnStdio,
-			env: { ...process.env, ...(await parseEnv()) },
+			env: { ...process.env, ...(await parseEnv().catch(() => ({}))) },
 		}
 	).catch(() => null);
 })();
