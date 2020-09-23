@@ -115,5 +115,11 @@ export const generateGraphqlTypes = async (options: GenerateGraphqlOptions): Pro
 		})
 	);
 
+	await fs
+		.readFile(typesFilePath, "utf-8")
+		.then((content) =>
+			fs.writeFile(typesFilePath, `/* eslint-disable @typescript-eslint/no-explicit-any */\n` + content)
+		);
+
 	return generatedFilesPaths;
 };
