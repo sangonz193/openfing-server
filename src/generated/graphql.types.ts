@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from "graphql";
 
 import { OptionalUndefinedKeys, SafeOmit } from "../_utils/utilTypes";
@@ -68,8 +69,13 @@ export type QueryCourseEditionByIdArgs = {
 export type Mutation = {
 	__typename: "Mutation";
 	_?: Maybe<Scalars["Void"]>;
+	backupDb?: Maybe<Scalars["Void"]>;
 	createCourse: CreateCoursePayload;
 	updateCourseClassVideos: NotFoundError;
+};
+
+export type MutationBackupDbArgs = {
+	secret: Scalars["String"];
 };
 
 export type MutationCreateCourseArgs = {
@@ -458,6 +464,12 @@ export type MutationResolvers<
 	ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = {
 	_: Resolver<Maybe<ResolversTypes["Void"]>, ParentType, ContextType>;
+	backupDb: Resolver<
+		Maybe<ResolversTypes["Void"]>,
+		ParentType,
+		ContextType,
+		RequireFields<MutationBackupDbArgs, "secret">
+	>;
 	createCourse: Resolver<
 		ResolversTypes["CreateCoursePayload"],
 		ParentType,
