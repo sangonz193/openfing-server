@@ -1,110 +1,227 @@
-import { glob } from "glob";
+import { GraphQLObjectType, GraphQLScalarType, GraphQLSchema, GraphQLUnionType } from "graphql";
 import path from "path";
 
 import { fs } from "../../_utils/fs";
+import { fsExists } from "../../_utils/fsExists";
 import { projectPath } from "../../_utils/projectPath";
-import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
 
-export const generateResolvers = async (): Promise<string[]> => {
+export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]> => {
 	const resolversFilePath = path.resolve(projectPath, "src", "generated", "resolvers.ts");
 	const generatedTypesFilePath = path.resolve(projectPath, "src", "generated", "graphql.types.ts");
 	const resolversFolderPath = path.resolve(projectPath, "src", "resolvers");
-	const resolverFilesGlob = path.resolve(resolversFolderPath, "**", "*.resolver.ts");
 
 	const generatedFilesPaths: string[] = [resolversFilePath];
 
-	const resolverFilesPaths = (
-		await new Promise<string[]>((resolve, reject) =>
-			glob(resolverFilesGlob, (error, files) => {
-				if (error) reject(error);
-				else resolve(files);
-			})
-		)
-	).sort();
+	type DefaultFieldResolverMetadata = {
+		type: "default-field-resolver";
+		name: string;
+		value: string;
+	};
 
 	type FieldResolverMetadata = {
 		type: "field-resolver";
 		filePath: string;
 		symbolName: string;
-		resolverName: string;
-		parent: string;
+		name: string;
+	};
+
+	type ObjectResolverMetadata = {
+		type: "object-resolver";
+		dirPath: string;
+		name: string;
+		fields: Array<FieldResolverMetadata | DefaultFieldResolverMetadata>;
 	};
 
 	type ScalarResolverMetadata = {
 		type: "scalar-resolver";
 		filePath: string;
 		symbolName: string;
-		resolverName: string;
+		name: string;
 	};
 
-	const resolverMetadatas: Array<FieldResolverMetadata | ScalarResolverMetadata> = resolverFilesPaths.map(
-		(filePath) => {
-			const isFieldResolver = path.relative(resolversFolderPath, filePath).split(path.sep).length === 2;
+	type UnionResolverMetadata = {
+		type: "union-resolver";
+		name: string;
+	};
 
-			return isFieldResolver
-				? {
-						type: "field-resolver",
-						filePath,
-						symbolName: `${path
-							.relative(resolversFolderPath, filePath)
-							.replace(".resolver.ts", "")
-							.replace("/", "_")}Resolver`,
-						parent: path.basename(path.resolve(filePath, "..")),
-						resolverName: path.basename(filePath).replace(".resolver.ts", ""),
-				  }
-				: {
-						type: "scalar-resolver",
-						filePath,
-						symbolName: `${path
-							.relative(resolversFolderPath, filePath)
-							.replace(".resolver.ts", "")
-							.replace("/", "_")}Resolver`,
-						resolverName: path.basename(filePath).replace(".resolver.ts", ""),
-				  };
-		}
-	);
+	const typeMap = schema.getTypeMap();
+
+	const resolverMetadatas = (
+		await Promise.all(
+			Object.keys(typeMap)
+				.filter(
+					(typeMapKey) =>
+						![
+							"__Directive",
+							"__EnumValue",
+							"__Field",
+							"__InputValue",
+							"__Schema",
+							"__Type",
+							"__TypeKind",
+							"__DirectiveLocation",
+						].includes(typeMapKey) && !typeMapKey.endsWith("Input")
+				)
+				.map<Promise<ObjectResolverMetadata | ScalarResolverMetadata | UnionResolverMetadata | undefined>>(
+					async (typeMapKey) => {
+						const type = typeMap[typeMapKey];
+
+						if (type instanceof GraphQLScalarType) {
+							const posibleResolverPath = path.resolve(resolversFolderPath, `${type.name}.resolver.ts`);
+
+							if (!(await fsExists(posibleResolverPath))) return undefined;
+
+							return {
+								type: "scalar-resolver",
+								filePath: posibleResolverPath,
+								symbolName: `${path
+									.relative(resolversFolderPath, posibleResolverPath)
+									.replace(".resolver.ts", "")
+									.replace("/", "_")}Resolver`,
+								name: type.name,
+							};
+						}
+
+						if (type instanceof GraphQLUnionType)
+							return {
+								type: "union-resolver",
+								name: type.name,
+								value: ``,
+							};
+
+						if (type instanceof GraphQLObjectType) {
+							const fields = type.getFields();
+							const objectResolversDirPath = path.resolve(resolversFolderPath, type.name);
+
+							return {
+								type: "object-resolver",
+								dirPath: objectResolversDirPath,
+								name: type.name,
+								fields: (
+									await Promise.all(
+										Object.keys(fields).map<
+											Promise<DefaultFieldResolverMetadata | FieldResolverMetadata | undefined>
+										>(async (fieldKey) => {
+											const field = fields[fieldKey];
+
+											if ("_" === field.name)
+												return {
+													type: "default-field-resolver",
+													name: field.name,
+													value: `() => null`,
+												};
+
+											const resolverFilePath = path.resolve(
+												objectResolversDirPath,
+												`${field.name}.resolver.ts`
+											);
+
+											if (!(await fsExists(resolverFilePath))) return undefined;
+
+											return {
+												type: "field-resolver",
+												filePath: resolverFilePath,
+												name: field.name,
+												symbolName: `${path
+													.relative(resolversFolderPath, resolverFilePath)
+													.replace(".resolver.ts", "")
+													.replace("/", "_")}Resolver`,
+											};
+										})
+									)
+								)
+									.filter((metadata): metadata is Exclude<typeof metadata, undefined> => !!metadata)
+									.sort((f1, f2) => f1.name.localeCompare(f2.name)),
+							};
+						}
+
+						console.log(`Unhandled type`, type);
+						return undefined;
+					}
+				)
+		)
+	)
+		.filter((metadata): metadata is Exclude<typeof metadata, undefined> => !!metadata)
+		.sort((m1, m2) => m1.name.localeCompare(m2.name));
 
 	const relativeImport = (relativePath: string) =>
 		relativePath.startsWith(".") ? relativePath : "./" + relativePath;
 
-	const imports = [
+	const imports: string[] = [
 		`import { Resolvers } from "${relativeImport(
 			path.relative(path.resolve(resolversFilePath, ".."), generatedTypesFilePath.replace(/\.[^.]+$/, ""))
 		)}";`,
-		...resolverMetadatas.map(
-			(fileMetadata) =>
-				`import ${fileMetadata.symbolName} from "${path.relative(
-					path.resolve(resolversFilePath, ".."),
-					fileMetadata.filePath.replace(/\.[^.]+$/, "")
-				)}";`
-		),
 	];
 
-	const printObject = (fieldResolverMetadatas: FieldResolverMetadata[]): string => {
-		return `{\n ${fieldResolverMetadatas
-			.map((metadata) => `${metadata.resolverName}: ${metadata.symbolName}`)
-			.join(",\n")} \n}`;
-	};
-
-	const parsedFileMetadataMap: Record<string, FieldResolverMetadata[] | ScalarResolverMetadata> = {};
-
 	resolverMetadatas.forEach((metadata) => {
-		if (metadata.type === "scalar-resolver") parsedFileMetadataMap[metadata.resolverName] = metadata;
-		else if (parsedFileMetadataMap[metadata.parent])
-			(parsedFileMetadataMap[metadata.parent] as FieldResolverMetadata[]).push(metadata);
-		else parsedFileMetadataMap[metadata.parent] = [metadata];
+		const handlers: {
+			[K in typeof metadata["type"]]: ((m: Extract<typeof metadata, { type: K }>) => void) | undefined;
+		} = {
+			"scalar-resolver": (m) =>
+				imports.push(
+					`import ${m.symbolName} from "${path.relative(
+						path.resolve(resolversFilePath, ".."),
+						m.filePath.replace(/\.[^.]+$/, "")
+					)}";`
+				),
+
+			"object-resolver": (m) => {
+				const handlers: {
+					[K in typeof m.fields[number]["type"]]:
+						| ((_: Extract<typeof m["fields"][number], { type: K }>) => void)
+						| undefined;
+				} = {
+					"field-resolver": (m) => {
+						imports.push(
+							`import ${m.symbolName} from "${path.relative(
+								path.resolve(resolversFilePath, ".."),
+								m.filePath.replace(/\.[^.]+$/, "")
+							)}";`
+						);
+					},
+
+					"default-field-resolver": undefined,
+				};
+
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				m.fields.forEach((field) => handlers[field.type]?.(field as any));
+			},
+
+			"union-resolver": undefined,
+		};
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		handlers[metadata.type]?.(metadata as any);
 	});
 
 	await fs.writeFile(
 		resolversFilePath,
 		`${imports.join("\n")}\n\n` +
-			`export const resolvers: Resolvers = {\n${dangerousKeysOf(parsedFileMetadataMap)
-				.map((key) => {
-					const value = parsedFileMetadataMap[key];
+			`const __resolveType = <T>({ __typename }: { __typename: T }) => __typename;\n\n` +
+			`export const resolvers: Resolvers = {\n` +
+			resolverMetadatas
+				.map((resolverMetadata) => {
+					if (resolverMetadata.type === "union-resolver")
+						return `${resolverMetadata.name}: {\n__resolveType}`;
 
-					return `${key}: ${Array.isArray(value) ? printObject(value) : value.symbolName}`;
+					if (resolverMetadata.type === "scalar-resolver")
+						return `${resolverMetadata.name}: ${resolverMetadata.symbolName}`;
+
+					return (
+						`${resolverMetadata.name}: {\n` +
+						resolverMetadata.fields
+							.map(
+								(field) =>
+									`${field.name}: ${
+										field.type === "default-field-resolver" ? field.value : field.symbolName
+									}`
+							)
+							.join(",") +
+						`}`
+					);
 				})
-				.join(",")}\n};`
+				.join(",") +
+			`\n};`
 	);
 
 	return generatedFilesPaths;

@@ -1,27 +1,21 @@
-import AuthenticationError__Resolver from "../resolvers/AuthenticationError/_.resolver";
 import Course_createdByResolver from "../resolvers/Course/createdBy.resolver";
 import Course_deletedByResolver from "../resolvers/Course/deletedBy.resolver";
 import Course_editionsResolver from "../resolvers/Course/editions.resolver";
 import Course_iconUrlResolver from "../resolvers/Course/iconUrl.resolver";
 import Course_idResolver from "../resolvers/Course/id.resolver";
 import Course_updatedByResolver from "../resolvers/Course/updatedBy.resolver";
-import CourseByCodeResult___resolveTypeResolver from "../resolvers/CourseByCodeResult/__resolveType.resolver";
-import CourseByIdResult___resolveTypeResolver from "../resolvers/CourseByIdResult/__resolveType.resolver";
 import CourseClass_courseClassListResolver from "../resolvers/CourseClass/courseClassList.resolver";
 import CourseClass_createdByResolver from "../resolvers/CourseClass/createdBy.resolver";
 import CourseClass_deletedByResolver from "../resolvers/CourseClass/deletedBy.resolver";
 import CourseClass_idResolver from "../resolvers/CourseClass/id.resolver";
 import CourseClass_updatedByResolver from "../resolvers/CourseClass/updatedBy.resolver";
 import CourseClass_videosResolver from "../resolvers/CourseClass/videos.resolver";
-import CourseClassByIdResult___resolveTypeResolver from "../resolvers/CourseClassByIdResult/__resolveType.resolver";
 import CourseClassList_classesResolver from "../resolvers/CourseClassList/classes.resolver";
 import CourseClassList_courseEditionResolver from "../resolvers/CourseClassList/courseEdition.resolver";
 import CourseClassList_createdByResolver from "../resolvers/CourseClassList/createdBy.resolver";
 import CourseClassList_deletedByResolver from "../resolvers/CourseClassList/deletedBy.resolver";
 import CourseClassList_idResolver from "../resolvers/CourseClassList/id.resolver";
 import CourseClassList_updatedByResolver from "../resolvers/CourseClassList/updatedBy.resolver";
-import CourseClassListByCodeResult___resolveTypeResolver from "../resolvers/CourseClassListByCodeResult/__resolveType.resolver";
-import CourseClassListByIdResult___resolveTypeResolver from "../resolvers/CourseClassListByIdResult/__resolveType.resolver";
 import CourseClassVideo_courseClassResolver from "../resolvers/CourseClassVideo/courseClass.resolver";
 import CourseClassVideo_createdByResolver from "../resolvers/CourseClassVideo/createdBy.resolver";
 import CourseClassVideo_deletedByResolver from "../resolvers/CourseClassVideo/deletedBy.resolver";
@@ -46,18 +40,13 @@ import CourseEdition_createdByResolver from "../resolvers/CourseEdition/createdB
 import CourseEdition_deletedByResolver from "../resolvers/CourseEdition/deletedBy.resolver";
 import CourseEdition_idResolver from "../resolvers/CourseEdition/id.resolver";
 import CourseEdition_updatedByResolver from "../resolvers/CourseEdition/updatedBy.resolver";
-import CourseEditionByIdResult___resolveTypeResolver from "../resolvers/CourseEditionByIdResult/__resolveType.resolver";
-import CreateCoursePayload___resolveTypeResolver from "../resolvers/CreateCoursePayload/__resolveType.resolver";
 import Faq_createdByResolver from "../resolvers/Faq/createdBy.resolver";
 import Faq_deletedByResolver from "../resolvers/Faq/deletedBy.resolver";
 import Faq_updatedByResolver from "../resolvers/Faq/updatedBy.resolver";
-import GenericError__Resolver from "../resolvers/GenericError/_.resolver";
-import Mutation__Resolver from "../resolvers/Mutation/_.resolver";
 import Mutation_backupDbResolver from "../resolvers/Mutation/backupDb.resolver";
 import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.resolver";
+import Mutation_signInResolver from "../resolvers/Mutation/signIn.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
-import NotFoundError__Resolver from "../resolvers/NotFoundError/_.resolver";
-import Query__Resolver from "../resolvers/Query/_.resolver";
 import Query_courseByCodeResolver from "../resolvers/Query/courseByCode.resolver";
 import Query_courseByIdResolver from "../resolvers/Query/courseById.resolver";
 import Query_courseClassByIdResolver from "../resolvers/Query/courseClassById.resolver";
@@ -68,16 +57,20 @@ import Query_coursesResolver from "../resolvers/Query/courses.resolver";
 import Query_faqsResolver from "../resolvers/Query/faqs.resolver";
 import Query_latestCourseClassesResolver from "../resolvers/Query/latestCourseClasses.resolver";
 import Query_userRolesResolver from "../resolvers/Query/userRoles.resolver";
-import UpdateCourseClassVideosResult___resolveTypeResolver from "../resolvers/UpdateCourseClassVideosResult/__resolveType.resolver";
 import User_idResolver from "../resolvers/User/id.resolver";
 import User_rolesResolver from "../resolvers/User/roles.resolver";
 import UserRole_idResolver from "../resolvers/UserRole/id.resolver";
 import VoidResolver from "../resolvers/Void.resolver";
 import { Resolvers } from "./graphql.types";
 
+const __resolveType = <T>({ __typename }: { __typename: T }) => __typename;
+
 export const resolvers: Resolvers = {
 	AuthenticationError: {
-		_: AuthenticationError__Resolver,
+		_: () => null,
+	},
+	BackupDbResult: {
+		__resolveType,
 	},
 	Course: {
 		createdBy: Course_createdByResolver,
@@ -88,10 +81,10 @@ export const resolvers: Resolvers = {
 		updatedBy: Course_updatedByResolver,
 	},
 	CourseByCodeResult: {
-		__resolveType: CourseByCodeResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CourseByIdResult: {
-		__resolveType: CourseByIdResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CourseClass: {
 		courseClassList: CourseClass_courseClassListResolver,
@@ -102,7 +95,7 @@ export const resolvers: Resolvers = {
 		videos: CourseClass_videosResolver,
 	},
 	CourseClassByIdResult: {
-		__resolveType: CourseClassByIdResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CourseClassList: {
 		classes: CourseClassList_classesResolver,
@@ -113,10 +106,10 @@ export const resolvers: Resolvers = {
 		updatedBy: CourseClassList_updatedByResolver,
 	},
 	CourseClassListByCodeResult: {
-		__resolveType: CourseClassListByCodeResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CourseClassListByIdResult: {
-		__resolveType: CourseClassListByIdResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CourseClassVideo: {
 		courseClass: CourseClassVideo_courseClassResolver,
@@ -151,10 +144,10 @@ export const resolvers: Resolvers = {
 		updatedBy: CourseEdition_updatedByResolver,
 	},
 	CourseEditionByIdResult: {
-		__resolveType: CourseEditionByIdResult___resolveTypeResolver,
+		__resolveType,
 	},
 	CreateCoursePayload: {
-		__resolveType: CreateCoursePayload___resolveTypeResolver,
+		__resolveType,
 	},
 	Faq: {
 		createdBy: Faq_createdByResolver,
@@ -162,19 +155,20 @@ export const resolvers: Resolvers = {
 		updatedBy: Faq_updatedByResolver,
 	},
 	GenericError: {
-		_: GenericError__Resolver,
+		_: () => null,
 	},
 	Mutation: {
-		_: Mutation__Resolver,
+		_: () => null,
 		backupDb: Mutation_backupDbResolver,
 		createCourse: Mutation_createCourseResolver,
+		signIn: Mutation_signInResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
 	},
 	NotFoundError: {
-		_: NotFoundError__Resolver,
+		_: () => null,
 	},
 	Query: {
-		_: Query__Resolver,
+		_: () => null,
 		courseByCode: Query_courseByCodeResolver,
 		courseById: Query_courseByIdResolver,
 		courseClassById: Query_courseClassByIdResolver,
@@ -186,8 +180,12 @@ export const resolvers: Resolvers = {
 		latestCourseClasses: Query_latestCourseClassesResolver,
 		userRoles: Query_userRolesResolver,
 	},
+	SignInPayload: {},
+	SignInResult: {
+		__resolveType,
+	},
 	UpdateCourseClassVideosResult: {
-		__resolveType: UpdateCourseClassVideosResult___resolveTypeResolver,
+		__resolveType,
 	},
 	User: {
 		id: User_idResolver,
