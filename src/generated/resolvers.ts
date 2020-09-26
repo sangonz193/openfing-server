@@ -45,7 +45,6 @@ import Faq_deletedByResolver from "../resolvers/Faq/deletedBy.resolver";
 import Faq_updatedByResolver from "../resolvers/Faq/updatedBy.resolver";
 import Mutation_backupDbResolver from "../resolvers/Mutation/backupDb.resolver";
 import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.resolver";
-import Mutation_signInResolver from "../resolvers/Mutation/signIn.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
 import Query_courseByCodeResolver from "../resolvers/Query/courseByCode.resolver";
 import Query_courseByIdResolver from "../resolvers/Query/courseById.resolver";
@@ -68,9 +67,6 @@ const __resolveType = <T>({ __typename }: { __typename: T }) => __typename;
 export const resolvers: Resolvers = {
 	AuthenticationError: {
 		_: () => null,
-	},
-	BackupDbResult: {
-		__resolveType,
 	},
 	Course: {
 		createdBy: Course_createdByResolver,
@@ -161,7 +157,6 @@ export const resolvers: Resolvers = {
 		_: () => null,
 		backupDb: Mutation_backupDbResolver,
 		createCourse: Mutation_createCourseResolver,
-		signIn: Mutation_signInResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
 	},
 	NotFoundError: {
@@ -179,10 +174,6 @@ export const resolvers: Resolvers = {
 		faqs: Query_faqsResolver,
 		latestCourseClasses: Query_latestCourseClassesResolver,
 		userRoles: Query_userRolesResolver,
-	},
-	SignInPayload: {},
-	SignInResult: {
-		__resolveType,
 	},
 	UpdateCourseClassVideosResult: {
 		__resolveType,

@@ -10,19 +10,19 @@ const command: CommandModule<{}, {}> = {
 
 	describe: "Will run the typeorm cli. Pass the arguments after --",
 
-	builder: (yargs) => yargs,
+	builder: (yargs) => yargs.strict(false),
 
 	handler: async () => {
 		const argsIndex = process.argv.indexOf("--");
 
 		if (argsIndex === -1) throw new Error("Must specify typeorm arguments after `--`");
 
-		spawn(
+		await spawn(
 			"node",
 			[
 				...["-r", path.resolve(projectPath, "node_modules", "ts-node", "register")],
 				path.resolve(projectPath, "node_modules", "typeorm", "cli.js"),
-				...process.argv.slice(argsIndex),
+				...process.argv.slice(argsIndex + 1),
 			],
 			{
 				cwd: projectPath,
