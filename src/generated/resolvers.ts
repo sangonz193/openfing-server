@@ -64,9 +64,11 @@ import { Resolvers } from "./graphql.types";
 
 const __resolveType = <T>({ __typename }: { __typename: T }) => __typename;
 
+const _ = () => null;
+
 export const resolvers: Resolvers = {
 	AuthenticationError: {
-		_: () => null,
+		_,
 	},
 	Course: {
 		createdBy: Course_createdByResolver,
@@ -151,19 +153,19 @@ export const resolvers: Resolvers = {
 		updatedBy: Faq_updatedByResolver,
 	},
 	GenericError: {
-		_: () => null,
+		_,
 	},
 	Mutation: {
-		_: () => null,
+		_,
 		backupDb: Mutation_backupDbResolver,
 		createCourse: Mutation_createCourseResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
 	},
 	NotFoundError: {
-		_: () => null,
+		_,
 	},
 	Query: {
-		_: () => null,
+		_,
 		courseByCode: Query_courseByCodeResolver,
 		courseById: Query_courseByIdResolver,
 		courseClassById: Query_courseClassByIdResolver,

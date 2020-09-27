@@ -108,7 +108,7 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 												return {
 													type: "default-field-resolver",
 													name: field.name,
-													value: `() => null`,
+													value: `_`,
 												};
 
 											const resolverFilePath = path.resolve(
@@ -198,6 +198,7 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 		resolversFilePath,
 		`${imports.join("\n")}\n\n` +
 			`const __resolveType = <T>({ __typename }: { __typename: T }) => __typename;\n\n` +
+			`const _ = () => null;\n\n` +
 			`export const resolvers: Resolvers = {\n` +
 			resolverMetadatas
 				.map((resolverMetadata) => {
@@ -210,12 +211,19 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 					return (
 						`${resolverMetadata.name}: {\n` +
 						resolverMetadata.fields
-							.map(
-								(field) =>
-									`${field.name}: ${
-										field.type === "default-field-resolver" ? field.value : field.symbolName
-									}`
-							)
+							.map((field) => {
+								const handlers: {
+									[K in typeof field["type"]]: (f: Extract<typeof field, { type: K }>) => string;
+								} = {
+									"default-field-resolver": (f) =>
+										f.name === f.value ? f.name : `${f.name}: ${f.value}\n`,
+
+									"field-resolver": (f) => `${f.name}: ${f.symbolName}`,
+								};
+
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								return handlers[field.type](field as any);
+							})
 							.join(",") +
 						`}`
 					);
