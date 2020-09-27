@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const schema = gql`
+export default gql`
 	type CourseClassList {
 		id: ID!
 
@@ -18,14 +18,4 @@ const schema = gql`
 		updatedBy: User
 		deletedBy: User
 	}
-
-	union CourseClassListByIdResult = CourseClassList | NotFoundError
-	union CourseClassListByCodeResult = CourseClassList | NotFoundError
-
-	extend type Query {
-		courseClassListById(id: ID!): CourseClassListByIdResult!
-		courseClassListByCode(code: String!): CourseClassListByCodeResult!
-	}
 `;
-
-export default schema;

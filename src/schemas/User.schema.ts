@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const schema = gql`
+export default gql`
 	type User {
 		id: ID!
 
@@ -15,5 +15,3 @@ const schema = gql`
 		deletedAt: String
 	}
 `;
-
-export default schema;

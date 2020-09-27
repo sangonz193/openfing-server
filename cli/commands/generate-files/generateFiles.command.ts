@@ -17,7 +17,7 @@ const command: CommandModule<{}, {}> = {
 	builder: (yargs) => yargs,
 
 	handler: async () => {
-		const schemaFilesGlob = path.resolve(projectPath, "src", "schemas", "*.schema.ts");
+		const schemaFilesGlob = path.resolve(projectPath, "src", "schemas", "**", "*.schema.ts");
 		const schemaPromise = loadSchema(schemaFilesGlob, { loaders: [new CodeFileLoader()] });
 
 		const results = await Promise.all([
