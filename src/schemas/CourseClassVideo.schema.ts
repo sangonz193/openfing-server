@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const schema = gql`
+export default gql`
 	type CourseClassVideo {
 		id: ID!
 
@@ -18,5 +18,3 @@ const schema = gql`
 		updatedBy: User
 	}
 `;
-
-export default schema;

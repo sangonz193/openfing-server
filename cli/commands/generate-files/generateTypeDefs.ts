@@ -6,7 +6,7 @@ import { projectPath } from "../../../src/_utils/projectPath";
 
 export const generateTypeDefs = async (): Promise<string[]> => {
 	const typeDefsFilePath = path.resolve(projectPath, "src", "generated", "typeDefs.ts");
-	const schemaFilesGlob = path.resolve(projectPath, "src", "schemas", "*.schema.ts");
+	const schemaFilesGlob = path.resolve(projectPath, "src", "schemas", "**", "*.schema.ts");
 
 	const generatedFilePaths = [typeDefsFilePath];
 

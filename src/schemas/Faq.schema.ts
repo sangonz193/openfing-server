@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const schema = gql`
+export default gql`
 	type Faq {
 		id: ID!
 
@@ -17,10 +17,4 @@ const schema = gql`
 		deletedAt: String
 		deletedBy: User
 	}
-
-	extend type Query {
-		faqs: [Faq!]!
-	}
 `;
-
-export default schema;

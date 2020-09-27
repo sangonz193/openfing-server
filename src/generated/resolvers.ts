@@ -144,7 +144,7 @@ export const resolvers: Resolvers = {
 	CourseEditionByIdResult: {
 		__resolveType,
 	},
-	CreateCoursePayload: {
+	CreateCourseResult: {
 		__resolveType,
 	},
 	Faq: {
@@ -176,9 +176,6 @@ export const resolvers: Resolvers = {
 		faqs: Query_faqsResolver,
 		latestCourseClasses: Query_latestCourseClassesResolver,
 		userRoles: Query_userRolesResolver,
-	},
-	UpdateCourseClassVideosResult: {
-		__resolveType,
 	},
 	User: {
 		id: User_idResolver,

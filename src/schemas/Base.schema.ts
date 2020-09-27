@@ -1,15 +1,10 @@
 import gql from "graphql-tag";
 
-const schema = gql`
+export default gql`
 	scalar Void
-
-	type Query {
-		_: Void
-	}
 
 	type Mutation {
 		_: Void
-		backupDb(secret: String!): Void
 	}
 
 	type GenericError {
@@ -24,5 +19,3 @@ const schema = gql`
 		_: Void
 	}
 `;
-
-export default schema;
