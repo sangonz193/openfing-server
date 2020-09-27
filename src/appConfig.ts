@@ -1,7 +1,7 @@
 import * as path from "path";
 import urlJoin from "url-join";
 
-import { dbConnectionOptions } from "./config/dbConnectionOptions";
+import { getDbConnectionOptions } from "./config/getDbConnectionOptions";
 
 const { env } = process;
 const {
@@ -42,7 +42,7 @@ const COURSE_ICONS_PATH = path.join(ASSETS_PATH, "course-icons");
 const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons");
 
 export const appConfig = {
-	dbConnectionOptions,
+	dbConnectionOptions: getDbConnectionOptions(),
 
 	FILES_PATH,
 	FILES_URL,

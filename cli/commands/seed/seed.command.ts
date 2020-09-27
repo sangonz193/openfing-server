@@ -10,7 +10,7 @@ import { fsExists } from "../../_utils/fsExists";
 import { hashPassword } from "../../../src/_helpers/hashPassword";
 import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
 import { _fs } from "../../../src/_utils/fs";
-import { dbConnectionOptions } from "../../../src/config/dbConnectionOptions";
+import { getDbConnectionOptions } from "../../../src/config/getDbConnectionOptions";
 import { entities } from "../../../src/entities";
 import { UserRoleCode } from "../../../src/entities/UserRole";
 import { getUserRepository } from "../../../src/repositories/User";
@@ -28,6 +28,7 @@ const command: CommandModule<{}, {}> = {
 	builder: (yargs) => yargs,
 
 	handler: async () => {
+		const dbConnectionOptions = getDbConnectionOptions();
 		const connection = await createConnection(dbConnectionOptions);
 		const { schema } = dbConnectionOptions;
 
