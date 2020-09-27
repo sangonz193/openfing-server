@@ -18,11 +18,12 @@ const command: CommandModule<{}, {}> = {
 
 	handler: async () => {
 		const schemaFilesGlob = path.resolve(projectPath, "src", "schemas", "*.schema.ts");
+		const schemaPromise = loadSchema(schemaFilesGlob, { loaders: [new CodeFileLoader()] });
 
 		const results = await Promise.all([
 			generateTypeDefs(),
-			generateResolvers(),
-			loadSchema(schemaFilesGlob, { loaders: [new CodeFileLoader()] }).then((schema) =>
+			schemaPromise.then((schema) => generateResolvers(schema)),
+			schemaPromise.then((schema) =>
 				generateGraphqlTypes({
 					schema,
 				})
@@ -34,6 +35,7 @@ const command: CommandModule<{}, {}> = {
 			[...results.reduce<string[]>((res, value) => [...res, ...value], []), "--fix"],
 			{
 				cwd: projectPath,
+				encoding: "utf-8",
 			}
 		);
 	},

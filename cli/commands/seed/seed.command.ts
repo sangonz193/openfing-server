@@ -10,7 +10,7 @@ import { fsExists } from "../../_utils/fsExists";
 import { hashPassword } from "../../../src/_helpers/hashPassword";
 import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
 import { _fs } from "../../../src/_utils/fs";
-import { appConfig } from "../../../src/appConfig";
+import { getDbConnectionOptions } from "../../../src/config/getDbConnectionOptions";
 import { entities } from "../../../src/entities";
 import { UserRoleCode } from "../../../src/entities/UserRole";
 import { getUserRepository } from "../../../src/repositories/User";
@@ -28,8 +28,9 @@ const command: CommandModule<{}, {}> = {
 	builder: (yargs) => yargs,
 
 	handler: async () => {
-		const connection = await createConnection(appConfig.dbConnectionOptions);
-		const { schema } = appConfig.dbConnectionOptions;
+		const dbConnectionOptions = getDbConnectionOptions();
+		const connection = await createConnection(dbConnectionOptions);
+		const { schema } = dbConnectionOptions;
 
 		await connection.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
 		await connection.query(`CREATE SCHEMA "${schema}"`);
@@ -96,11 +97,11 @@ const command: CommandModule<{}, {}> = {
 				const fileStream = _fs.createReadStream(filePath);
 
 				const pool = new Pool({
-					database: appConfig.dbConnectionOptions.database,
-					password: appConfig.dbConnectionOptions.password as string,
-					port: appConfig.dbConnectionOptions.port,
-					user: appConfig.dbConnectionOptions.username,
-					host: appConfig.dbConnectionOptions.host,
+					database: dbConnectionOptions.database,
+					password: dbConnectionOptions.password,
+					port: dbConnectionOptions.port,
+					user: dbConnectionOptions.username,
+					host: dbConnectionOptions.host,
 				});
 
 				const repository = getRepository(entityToCopy);
