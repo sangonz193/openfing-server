@@ -144,6 +144,7 @@ export const resolvers: Resolvers = {
 	CourseEditionByIdResult: {
 		__resolveType,
 	},
+	CreateCoursePayload: {},
 	CreateCourseResult: {
 		__resolveType,
 	},

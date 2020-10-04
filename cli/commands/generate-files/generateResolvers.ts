@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLScalarType, GraphQLSchema, GraphQLUnionType } from "graphql";
+import { GraphQLEnumType, GraphQLObjectType, GraphQLScalarType, GraphQLSchema, GraphQLUnionType } from "graphql";
 import path from "path";
 
 import { fs } from "../../_utils/fs";
@@ -133,7 +133,9 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 									.filter((metadata): metadata is Exclude<typeof metadata, undefined> => !!metadata)
 									.sort((f1, f2) => f1.name.localeCompare(f2.name)),
 							};
-						}
+						} else if (type instanceof GraphQLEnumType)
+							// ignore
+							return undefined;
 
 						console.log(`Unhandled type`, type);
 						return undefined;

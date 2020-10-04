@@ -35,6 +35,7 @@ export const generateTypeDefs = async (): Promise<string[]> => {
 		`${imports.join("\n")}\n\n` +
 			`export const typeDefs: DocumentNode[] = [${files
 				.map((filePath) => getSymbolFromFilePath(filePath))
+				.sort()
 				.join(",")}]`
 	);
 

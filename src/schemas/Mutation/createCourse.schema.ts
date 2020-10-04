@@ -2,19 +2,25 @@ import gql from "graphql-tag";
 
 export default gql`
 	extend type Mutation {
-		createCourse(input: CreateCourseInput!): CreateCourseResult
+		createCourse(input: CreateCourseInput!, secret: String!): CreateCourseResult!
+	}
+
+	enum CreateCourseInputVisibility {
+		PUBLIC
+		HIDDEN
+		DISABLED
 	}
 
 	input CreateCourseInput {
 		code: String!
 		name: String!
 		eva: String
-		editionName: String!
-		editionSemester: Int!
-		editionYear: Int!
-		courseClassListCode: String!
-		courseClassListName: String!
+		visibility: CreateCourseInputVisibility
 	}
 
-	union CreateCourseResult = GenericError | NotFoundError
+	type CreateCoursePayload {
+		course: Course!
+	}
+
+	union CreateCourseResult = CreateCoursePayload | GenericError | AuthenticationError
 `;
