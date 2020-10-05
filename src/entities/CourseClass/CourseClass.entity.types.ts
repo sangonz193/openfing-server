@@ -5,6 +5,7 @@ import {
 	PrimaryColumn,
 	TypedEntitySchema,
 } from "../_utils/createTypedEntitySchema";
+import { CourseClassChapterCue } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import { CourseClassListToCourseClass_courseClasses } from "../CourseClassList/CourseClassList.entity.types";
 import { CourseClassVideo } from "../CourseClassVideo/CourseClassVideo.entity.types";
 import {
@@ -29,6 +30,20 @@ export type CourseClassToCourseClassVideo_videos = OneToManyRelation<{
 	};
 	to: {
 		entity: () => CourseClassVideo;
+		columnName: "course_class_id";
+		relationName: "courseClass";
+		nullable: true;
+	};
+}>;
+
+export type CourseClassToCourseClassChapterCue_chapterCues = OneToManyRelation<{
+	from: {
+		entity: () => CourseClass;
+		primaryColumn: CourseClass_id;
+		relationName: "courseClassChapterCue";
+	};
+	to: {
+		entity: () => CourseClassChapterCue;
 		columnName: "course_class_id";
 		relationName: "courseClass";
 		nullable: true;
