@@ -19,14 +19,9 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 
 	const validatedData = await yup
 		.object<MutationCreateCourseArgs["input"]>({
-			code: yup.string().trim().required(),
-			eva: yup.string().trim(),
-			name: yup.string().trim().required(),
-			// courseClassListCode: yup.string().trim().required(),
-			// courseClassListName: yup.string().trim().required(),
-			// editionName: yup.string().trim().required(),
-			// editionSemester: yup.number().integer().lessThan(3).moreThan(0).required(),
-			// editionYear: yup.number().integer().required(),
+			code: yup.string().trim().max(20).required(),
+			eva: yup.string().trim().max(300),
+			name: yup.string().trim().max(200).required(),
 		})
 		.required()
 		.validate(args.input);
