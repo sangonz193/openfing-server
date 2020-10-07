@@ -1,93 +1,53 @@
 import { Connection } from "typeorm";
 
-import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseClass, courseClassColumns, CourseClassVisibility } from "../../entities/CourseClass";
-import { CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
-import { CourseClassFindAllOptions, CourseClassRepository } from "./CourseClassChapterCue.repository.types";
+import { CourseClassChapterCue, courseClassChapterCueColumns } from "../../entities/CourseClassChapterCue";
+import { CourseClassChapterCueRow } from "../../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
+import {
+	CourseClassChapterCueFindAllOptions,
+	CourseClassChapterCueRepository,
+} from "./CourseClassChapterCue.repository.types";
 
-export const getCourseClassRepository = (connection: Connection): CourseClassRepository => {
-	const repo = getTypedRepository(CourseClass, connection);
+export const getCourseClassChapterCueRepository = (connection: Connection): CourseClassChapterCueRepository => {
+	const repo = getTypedRepository(CourseClassChapterCue, connection);
 
-	const is: CourseClassRepository["is"] = (courseClass, options) => {
-		return (
-			courseClass.id === options.id &&
-			courseClass.deletedAt === null &&
-			(options.includeHidden ||
-				courseClass.visibility === CourseClassVisibility.public ||
-				options.includeDisabled ||
-				courseClass.visibility === CourseClassVisibility.disabled)
-		);
+	const is: CourseClassChapterCueRepository["is"] = (courseClassChapterCue, options) => {
+		return courseClassChapterCue.id === options.id && courseClassChapterCue.deletedAt === null;
 	};
 
-	const findAllFromCourseClassList = (
-		options: Extract<CourseClassFindAllOptions, { courseClassListId: CourseClassRow["courseClassListId"] }>
-	) => {
-		const queryBuilder = repo.createQueryBuilder("ce");
+	const findAllFromCourseClassChapterCueList = (options: CourseClassChapterCueFindAllOptions) => {
+		const queryBuilder = repo.createQueryBuilder("cccc");
 
 		queryBuilder
 			.andWhere(
-				`ce.${courseClassColumns.courseClassListId.name} = :courseClassListId`,
-				identity<{ courseClassListId: CourseClassRow["courseClassListId"] }>({
-					courseClassListId: options.courseClassListId,
+				`cccc.${courseClassChapterCueColumns.courseClassId.name} = :courseClassId`,
+				identity<{ courseClassId: CourseClassChapterCueRow["courseClassId"] }>({
+					courseClassId: options.courseClassId,
 				})
 			)
-			.andWhere(`ce.${courseClassColumns.deletedAt.name} is null`);
+			.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`);
 
-		if (!options.includeDisabled)
-			queryBuilder.andWhere(
-				`ce.${courseClassColumns.visibility.name} != :visibility`,
-				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: CourseClassVisibility.disabled,
-				})
-			);
-
-		if (!options.includeHidden)
-			queryBuilder.andWhere(
-				`ce.${courseClassColumns.visibility.name} != :visibility`,
-				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: CourseClassVisibility.hidden,
-				})
-			);
-
-		queryBuilder.orderBy(courseClassColumns.number.name, "ASC");
+		queryBuilder.orderBy(courseClassChapterCueColumns.startSeconds.name, "ASC");
 
 		return queryBuilder.getMany();
-	};
-
-	const findLatestCourseClasses = (options: Extract<CourseClassFindAllOptions, { latest: number }>) => {
-		return repo.find({
-			where: {
-				deletedAt: null,
-				visibility: CourseClassVisibility.public,
-			},
-			order: {
-				createdAt: "DESC",
-			},
-			take: options.latest,
-		});
 	};
 
 	return {
 		_typedRepository: repo,
 
-		findAll: async (options) => {
-			if (hasProperty(options, "courseClassListId")) return findAllFromCourseClassList(options);
-
-			return findLatestCourseClasses(options);
-		},
+		findAll: async (options) => findAllFromCourseClassChapterCueList(options),
 
 		findBatch: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("ce");
+			const queryBuilder = repo.createQueryBuilder("cccc");
 
 			queryBuilder
-				.andWhere(`ce.${courseClassColumns.deletedAt.name} is null`)
-				.andWhereInIds(identity<Array<CourseClassRow["id"]>>(options.map((options) => options.id)));
+				.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`)
+				.andWhereInIds(identity<Array<CourseClassChapterCueRow["id"]>>(options.map((options) => options.id)));
 
-			const courseClasses = await queryBuilder.getMany();
+			const courseClassChapterCues = await queryBuilder.getMany();
 
-			return options.map((options) => courseClasses.find((ce) => is(ce, options)) || null);
+			return options.map((options) => courseClassChapterCues.find((cccc) => is(cccc, options)) || null);
 		},
 
 		is,

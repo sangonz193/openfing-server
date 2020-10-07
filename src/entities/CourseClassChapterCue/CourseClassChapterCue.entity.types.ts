@@ -18,8 +18,8 @@ export type CourseClassChapterCueColumns = {
 	id: CourseClassChapterCue_id;
 
 	name: CourseClassChapterCue_name;
-	start_seconds: CourseClassChapterCue_startSeconds;
-	end_seconds: CourseClassChapterCue_endSeconds;
+	startSeconds: CourseClassChapterCue_startSeconds;
+	endSeconds: CourseClassChapterCue_endSeconds;
 
 	createdAt: CourseClassChapterCue_createdAt;
 	updatedAt: CourseClassChapterCue_updatedAt;

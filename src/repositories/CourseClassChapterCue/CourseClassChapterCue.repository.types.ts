@@ -1,38 +1,38 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
-import { CourseClass, CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
+import {
+	CourseClassChapterCue,
+	CourseClassChapterCueRow,
+} from "../../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
 
-export type CourseClassAccessOptions = {
-	includeHidden?: boolean;
-	includeDisabled?: boolean;
+export type CourseClassChapterCueFindOneOptions = {
+	id: CourseClassChapterCueRow["id"];
 };
 
-export type CourseClassFindOneOptions = CourseClassAccessOptions & {
-	id: CourseClassRow["id"];
+export type CourseClassChapterCueFindAllOptions = {
+	courseClassId: CourseClassChapterCueRow["courseClassId"];
 };
 
-export type CourseClassFindAllOptions =
-	| (CourseClassAccessOptions & {
-			courseClassListId: CourseClassRow["courseClassListId"];
-	  })
-	| { latest: number };
+export type SaveCourseClassChapterCueData = SafeOmit<CourseClassChapterCueRow, "id">;
 
-export type SaveCourseClassData = SafeOmit<CourseClassRow, "id">;
-
-export type CreateCourseClassData = SafeOmit<
-	CourseClassRow,
+export type CreateCourseClassChapterCueData = SafeOmit<
+	CourseClassChapterCueRow,
 	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
 > &
-	Partial<Pick<CourseClassRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">>;
+	Partial<
+		Pick<CourseClassChapterCueRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">
+	>;
 
-export type CourseClassRepository = {
-	_typedRepository: TypedRepository<CourseClass>;
+export type CourseClassChapterCueRepository = {
+	_typedRepository: TypedRepository<CourseClassChapterCue>;
 
-	findAll: (options: CourseClassFindAllOptions) => Promise<CourseClassRow[]>;
-	findBatch: (options: readonly CourseClassFindOneOptions[]) => Promise<Array<CourseClassRow | null>>;
+	findAll: (options: CourseClassChapterCueFindAllOptions) => Promise<CourseClassChapterCueRow[]>;
+	findBatch: (
+		options: readonly CourseClassChapterCueFindOneOptions[]
+	) => Promise<Array<CourseClassChapterCueRow | null>>;
 
-	is: (courseClass: CourseClassRow, findOptions: CourseClassFindOneOptions) => boolean;
+	is: (courseClassChapterCue: CourseClassChapterCueRow, findOptions: CourseClassChapterCueFindOneOptions) => boolean;
 
-	create: (data: CreateCourseClassData) => SaveCourseClassData;
-	save: (data: SaveCourseClassData) => Promise<CourseClassRow>;
+	create: (data: CreateCourseClassChapterCueData) => SaveCourseClassChapterCueData;
+	save: (data: SaveCourseClassChapterCueData) => Promise<CourseClassChapterCueRow>;
 };

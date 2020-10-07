@@ -20,12 +20,12 @@ export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
 		type: "varchar",
 		nullable: true,
 	},
-	start_seconds: {
+	startSeconds: {
 		name: "start_seconds",
 		nullable: false,
 		type: "decimal",
 	},
-	end_seconds: {
+	endSeconds: {
 		name: "end_seconds",
 		nullable: false,
 		type: "decimal",

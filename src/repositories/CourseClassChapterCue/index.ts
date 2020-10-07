@@ -1,1 +1,1 @@
-export { getCourseClassRepository } from "./CourseClassChapterCue.repository";
+export { getCourseClassChapterCueRepository } from "./CourseClassChapterCueChapterCue.repository";
