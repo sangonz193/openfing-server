@@ -244,7 +244,7 @@ export type UserToCourseClassVideo_deleted = OneToManyRelation<{
 }>;
 // endregion
 
-// region CourseClassVideo management
+// region CourseClassChapterCue management
 export type UserToCourseClassChapterCue_created = OneToManyRelation<{
 	from: {
 		entity: () => User;
@@ -286,7 +286,6 @@ export type UserToCourseClassChapterCue_deleted = OneToManyRelation<{
 		nullable: true;
 	};
 }>;
-
 // endregion
 
 // region CourseClassVideoQuality management
