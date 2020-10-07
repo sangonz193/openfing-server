@@ -46,7 +46,7 @@ export type CourseClassToCourseClassChapterCue_chapterCues = OneToManyRelation<{
 		entity: () => CourseClassChapterCue;
 		columnName: "course_class_id";
 		relationName: "courseClass";
-		nullable: true;
+		nullable: false;
 	};
 }>;
 

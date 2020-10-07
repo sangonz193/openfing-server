@@ -38,7 +38,7 @@ export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
 	courseClassId: {
 		name: "course_class_id",
 		type: "integer",
-		nullable: true,
+		nullable: false,
 	},
 
 	createdById: commonManagedByColumns.createdById,
