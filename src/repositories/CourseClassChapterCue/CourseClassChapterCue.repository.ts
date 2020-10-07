@@ -1,5 +1,6 @@
 import { Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import { CourseClassChapterCue, courseClassChapterCueColumns } from "../../entities/CourseClassChapterCue";
@@ -54,6 +55,7 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 
 		create: (data) => ({
 			...data,
+			id: data.id ?? getUuid(),
 			createdAt: data.createdAt || new Date(),
 			updatedAt: data.updatedAt || null,
 			deletedAt: data.deletedAt || null,

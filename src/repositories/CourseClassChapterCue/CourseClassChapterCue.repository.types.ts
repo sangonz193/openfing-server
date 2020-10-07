@@ -13,7 +13,7 @@ export type CourseClassChapterCueFindAllOptions = {
 	courseClassId: CourseClassChapterCueRow["courseClassId"];
 };
 
-export type SaveCourseClassChapterCueData = SafeOmit<CourseClassChapterCueRow, "id">;
+export type SaveCourseClassChapterCueData = CourseClassChapterCueRow;
 
 export type CreateCourseClassChapterCueData = SafeOmit<
 	CourseClassChapterCueRow,
