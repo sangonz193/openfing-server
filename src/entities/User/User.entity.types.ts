@@ -7,6 +7,7 @@ import {
 } from "../_utils/createTypedEntitySchema";
 import { Course } from "../Course/Course.entity.types";
 import { CourseClass } from "../CourseClass/CourseClass.entity.types";
+import { CourseClassChapterCue } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import { CourseClassList } from "../CourseClassList/CourseClassList.entity.types";
 import { CourseClassVideo } from "../CourseClassVideo/CourseClassVideo.entity.types";
 import { CourseClassVideoFormat } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
@@ -236,6 +237,50 @@ export type UserToCourseClassVideo_deleted = OneToManyRelation<{
 	};
 	to: {
 		entity: () => CourseClassVideo;
+		columnName: "deleted_by_id";
+		relationName: "deletedBy";
+		nullable: true;
+	};
+}>;
+// endregion
+
+// region CourseClassChapterCue management
+export type UserToCourseClassChapterCue_created = OneToManyRelation<{
+	from: {
+		entity: () => User;
+		primaryColumn: User_id;
+		relationName: "createdCourseClassChapterCues";
+	};
+	to: {
+		entity: () => CourseClassChapterCue;
+		columnName: "created_by_id";
+		relationName: "createdBy";
+		nullable: true;
+	};
+}>;
+
+export type UserToCourseClassChapterCue_updated = OneToManyRelation<{
+	from: {
+		entity: () => User;
+		primaryColumn: User_id;
+		relationName: "updatedCourseClassChapterCues";
+	};
+	to: {
+		entity: () => CourseClassChapterCue;
+		columnName: "updated_by_id";
+		relationName: "updatedBy";
+		nullable: true;
+	};
+}>;
+
+export type UserToCourseClassChapterCue_deleted = OneToManyRelation<{
+	from: {
+		entity: () => User;
+		primaryColumn: User_id;
+		relationName: "deletedCourseClassChapterCues";
+	};
+	to: {
+		entity: () => CourseClassChapterCue;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
