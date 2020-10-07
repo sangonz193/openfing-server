@@ -142,9 +142,11 @@ const command: CommandModule<{}, {}> = {
 								.catch(reject);
 						});
 					});
-					await connection.query(
-						`SELECT setval(pg_get_serial_sequence('${repository.metadata.schema}.${repository.metadata.tableName}', 'id'), max(id)) FROM ${repository.metadata.schema}.${repository.metadata.tableName}; `
-					);
+
+					if (entityToCopy.options.columns.id?.type !== "uuid")
+						await connection.query(
+							`SELECT setval(pg_get_serial_sequence('${repository.metadata.schema}.${repository.metadata.tableName}', 'id'), max(id)) FROM ${repository.metadata.schema}.${repository.metadata.tableName}; `
+						);
 				} catch (e) {
 					console.log(e);
 					process.exit(1);
