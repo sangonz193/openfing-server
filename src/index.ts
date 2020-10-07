@@ -1,8 +1,8 @@
-import "./_utils/configEnv";
 import "core-js/stable";
 import "moment-timezone";
 import "reflect-metadata";
 import "regenerator-runtime/runtime";
+import "./_utils/configEnv";
 
 import { formatError } from "apollo-errors";
 import type { ContextFunction } from "apollo-server-core";

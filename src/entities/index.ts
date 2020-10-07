@@ -1,5 +1,6 @@
 import { Course } from "./Course";
 import { CourseClass } from "./CourseClass";
+import { CourseClassChapterCue } from "./CourseClassChapterCue";
 import { CourseClassList } from "./CourseClassList";
 import { CourseClassVideo } from "./CourseClassVideo";
 import { CourseClassVideoFormat } from "./CourseClassVideoFormat";
@@ -11,15 +12,16 @@ import { UserRole } from "./UserRole";
 import { UserToUserRole } from "./UserToUserRole";
 
 export const entities = [
-	User,
 	Course,
-	CourseEdition,
-	CourseClassList,
 	CourseClass,
+	CourseClassChapterCue,
+	CourseClassList,
 	CourseClassVideo,
-	CourseClassVideoQuality,
 	CourseClassVideoFormat,
+	CourseClassVideoQuality,
+	CourseEdition,
 	Faq,
+	User,
 	UserRole,
 	UserToUserRole,
 ];
