@@ -5,7 +5,7 @@ import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import { CourseClass, courseClassColumns, CourseClassVisibility } from "../../entities/CourseClass";
 import { CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
-import { CourseClassFindAllOptions, CourseClassRepository } from "./CourseClass.repository.types";
+import { CourseClassFindAllOptions, CourseClassRepository } from "./CourseClassChapterCue.repository.types";
 
 export const getCourseClassRepository = (connection: Connection): CourseClassRepository => {
 	const repo = getTypedRepository(CourseClass, connection);
