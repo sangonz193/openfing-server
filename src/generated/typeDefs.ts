@@ -11,6 +11,7 @@ import CourseEditionDoc from "../schemas/CourseEdition.schema";
 import FaqDoc from "../schemas/Faq.schema";
 import backupDbDoc from "../schemas/Mutation/backupDb.schema";
 import createCourseDoc from "../schemas/Mutation/createCourse.schema";
+import updateCourseClassVideosDoc from "../schemas/Mutation/updateCourseClassVideos.schema";
 import courseByCodeDoc from "../schemas/Query/courseByCode.schema";
 import courseByIdDoc from "../schemas/Query/courseById.schema";
 import courseClassByIdDoc from "../schemas/Query/courseClassById.schema";
@@ -21,23 +22,24 @@ import coursesDoc from "../schemas/Query/courses.schema";
 import faqsDoc from "../schemas/Query/faqs.schema";
 import latestCourseClassesDoc from "../schemas/Query/latestCourseClasses.schema";
 import QueryDoc from "../schemas/Query/Query.schema";
-import updateCourseClassVideosDoc from "../schemas/Query/updateCourseClassVideos.schema";
 import userRolesDoc from "../schemas/Query/userRoles.schema";
 import UserDoc from "../schemas/User.schema";
 import UserRoleDoc from "../schemas/UserRole.schema";
 
 export const typeDefs: DocumentNode[] = [
 	BaseDoc,
-	CourseDoc,
 	CourseClassDoc,
 	CourseClassListDoc,
 	CourseClassVideoDoc,
 	CourseClassVideoFormatDoc,
 	CourseClassVideoQualityDoc,
+	CourseDoc,
 	CourseEditionDoc,
 	FaqDoc,
+	QueryDoc,
+	UserDoc,
+	UserRoleDoc,
 	backupDbDoc,
-	createCourseDoc,
 	courseByCodeDoc,
 	courseByIdDoc,
 	courseClassByIdDoc,
@@ -45,11 +47,9 @@ export const typeDefs: DocumentNode[] = [
 	courseClassListByIdDoc,
 	courseEditionByIdDoc,
 	coursesDoc,
+	createCourseDoc,
 	faqsDoc,
 	latestCourseClassesDoc,
-	QueryDoc,
 	updateCourseClassVideosDoc,
 	userRolesDoc,
-	UserDoc,
-	UserRoleDoc,
 ];

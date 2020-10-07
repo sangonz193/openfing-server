@@ -4,11 +4,14 @@ import { Connection } from "typeorm";
 import { hasProperty } from "../_utils/hasProperty";
 import { CourseRow } from "../entities/Course/Course.entity.types";
 import { getCourseRepository } from "../repositories/Course";
-import { CourseFindOneOptions } from "../repositories/Course/Course.repository.types";
+import { CourseFindOneOptions, CourseRepository } from "../repositories/Course/Course.repository.types";
 
 export type CourseDataLoader = {
 	findOne: (options: CourseFindOneOptions) => Promise<CourseRow | null>;
 	findAll: () => Promise<CourseRow[]>;
+
+	create: CourseRepository["create"];
+	save: CourseRepository["save"];
 };
 
 export const getCourseDataLoader = (connection: Connection): CourseDataLoader => {
@@ -44,6 +47,17 @@ export const getCourseDataLoader = (connection: Connection): CourseDataLoader =>
 			});
 
 			return courses;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newCourse = await repo.save(data);
+
+			courseById.set(newCourse.id, newCourse);
+			courseByCode.set(newCourse.code, newCourse);
+
+			return newCourse;
 		},
 	};
 };

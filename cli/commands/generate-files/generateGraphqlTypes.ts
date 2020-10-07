@@ -50,6 +50,7 @@ export const generateGraphqlTypes = async (options: GenerateGraphqlOptions): Pro
 					{
 						typescript: {
 							nonOptionalTypename: true,
+							enumsAsTypes: true,
 						},
 					},
 					{
