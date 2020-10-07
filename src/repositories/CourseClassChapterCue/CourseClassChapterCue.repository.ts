@@ -5,10 +5,7 @@ import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import { CourseClassChapterCue, courseClassChapterCueColumns } from "../../entities/CourseClassChapterCue";
 import { CourseClassChapterCueRow } from "../../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
-import {
-	CourseClassChapterCueFindAllOptions,
-	CourseClassChapterCueRepository,
-} from "./CourseClassChapterCue.repository.types";
+import { CourseClassChapterCueRepository } from "./CourseClassChapterCue.repository.types";
 
 export const getCourseClassChapterCueRepository = (connection: Connection): CourseClassChapterCueRepository => {
 	const repo = getTypedRepository(CourseClassChapterCue, connection);
@@ -17,27 +14,25 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 		return courseClassChapterCue.id === options.id && courseClassChapterCue.deletedAt === null;
 	};
 
-	const findAllFromCourseClassChapterCueList = (options: CourseClassChapterCueFindAllOptions) => {
-		const queryBuilder = repo.createQueryBuilder("cccc");
-
-		queryBuilder
-			.andWhere(
-				`cccc.${courseClassChapterCueColumns.courseClassId.name} = :courseClassId`,
-				identity<{ courseClassId: CourseClassChapterCueRow["courseClassId"] }>({
-					courseClassId: options.courseClassId,
-				})
-			)
-			.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`);
-
-		queryBuilder.orderBy(courseClassChapterCueColumns.startSeconds.name, "ASC");
-
-		return queryBuilder.getMany();
-	};
-
 	return {
 		_typedRepository: repo,
 
-		findAll: async (options) => findAllFromCourseClassChapterCueList(options),
+		findAll: async (options) => {
+			const queryBuilder = repo.createQueryBuilder("cccc");
+
+			queryBuilder
+				.andWhere(
+					`cccc.${courseClassChapterCueColumns.courseClassId.name} = :courseClassId`,
+					identity<{ courseClassId: CourseClassChapterCueRow["courseClassId"] }>({
+						courseClassId: options.courseClassId,
+					})
+				)
+				.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`);
+
+			queryBuilder.orderBy(courseClassChapterCueColumns.startSeconds.name, "ASC");
+
+			return queryBuilder.getMany();
+		},
 
 		findBatch: async (options) => {
 			const queryBuilder = repo.createQueryBuilder("cccc");
