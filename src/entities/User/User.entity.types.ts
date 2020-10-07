@@ -266,7 +266,7 @@ export type UserToCourseClassChapterCue_updated = OneToManyRelation<{
 		relationName: "updatedCourseClassChapterCues";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: () => CourseClassChapterCue;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
@@ -280,7 +280,7 @@ export type UserToCourseClassChapterCue_deleted = OneToManyRelation<{
 		relationName: "deletedCourseClassChapterCues";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: () => CourseClassChapterCue;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
