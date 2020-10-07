@@ -8,6 +8,7 @@ export default gql`
 		name: String
 
 		videos: [CourseClassVideo!]!
+		chapterCues: [CourseClassChapterCue!]!
 		courseClassList: CourseClassList
 
 		createdAt: String

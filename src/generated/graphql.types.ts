@@ -5,6 +5,7 @@ import { OptionalUndefinedKeys, SafeOmit } from "../_utils/utilTypes";
 import { Context } from "../Context";
 import { CourseParent } from "../resolvers/Course/Course.parent";
 import { CourseClassParent } from "../resolvers/CourseClass/CourseClass.parent";
+import { CourseClassChapterCueParent } from "../resolvers/CourseClassChapterCue/CourseClassChapterCue.parent";
 import { CourseClassListParent } from "../resolvers/CourseClassList/CourseClassList.parent";
 import { CourseClassVideoParent } from "../resolvers/CourseClassVideo/CourseClassVideo.parent";
 import { CourseClassVideoFormatParent } from "../resolvers/CourseClassVideoFormat/CourseClassVideoFormat.parent";
@@ -87,6 +88,7 @@ export type CourseClass = {
 	number?: Maybe<Scalars["Int"]>;
 	name?: Maybe<Scalars["String"]>;
 	videos: CourseClassVideo[];
+	chapterCues: CourseClassChapterCue[];
 	courseClassList?: Maybe<CourseClassList>;
 	createdAt?: Maybe<Scalars["String"]>;
 	updatedAt?: Maybe<Scalars["String"]>;
@@ -94,6 +96,21 @@ export type CourseClass = {
 	createdBy?: Maybe<User>;
 	updatedBy?: Maybe<User>;
 	deletedBy?: Maybe<User>;
+};
+
+export type CourseClassChapterCue = {
+	__typename: "CourseClassChapterCue";
+	id: Scalars["ID"];
+	name: Scalars["String"];
+	startSeconds: Scalars["Float"];
+	endSeconds: Scalars["Float"];
+	courseClass?: Maybe<CourseClass>;
+	createdAt?: Maybe<Scalars["String"]>;
+	updatedAt?: Maybe<Scalars["String"]>;
+	deletedAt?: Maybe<Scalars["String"]>;
+	createdBy?: Maybe<User>;
+	deletedBy?: Maybe<User>;
+	updatedBy?: Maybe<User>;
 };
 
 export type CourseClassList = {
@@ -357,6 +374,8 @@ export type ResolversTypes = {
 	Course: ResolverTypeWrapper<CourseParent>;
 	CourseClass: ResolverTypeWrapper<CourseClassParent>;
 	Int: ResolverTypeWrapper<Scalars["Int"]>;
+	CourseClassChapterCue: ResolverTypeWrapper<CourseClassChapterCueParent>;
+	Float: ResolverTypeWrapper<Scalars["Float"]>;
 	CourseClassList: ResolverTypeWrapper<CourseClassListParent>;
 	CourseClassVideo: ResolverTypeWrapper<CourseClassVideoParent>;
 	CourseClassVideoFormat: ResolverTypeWrapper<CourseClassVideoFormatParent>;
@@ -394,6 +413,8 @@ export type ResolversParentTypes = {
 	Course: CourseParent;
 	CourseClass: CourseClassParent;
 	Int: Scalars["Int"];
+	CourseClassChapterCue: CourseClassChapterCueParent;
+	Float: Scalars["Float"];
 	CourseClassList: CourseClassListParent;
 	CourseClassVideo: CourseClassVideoParent;
 	CourseClassVideoFormat: CourseClassVideoFormatParent;
@@ -498,6 +519,7 @@ export type CourseClassResolvers<
 	number: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
 	name: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	videos: Resolver<Array<ResolversTypes["CourseClassVideo"]>, ParentType, ContextType>;
+	chapterCues: Resolver<Array<ResolversTypes["CourseClassChapterCue"]>, ParentType, ContextType>;
 	courseClassList: Resolver<Maybe<ResolversTypes["CourseClassList"]>, ParentType, ContextType>;
 	createdAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	updatedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
@@ -505,6 +527,24 @@ export type CourseClassResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type CourseClassChapterCueResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["CourseClassChapterCue"] = ResolversParentTypes["CourseClassChapterCue"]
+> = {
+	id: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+	name: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+	startSeconds: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+	endSeconds: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+	courseClass: Resolver<Maybe<ResolversTypes["CourseClass"]>, ParentType, ContextType>;
+	createdAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+	updatedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+	deletedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -755,6 +795,7 @@ export type _Resolvers<ContextType = Context> = {
 	AuthenticationError: AuthenticationErrorResolvers<ContextType>;
 	Course: CourseResolvers<ContextType>;
 	CourseClass: CourseClassResolvers<ContextType>;
+	CourseClassChapterCue: CourseClassChapterCueResolvers<ContextType>;
 	CourseClassList: CourseClassListResolvers<ContextType>;
 	CourseClassVideo: CourseClassVideoResolvers<ContextType>;
 	CourseClassVideoFormat: CourseClassVideoFormatResolvers<ContextType>;
@@ -795,6 +836,7 @@ export type ResolversByParent<TResolvers, TParent> = OptionalUndefinedKeys<
 export type CustomResolvers = {
 	Course: ResolversByParent<_Resolvers["Course"], CourseParent>;
 	CourseClass: ResolversByParent<_Resolvers["CourseClass"], CourseClassParent>;
+	CourseClassChapterCue: ResolversByParent<_Resolvers["CourseClassChapterCue"], CourseClassChapterCueParent>;
 	CourseClassList: ResolversByParent<_Resolvers["CourseClassList"], CourseClassListParent>;
 	CourseClassVideo: ResolversByParent<_Resolvers["CourseClassVideo"], CourseClassVideoParent>;
 	CourseClassVideoFormat: ResolversByParent<_Resolvers["CourseClassVideoFormat"], CourseClassVideoFormatParent>;

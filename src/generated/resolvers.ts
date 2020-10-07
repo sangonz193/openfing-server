@@ -4,12 +4,17 @@ import Course_editionsResolver from "../resolvers/Course/editions.resolver";
 import Course_iconUrlResolver from "../resolvers/Course/iconUrl.resolver";
 import Course_idResolver from "../resolvers/Course/id.resolver";
 import Course_updatedByResolver from "../resolvers/Course/updatedBy.resolver";
+import CourseClass_chapterCuesResolver from "../resolvers/CourseClass/chapterCues.resolver";
 import CourseClass_courseClassListResolver from "../resolvers/CourseClass/courseClassList.resolver";
 import CourseClass_createdByResolver from "../resolvers/CourseClass/createdBy.resolver";
 import CourseClass_deletedByResolver from "../resolvers/CourseClass/deletedBy.resolver";
 import CourseClass_idResolver from "../resolvers/CourseClass/id.resolver";
 import CourseClass_updatedByResolver from "../resolvers/CourseClass/updatedBy.resolver";
 import CourseClass_videosResolver from "../resolvers/CourseClass/videos.resolver";
+import CourseClassChapterCue_courseClassResolver from "../resolvers/CourseClassChapterCue/courseClass.resolver";
+import CourseClassChapterCue_createdByResolver from "../resolvers/CourseClassChapterCue/createdBy.resolver";
+import CourseClassChapterCue_deletedByResolver from "../resolvers/CourseClassChapterCue/deletedBy.resolver";
+import CourseClassChapterCue_updatedByResolver from "../resolvers/CourseClassChapterCue/updatedBy.resolver";
 import CourseClassList_classesResolver from "../resolvers/CourseClassList/classes.resolver";
 import CourseClassList_courseEditionResolver from "../resolvers/CourseClassList/courseEdition.resolver";
 import CourseClassList_createdByResolver from "../resolvers/CourseClassList/createdBy.resolver";
@@ -85,6 +90,7 @@ export const resolvers: Resolvers = {
 		__resolveType,
 	},
 	CourseClass: {
+		chapterCues: CourseClass_chapterCuesResolver,
 		courseClassList: CourseClass_courseClassListResolver,
 		createdBy: CourseClass_createdByResolver,
 		deletedBy: CourseClass_deletedByResolver,
@@ -94,6 +100,12 @@ export const resolvers: Resolvers = {
 	},
 	CourseClassByIdResult: {
 		__resolveType,
+	},
+	CourseClassChapterCue: {
+		courseClass: CourseClassChapterCue_courseClassResolver,
+		createdBy: CourseClassChapterCue_createdByResolver,
+		deletedBy: CourseClassChapterCue_deletedByResolver,
+		updatedBy: CourseClassChapterCue_updatedByResolver,
 	},
 	CourseClassList: {
 		classes: CourseClassList_classesResolver,

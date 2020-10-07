@@ -2,6 +2,10 @@ import { Connection } from "typeorm";
 
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
+import {
+	CourseClassChapterCueDataLoader,
+	getCourseClassChapterCueDataLoader,
+} from "./CourseClassChapterCue.dataLoader";
 import { CourseClassListDataLoader, getCourseClassListDataLoader } from "./CourseClassList.dataLoader";
 import { CourseClassVideoDataLoader, getCourseClassVideoDataLoader } from "./CourseClassVideo.dataLoader";
 import {
@@ -20,6 +24,7 @@ import { getUserRoleDataLoader, UserRoleDataLoader } from "./UserRole.dataLoader
 export type DataLoaders = {
 	course: CourseDataLoader;
 	courseClass: CourseClassDataLoader;
+	courseClassChapterCue: CourseClassChapterCueDataLoader;
 	courseClassVideo: CourseClassVideoDataLoader;
 	courseClassVideoFormat: CourseClassVideoFormatDataLoader;
 	courseClassVideoQuality: CourseClassVideoQualityDataLoader;
@@ -33,6 +38,7 @@ export type DataLoaders = {
 export const getDataLoaders = (connection: Connection) => ({
 	course: getCourseDataLoader(connection),
 	courseClass: getCourseClassDataLoader(connection),
+	courseClassChapterCue: getCourseClassChapterCueDataLoader(connection),
 	courseClassVideo: getCourseClassVideoDataLoader(connection),
 	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(connection),
 	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(connection),

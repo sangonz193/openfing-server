@@ -16,7 +16,7 @@ export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
 	name: {
 		name: "name",
 		type: "varchar",
-		nullable: true,
+		nullable: false,
 	},
 	startSeconds: {
 		name: "start_seconds",
