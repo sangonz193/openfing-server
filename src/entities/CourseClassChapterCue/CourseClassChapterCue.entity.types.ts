@@ -7,7 +7,7 @@ import {
 } from "../User/User.entity.types";
 
 export type CourseClassChapterCue_id = PrimaryColumn<{ name: "id"; type: "uuid"; entity: CourseClassChapterCue }>;
-export type CourseClassChapterCue_name = Column<{ name: "name"; type: "varchar" }>;
+export type CourseClassChapterCue_name = Column<{ name: "name"; type: "varchar"; nullable: false }>;
 export type CourseClassChapterCue_startSeconds = Column<{ name: "start_seconds"; type: "decimal"; nullable: false }>;
 export type CourseClassChapterCue_endSeconds = Column<{ name: "end_seconds"; type: "decimal"; nullable: false }>;
 export type CourseClassChapterCue_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
