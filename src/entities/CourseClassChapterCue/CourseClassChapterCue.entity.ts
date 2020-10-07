@@ -1,12 +1,10 @@
-import { commonManagedAtColumns, commonManagedByColumns, commonVisibility } from "../_utils/common";
+import { commonManagedAtColumns, commonManagedByColumns } from "../_utils/common";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import {
 	CourseClassChapterCue as CourseClassChapterCueType,
 	CourseClassChapterCueColumns,
 	CourseClassChapterCueRelations,
 } from "./CourseClassChapterCue.entity.types";
-
-export const CourseClassChapterCueVisibility = { ...commonVisibility };
 
 export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
 	id: {
