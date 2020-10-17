@@ -12,6 +12,7 @@ import CourseEditionDoc from "../schemas/CourseEdition.schema";
 import FaqDoc from "../schemas/Faq.schema";
 import backupDbDoc from "../schemas/Mutation/backupDb.schema";
 import createCourseDoc from "../schemas/Mutation/createCourse.schema";
+import createCourseClassListDoc from "../schemas/Mutation/createCourseClassList.schema";
 import updateCourseClassVideosDoc from "../schemas/Mutation/updateCourseClassVideos.schema";
 import courseByCodeDoc from "../schemas/Query/courseByCode.schema";
 import courseByIdDoc from "../schemas/Query/courseById.schema";
@@ -49,6 +50,7 @@ export const typeDefs: DocumentNode[] = [
 	courseClassListByIdDoc,
 	courseEditionByIdDoc,
 	coursesDoc,
+	createCourseClassListDoc,
 	createCourseDoc,
 	faqsDoc,
 	latestCourseClassesDoc,

@@ -6,11 +6,15 @@ import { getCourseEditionRepository } from "../repositories/CourseEdition";
 import {
 	CourseEditionFindAllOptions,
 	CourseEditionFindOneOptions,
+	CourseEditionRepository,
 } from "../repositories/CourseEdition/CourseEdition.repository.types";
 
 export type CourseEditionDataLoader = {
 	findOne: (options: CourseEditionFindOneOptions) => Promise<CourseEditionRow | null>;
 	findAll: (options: CourseEditionFindAllOptions) => Promise<CourseEditionRow[]>;
+
+	create: CourseEditionRepository["create"];
+	save: CourseEditionRepository["save"];
 };
 
 export const getCourseEditionDataLoader = (connection: Connection): CourseEditionDataLoader => {
@@ -36,6 +40,16 @@ export const getCourseEditionDataLoader = (connection: Connection): CourseEditio
 			});
 
 			return courseEditions;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newCourseEdition = await repo.save(data);
+
+			courseEditionById.set(newCourseEdition.id, newCourseEdition);
+
+			return newCourseEdition;
 		},
 	};
 };

@@ -46,6 +46,7 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 				eva: validatedData.eva || null,
 				iconUrl,
 				name: validatedData.name,
+				// TODO: type visibility!
 				visibility: identity<Record<Extract<CreateCourseInputVisibility, string>, string>>({
 					DISABLED: CourseVisibility.disabled,
 					HIDDEN: CourseVisibility.hidden,

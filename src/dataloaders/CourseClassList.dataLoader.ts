@@ -7,11 +7,15 @@ import { getCourseClassListRepository } from "../repositories/CourseClassList";
 import {
 	CourseClassListFindAllOptions,
 	CourseClassListFindOneOptions,
+	CourseClassListRepository,
 } from "../repositories/CourseClassList/CourseClassList.repository.types";
 
 export type CourseClassListDataLoader = {
 	findOne: (options: CourseClassListFindOneOptions) => Promise<CourseClassListRow | null>;
 	findAll: (options: CourseClassListFindAllOptions) => Promise<CourseClassListRow[]>;
+
+	create: CourseClassListRepository["create"];
+	save: CourseClassListRepository["save"];
 };
 
 export const getCourseClassListDataLoader = (connection: Connection): CourseClassListDataLoader => {
@@ -49,6 +53,17 @@ export const getCourseClassListDataLoader = (connection: Connection): CourseClas
 			});
 
 			return courseClassLists;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newCourseClassList = await repo.save(data);
+
+			courseClassListById.set(newCourseClassList.id, newCourseClassList);
+			courseClassListByCode.set(newCourseClassList.code, newCourseClassList);
+
+			return newCourseClassList;
 		},
 	};
 };
