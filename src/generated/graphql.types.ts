@@ -12,6 +12,7 @@ import { CourseClassVideoFormatParent } from "../resolvers/CourseClassVideoForma
 import { CourseClassVideoQualityParent } from "../resolvers/CourseClassVideoQuality/CourseClassVideoQuality.parent";
 import { CourseEditionParent } from "../resolvers/CourseEdition/CourseEdition.parent";
 import { CreateCourseClassListPayloadParent } from "../resolvers/CreateCourseClassListPayload/CreateCourseClassListPayload.parent";
+import { CreateCourseClassPayloadParent } from "../resolvers/CreateCourseClassPayload/CreateCourseClassPayload.parent";
 import { CreateCoursePayloadParent } from "../resolvers/CreateCoursePayload/CreateCoursePayload.parent";
 import { FaqParent } from "../resolvers/Faq/Faq.parent";
 import { UserParent } from "../resolvers/User/User.parent";
@@ -35,6 +36,7 @@ export type Mutation = {
 	_?: Maybe<Scalars["Void"]>;
 	backupDb?: Maybe<Scalars["Void"]>;
 	createCourse: CreateCourseResult;
+	createCourseClass: CreateCourseClassResult;
 	createCourseClassList: CreateCourseClassListResult;
 	updateCourseClassVideos?: Maybe<NotFoundError>;
 };
@@ -45,6 +47,11 @@ export type MutationBackupDbArgs = {
 
 export type MutationCreateCourseArgs = {
 	input: CreateCourseInput;
+	secret: Scalars["String"];
+};
+
+export type MutationCreateCourseClassArgs = {
+	input: CreateCourseClassInput;
 	secret: Scalars["String"];
 };
 
@@ -224,6 +231,22 @@ export type CreateCoursePayload = {
 };
 
 export type CreateCourseResult = CreateCoursePayload | GenericError | AuthenticationError;
+
+export type CreateCourseClassInputVisibility = "PUBLIC" | "HIDDEN" | "DISABLED";
+
+export type CreateCourseClassInput = {
+	courseClassListId: Scalars["ID"];
+	name: Scalars["String"];
+	number: Scalars["Int"];
+	visibility?: Maybe<CreateCourseClassInputVisibility>;
+};
+
+export type CreateCourseClassPayload = {
+	__typename: "CreateCourseClassPayload";
+	courseClass: CourseClass;
+};
+
+export type CreateCourseClassResult = CreateCourseClassPayload | GenericError | AuthenticationError;
 
 export type CreateCourseClassListInputVisibility = "PUBLIC" | "HIDDEN" | "DISABLED";
 
@@ -415,6 +438,13 @@ export type ResolversTypes = {
 		| ResolversTypes["CreateCoursePayload"]
 		| ResolversTypes["GenericError"]
 		| ResolversTypes["AuthenticationError"];
+	CreateCourseClassInputVisibility: CreateCourseClassInputVisibility;
+	CreateCourseClassInput: CreateCourseClassInput;
+	CreateCourseClassPayload: ResolverTypeWrapper<CreateCourseClassPayloadParent>;
+	CreateCourseClassResult:
+		| ResolversTypes["CreateCourseClassPayload"]
+		| ResolversTypes["GenericError"]
+		| ResolversTypes["AuthenticationError"];
 	CreateCourseClassListInputVisibility: CreateCourseClassListInputVisibility;
 	CreateCourseClassListInput: CreateCourseClassListInput;
 	CreateCourseClassListPayload: ResolverTypeWrapper<CreateCourseClassListPayloadParent>;
@@ -460,6 +490,12 @@ export type ResolversParentTypes = {
 		| ResolversParentTypes["CreateCoursePayload"]
 		| ResolversParentTypes["GenericError"]
 		| ResolversParentTypes["AuthenticationError"];
+	CreateCourseClassInput: CreateCourseClassInput;
+	CreateCourseClassPayload: CreateCourseClassPayloadParent;
+	CreateCourseClassResult:
+		| ResolversParentTypes["CreateCourseClassPayload"]
+		| ResolversParentTypes["GenericError"]
+		| ResolversParentTypes["AuthenticationError"];
 	CreateCourseClassListInput: CreateCourseClassListInput;
 	CreateCourseClassListPayload: CreateCourseClassListPayloadParent;
 	CreateCourseClassListResult:
@@ -497,6 +533,12 @@ export type MutationResolvers<
 		ParentType,
 		ContextType,
 		RequireFields<MutationCreateCourseArgs, "input" | "secret">
+	>;
+	createCourseClass: Resolver<
+		ResolversTypes["CreateCourseClassResult"],
+		ParentType,
+		ContextType,
+		RequireFields<MutationCreateCourseClassArgs, "input" | "secret">
 	>;
 	createCourseClassList: Resolver<
 		ResolversTypes["CreateCourseClassListResult"],
@@ -718,6 +760,25 @@ export type CreateCourseResultResolvers<
 	>;
 };
 
+export type CreateCourseClassPayloadResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["CreateCourseClassPayload"] = ResolversParentTypes["CreateCourseClassPayload"]
+> = {
+	courseClass: Resolver<ResolversTypes["CourseClass"], ParentType, ContextType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type CreateCourseClassResultResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["CreateCourseClassResult"] = ResolversParentTypes["CreateCourseClassResult"]
+> = {
+	__resolveType: TypeResolveFn<
+		"CreateCourseClassPayload" | "GenericError" | "AuthenticationError",
+		ParentType,
+		ContextType
+	>;
+};
+
 export type CreateCourseClassListPayloadResolvers<
 	ContextType = Context,
 	ParentType extends ResolversParentTypes["CreateCourseClassListPayload"] = ResolversParentTypes["CreateCourseClassListPayload"]
@@ -867,6 +928,8 @@ export type _Resolvers<ContextType = Context> = {
 	Faq: FaqResolvers<ContextType>;
 	CreateCoursePayload: CreateCoursePayloadResolvers<ContextType>;
 	CreateCourseResult: CreateCourseResultResolvers<ContextType>;
+	CreateCourseClassPayload: CreateCourseClassPayloadResolvers<ContextType>;
+	CreateCourseClassResult: CreateCourseClassResultResolvers<ContextType>;
 	CreateCourseClassListPayload: CreateCourseClassListPayloadResolvers<ContextType>;
 	CreateCourseClassListResult: CreateCourseClassListResultResolvers<ContextType>;
 	Query: QueryResolvers<ContextType>;
@@ -911,6 +974,7 @@ export type CustomResolvers = {
 		_Resolvers["CreateCourseClassListPayload"],
 		CreateCourseClassListPayloadParent
 	>;
+	CreateCourseClassPayload: ResolversByParent<_Resolvers["CreateCourseClassPayload"], CreateCourseClassPayloadParent>;
 	CreateCoursePayload: ResolversByParent<_Resolvers["CreateCoursePayload"], CreateCoursePayloadParent>;
 	Faq: ResolversByParent<_Resolvers["Faq"], FaqParent>;
 	User: ResolversByParent<_Resolvers["User"], UserParent>;

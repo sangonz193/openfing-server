@@ -6,36 +6,50 @@ import { getCourseClassRepository } from "../repositories/CourseClass";
 import {
 	CourseClassFindAllOptions,
 	CourseClassFindOneOptions,
+	CourseClassRepository,
 } from "../repositories/CourseClass/CourseClass.repository.types";
 
 export type CourseClassDataLoader = {
 	findOne: (options: CourseClassFindOneOptions) => Promise<CourseClassRow | null>;
 	findAll: (options: CourseClassFindAllOptions) => Promise<CourseClassRow[]>;
+
+	create: CourseClassRepository["create"];
+	save: CourseClassRepository["save"];
 };
 
 export const getCourseClassDataLoader = (connection: Connection): CourseClassDataLoader => {
 	const repo = getCourseClassRepository(connection);
 	const loader = new DataLoader<CourseClassFindOneOptions, CourseClassRow | null>(repo.findBatch);
 
-	const courseEditionById = new Map<CourseClassRow["id"], CourseClassRow | null>();
+	const courseClassById = new Map<CourseClassRow["id"], CourseClassRow | null>();
 
 	return {
 		findOne: async (options) => {
-			const courseEdition = await loader.load(options);
+			const courseClass = await loader.load(options);
 
-			courseEditionById.set(options.id, courseEdition);
+			courseClassById.set(options.id, courseClass);
 
-			return courseEdition;
+			return courseClass;
 		},
 
 		findAll: async (options) => {
-			const courseEditions = await repo.findAll(options);
+			const courseClasses = await repo.findAll(options);
 
-			courseEditions.forEach((courseEdition) => {
-				courseEditionById.set(courseEdition.id, courseEdition);
+			courseClasses.forEach((courseClass) => {
+				courseClassById.set(courseClass.id, courseClass);
 			});
 
-			return courseEditions;
+			return courseClasses;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newCourseClass = await repo.save(data);
+
+			courseClassById.set(newCourseClass.id, newCourseClass);
+
+			return newCourseClass;
 		},
 	};
 };
