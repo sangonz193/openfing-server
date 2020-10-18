@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
 import { getGenericError } from "../_utils/getGenericError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
@@ -8,6 +9,7 @@ import { getResolutionFromVideoUrl } from "../../_helpers/getResolutionFromVideo
 import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
 import { identity } from "../../_utils/identity";
 import { identityMap } from "../../_utils/identityMap";
+import { SafeOmit } from "../../_utils/utilTypes";
 import { CourseClassVisibility } from "../../entities/CourseClass";
 import { CourseClassVideoVisibility } from "../../entities/CourseClassVideo";
 import {
@@ -25,8 +27,7 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 	const { dataLoaders } = context;
 
 	const validatedData = await yup
-		.object<MutationCreateCourseClassArgs["input"]>({
-			courseClassListId: yup.string().required(),
+		.object<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>({
 			name: yup.string().trim().max(200).required(),
 			number: yup.number().moreThan(0).lessThan(1000).required(),
 			visibility: yup.string().oneOf<Exclude<MutationCreateCourseClassArgs["input"]["visibility"], null>>(
@@ -42,15 +43,14 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 		.required()
 		.validate(args.input);
 
-	const numberId = Number(validatedData.courseClassListId) || undefined;
-
-	if (!numberId) return getGenericError();
-
-	const courseClassList = await context.dataLoaders.courseClassList.findOne({
-		id: numberId,
-		includeDisabled: true,
-		includeHidden: true,
-	});
+	const courseClassList = await getCourseClassListFromRef(
+		args.input.courseClassListRef,
+		{
+			includeDisabled: true,
+			includeHidden: true,
+		},
+		context
+	);
 
 	if (!courseClassList) return getGenericError();
 

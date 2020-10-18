@@ -112,6 +112,20 @@ export type CourseClass = {
 	deletedBy?: Maybe<User>;
 };
 
+export type CourseClassRefById = {
+	id: Scalars["ID"];
+};
+
+export type CourseClassRefByNumber = {
+	courseClassList: CourseClassListRef;
+	number: Scalars["Int"];
+};
+
+export type CourseClassRef = {
+	byId?: Maybe<CourseClassRefById>;
+	byNumber?: Maybe<CourseClassRefByNumber>;
+};
+
 export type CourseClassChapterCue = {
 	__typename: "CourseClassChapterCue";
 	id: Scalars["ID"];
@@ -140,6 +154,19 @@ export type CourseClassList = {
 	createdBy?: Maybe<User>;
 	updatedBy?: Maybe<User>;
 	deletedBy?: Maybe<User>;
+};
+
+export type CourseClassListRefById = {
+	id: Scalars["ID"];
+};
+
+export type CourseClassListRefByCode = {
+	code: Scalars["String"];
+};
+
+export type CourseClassListRef = {
+	byId?: Maybe<CourseClassListRefById>;
+	byCode?: Maybe<CourseClassListRefByCode>;
 };
 
 export type CourseClassVideo = {
@@ -235,7 +262,7 @@ export type CreateCourseResult = CreateCoursePayload | GenericError | Authentica
 export type CreateCourseClassInputVisibility = "PUBLIC" | "HIDDEN" | "DISABLED";
 
 export type CreateCourseClassInput = {
-	courseClassListId: Scalars["ID"];
+	courseClassListRef: CourseClassListRef;
 	name: Scalars["String"];
 	number: Scalars["Int"];
 	visibility?: Maybe<CreateCourseClassInputVisibility>;
@@ -422,9 +449,15 @@ export type ResolversTypes = {
 	Course: ResolverTypeWrapper<CourseParent>;
 	CourseClass: ResolverTypeWrapper<CourseClassParent>;
 	Int: ResolverTypeWrapper<Scalars["Int"]>;
+	CourseClassRefById: CourseClassRefById;
+	CourseClassRefByNumber: CourseClassRefByNumber;
+	CourseClassRef: CourseClassRef;
 	CourseClassChapterCue: ResolverTypeWrapper<CourseClassChapterCueParent>;
 	Float: ResolverTypeWrapper<Scalars["Float"]>;
 	CourseClassList: ResolverTypeWrapper<CourseClassListParent>;
+	CourseClassListRefById: CourseClassListRefById;
+	CourseClassListRefByCode: CourseClassListRefByCode;
+	CourseClassListRef: CourseClassListRef;
 	CourseClassVideo: ResolverTypeWrapper<CourseClassVideoParent>;
 	CourseClassVideoFormat: ResolverTypeWrapper<CourseClassVideoFormatParent>;
 	Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
@@ -475,9 +508,15 @@ export type ResolversParentTypes = {
 	Course: CourseParent;
 	CourseClass: CourseClassParent;
 	Int: Scalars["Int"];
+	CourseClassRefById: CourseClassRefById;
+	CourseClassRefByNumber: CourseClassRefByNumber;
+	CourseClassRef: CourseClassRef;
 	CourseClassChapterCue: CourseClassChapterCueParent;
 	Float: Scalars["Float"];
 	CourseClassList: CourseClassListParent;
+	CourseClassListRefById: CourseClassListRefById;
+	CourseClassListRefByCode: CourseClassListRefByCode;
+	CourseClassListRef: CourseClassListRef;
 	CourseClassVideo: CourseClassVideoParent;
 	CourseClassVideoFormat: CourseClassVideoFormatParent;
 	Boolean: Scalars["Boolean"];

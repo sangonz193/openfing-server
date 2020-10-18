@@ -12,7 +12,7 @@ export default gql`
 	}
 
 	input CreateCourseClassInput {
-		courseClassListId: ID!
+		courseClassListRef: CourseClassListRef!
 		name: String!
 		number: Int!
 		visibility: CreateCourseClassInputVisibility

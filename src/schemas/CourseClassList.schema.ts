@@ -18,4 +18,17 @@ export default gql`
 		updatedBy: User
 		deletedBy: User
 	}
+
+	input CourseClassListRefById {
+		id: ID!
+	}
+
+	input CourseClassListRefByCode {
+		code: String!
+	}
+
+	input CourseClassListRef {
+		byId: CourseClassListRefById
+		byCode: CourseClassListRefByCode
+	}
 `;
