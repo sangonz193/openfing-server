@@ -6,11 +6,15 @@ import { getCourseClassVideoRepository } from "../repositories/CourseClassVideo"
 import {
 	CourseClassVideoFindAllOptions,
 	CourseClassVideoFindOneOptions,
+	CourseClassVideoRepository,
 } from "../repositories/CourseClassVideo/CourseClassVideo.repository.types";
 
 export type CourseClassVideoDataLoader = {
 	findOne: (options: CourseClassVideoFindOneOptions) => Promise<CourseClassVideoRow | null>;
 	findAll: (options: CourseClassVideoFindAllOptions) => Promise<CourseClassVideoRow[]>;
+
+	create: CourseClassVideoRepository["create"];
+	save: CourseClassVideoRepository["save"];
 };
 
 export const getCourseClassVideoDataLoader = (connection: Connection): CourseClassVideoDataLoader => {
@@ -39,6 +43,16 @@ export const getCourseClassVideoDataLoader = (connection: Connection): CourseCla
 			});
 
 			return courseClassVideos;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newVideo = await repo.save(data);
+
+			courseClassVideoById.set(newVideo.id, newVideo);
+
+			return newVideo;
 		},
 	};
 };

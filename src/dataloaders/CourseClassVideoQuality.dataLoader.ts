@@ -6,11 +6,15 @@ import { getCourseClassVideoQualityRepository } from "../repositories/CourseClas
 import {
 	CourseClassVideoQualityFindAllOptions,
 	CourseClassVideoQualityFindOneOptions,
+	CourseClassVideoQualityRepository,
 } from "../repositories/CourseClassVideoQuality/CourseClassVideoQuality.repository.types";
 
 export type CourseClassVideoQualityDataLoader = {
 	findOne: (options: CourseClassVideoQualityFindOneOptions) => Promise<CourseClassVideoQualityRow | null>;
 	findAll: (options: CourseClassVideoQualityFindAllOptions) => Promise<CourseClassVideoQualityRow[]>;
+
+	create: CourseClassVideoQualityRepository["create"];
+	save: CourseClassVideoQualityRepository["save"];
 };
 
 export const getCourseClassVideoQualityDataLoader = (connection: Connection): CourseClassVideoQualityDataLoader => {
@@ -34,13 +38,23 @@ export const getCourseClassVideoQualityDataLoader = (connection: Connection): Co
 		},
 
 		findAll: async (options) => {
-			const courseClassVideoQualitys = await repo.findAll(options);
+			const courseClassVideoQualities = await repo.findAll(options);
 
-			courseClassVideoQualitys.forEach((courseClassVideoQuality) => {
+			courseClassVideoQualities.forEach((courseClassVideoQuality) => {
 				courseClassVideoQualityById.set(courseClassVideoQuality.id, courseClassVideoQuality);
 			});
 
-			return courseClassVideoQualitys;
+			return courseClassVideoQualities;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newQuality = await repo.save(data);
+
+			courseClassVideoQualityById.set(newQuality.id, newQuality);
+
+			return newQuality;
 		},
 	};
 };

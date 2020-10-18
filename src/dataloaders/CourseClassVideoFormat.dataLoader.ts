@@ -7,6 +7,7 @@ import { getCourseClassVideoFormatRepository } from "../repositories/CourseClass
 import {
 	CourseClassVideoFormatFindAllOptions,
 	CourseClassVideoFormatFindOneOptions,
+	CourseClassVideoFormatRepository,
 } from "../repositories/CourseClassVideoFormat/CourseClassVideoFormat.repository.types";
 
 export type CourseClassVideoFormatDataLoader = {
@@ -14,6 +15,9 @@ export type CourseClassVideoFormatDataLoader = {
 	findAll: (options: CourseClassVideoFormatFindAllOptions) => Promise<CourseClassVideoFormatRow[]>;
 
 	hasTorrent: (options: { url: string }) => Promise<boolean>;
+
+	create: CourseClassVideoFormatRepository["create"];
+	save: CourseClassVideoFormatRepository["save"];
 };
 
 export const getCourseClassVideoFormatDataLoader = (connection: Connection): CourseClassVideoFormatDataLoader => {
@@ -58,6 +62,16 @@ export const getCourseClassVideoFormatDataLoader = (connection: Connection): Cou
 			hasTorrentByUrl.set(url, result);
 
 			return result;
+		},
+
+		create: (...args) => repo.create(...args),
+
+		save: async (data) => {
+			const newFormat = await repo.save(data);
+
+			courseClassVideoFormatById.set(newFormat.id, newFormat);
+
+			return newFormat;
 		},
 	};
 };
