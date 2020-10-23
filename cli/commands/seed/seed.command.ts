@@ -34,7 +34,7 @@ const command: CommandModule<{}, {}> = {
 
 		await connection.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
 		await connection.query(`CREATE SCHEMA "${schema}"`);
-		await connection.synchronize();
+		await connection.runMigrations();
 
 		const adminUserRole = await getUserRoleRepository(connection).save({
 			code: UserRoleCode.admin,

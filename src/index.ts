@@ -21,6 +21,14 @@ import { typeDefs } from "./generated/typeDefs";
 
 (async () => {
 	const connection = await createConnection(appConfig.dbConnectionOptions);
+
+	const { schema } = appConfig.dbConnectionOptions;
+	const schemaExists =
+		(await connection.query(`SELECT schema_name FROM information_schema.schemata WHERE schema_name = '${schema}';`))
+			.length > 0;
+
+	if (!schemaExists) await connection.query(`CREATE SCHEMA ${appConfig.dbConnectionOptions.schema}`);
+
 	await connection.runMigrations();
 
 	const expressApp = express();
@@ -53,7 +61,7 @@ import { typeDefs } from "./generated/typeDefs";
 		context,
 	});
 
-	apolloServer.applyMiddleware({ app: expressApp, path: `/v1/graphql` });
+	apolloServer.applyMiddleware({ app: expressApp, path: appConfig.GRAPHQL_PATH });
 
 	expressApp
 		.listen(

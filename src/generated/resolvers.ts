@@ -50,6 +50,7 @@ import Faq_deletedByResolver from "../resolvers/Faq/deletedBy.resolver";
 import Faq_updatedByResolver from "../resolvers/Faq/updatedBy.resolver";
 import Mutation_backupDbResolver from "../resolvers/Mutation/backupDb.resolver";
 import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.resolver";
+import Mutation_resetDatabaseFromBackupResolver from "../resolvers/Mutation/resetDatabaseFromBackup.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
 import Query_courseByCodeResolver from "../resolvers/Query/courseByCode.resolver";
 import Query_courseByIdResolver from "../resolvers/Query/courseById.resolver";
@@ -172,6 +173,7 @@ export const resolvers: Resolvers = {
 		_,
 		backupDb: Mutation_backupDbResolver,
 		createCourse: Mutation_createCourseResolver,
+		resetDatabaseFromBackup: Mutation_resetDatabaseFromBackupResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
 	},
 	NotFoundError: {
