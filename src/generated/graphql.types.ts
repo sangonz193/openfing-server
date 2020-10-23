@@ -34,6 +34,7 @@ export type Mutation = {
 	_?: Maybe<Scalars["Void"]>;
 	backupDb?: Maybe<Scalars["Void"]>;
 	createCourse: CreateCourseResult;
+	resetDatabaseFromBackup?: Maybe<Scalars["String"]>;
 	updateCourseClassVideos?: Maybe<NotFoundError>;
 };
 
@@ -43,6 +44,10 @@ export type MutationBackupDbArgs = {
 
 export type MutationCreateCourseArgs = {
 	input: CreateCourseInput;
+	secret: Scalars["String"];
+};
+
+export type MutationResetDatabaseFromBackupArgs = {
 	secret: Scalars["String"];
 };
 
@@ -459,6 +464,12 @@ export type MutationResolvers<
 		ParentType,
 		ContextType,
 		RequireFields<MutationCreateCourseArgs, "input" | "secret">
+	>;
+	resetDatabaseFromBackup: Resolver<
+		Maybe<ResolversTypes["String"]>,
+		ParentType,
+		ContextType,
+		RequireFields<MutationResetDatabaseFromBackupArgs, "secret">
 	>;
 	updateCourseClassVideos: Resolver<
 		Maybe<ResolversTypes["NotFoundError"]>,
