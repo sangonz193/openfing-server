@@ -18,12 +18,7 @@ const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, arg
 	const { DATABASE_BACKUP_REPO_PATH } = appConfig;
 	if (!DATABASE_BACKUP_REPO_PATH) return "skipping reset; no repo path defined";
 
-	const tableNames = entities
-		.map((entity) => {
-			return ormConnection.getRepository(entity).metadata.tableName;
-		})
-		.filter(Boolean);
-	if (tableNames.length !== entities.length) return "tableNames.length !== entities.length";
+	const tableNames = entities.map((entity) => ormConnection.getRepository(entity).metadata.tableName);
 
 	const pool = new Pool({
 		database: dbConnectionOptions.database,
