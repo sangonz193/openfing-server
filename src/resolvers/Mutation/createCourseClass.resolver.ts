@@ -24,7 +24,7 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	if (!user) return getAuthenticationError();
 
-	const { dataLoaders } = context;
+	const { dataLoaders, repositories } = context;
 
 	const validatedData = await yup
 		.object<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>({
@@ -54,7 +54,7 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	if (!courseClassList) return getGenericError();
 
-	const courseClasses = await dataLoaders.courseClass.findAll({
+	const courseClasses = await repositories.courseClass.findAll({
 		courseClassListId: courseClassList.id,
 		includeDisabled: true,
 		includeHidden: true,
@@ -63,8 +63,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 	const courseClassWithSameNumber = courseClasses.find((courseClass) => courseClass.number === validatedData.number);
 
 	if (!courseClassWithSameNumber) {
-		const courseClass = await dataLoaders.courseClass.save(
-			dataLoaders.courseClass.create({
+		const courseClass = await repositories.courseClass.insert(
+			repositories.courseClass.create({
 				createdById: user.id,
 				courseClassListId: courseClassList.id,
 				name: validatedData.name,
@@ -76,6 +76,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 				number: validatedData.number,
 			})
 		);
+		// TODO: necessary?
+		dataLoaders.courseClass.clearAll();
 
 		await backupDb(context.ormConnection);
 
@@ -114,8 +116,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 		);
 
 		if (videoResolutions.length > 0) {
-			const courseClassVideo = await context.dataLoaders.courseClassVideo.save(
-				context.dataLoaders.courseClassVideo.create({
+			const courseClassVideo = await repositories.courseClassVideo.save(
+				repositories.courseClassVideo.create({
 					courseClassId: courseClass.id,
 					createdById: user.id,
 					name: "Clase",
@@ -123,27 +125,34 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 					visibility: CourseClassVideoVisibility.public,
 				})
 			);
-			const courseClassVideoQuality = await context.dataLoaders.courseClassVideoQuality.save(
-				context.dataLoaders.courseClassVideoQuality.create({
+			// TODO: necessary?
+			dataLoaders.courseClassVideo.clearAll();
+
+			const courseClassVideoQuality = await repositories.courseClassVideoQuality.save(
+				repositories.courseClassVideoQuality.create({
 					courseClassVideoId: courseClassVideo.id,
 					createdById: user.id,
 					height: null,
 					width: null,
 				})
 			);
+			// TODO: necessary?
+			dataLoaders.courseClassVideoQuality.clearAll();
 
 			await Promise.all(
 				videoResolutions.map(async (videoResolution) => {
 					await Promise.all(
 						videoResolution.formats.map(async (videoFormat) => {
-							await context.dataLoaders.courseClassVideoFormat.save(
-								context.dataLoaders.courseClassVideoFormat.create({
+							await repositories.courseClassVideoFormat.save(
+								repositories.courseClassVideoFormat.create({
 									courseClassVideoQualityId: courseClassVideoQuality.id,
 									createdById: user.id,
 									name: videoFormat.name,
 									url: videoFormat.url,
 								})
 							);
+							// TODO: necessary?
+							dataLoaders.courseClassVideoFormat.clearAll();
 						})
 					);
 				})

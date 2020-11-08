@@ -3,6 +3,7 @@ import { Connection } from "typeorm";
 
 import { DataLoaders } from "./dataloaders";
 import { UserRow } from "./entities/User/User.entity.types";
+import { Repositories } from "./repositories";
 
 export type Context = {
 	ormConnection: Connection;
@@ -12,4 +13,5 @@ export type Context = {
 	includeHidden?: boolean;
 
 	dataLoaders: DataLoaders;
+	repositories: Repositories;
 };

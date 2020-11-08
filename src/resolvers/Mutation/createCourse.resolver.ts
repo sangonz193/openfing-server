@@ -15,7 +15,7 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 
 	if (!user) return getAuthenticationError();
 
-	const { dataLoaders } = context;
+	const { dataLoaders, repositories } = context;
 
 	const validatedData = await yup
 		.object<MutationCreateCourseArgs["input"]>({
@@ -32,15 +32,15 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 	if (isAxiosError(response) || typeof response.data !== "string" || response.data.includes('<div id="root"></div>'))
 		iconUrl = null;
 
-	let courseWithSameCode = await dataLoaders.course.findOne({
+	let courseWithSameCode = await dataLoaders.course.load({
 		code: validatedData.code,
 		includeDisabled: true,
 		includeHidden: true,
 	});
 
 	if (!courseWithSameCode) {
-		courseWithSameCode = await dataLoaders.course.save(
-			dataLoaders.course.create({
+		courseWithSameCode = await repositories.course.save(
+			repositories.course.create({
 				code: validatedData.code,
 				createdById: user.id,
 				eva: validatedData.eva || null,
@@ -54,6 +54,8 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 				})[validatedData.visibility || "PUBLIC"],
 			})
 		);
+		// TODO: necessary?
+		dataLoaders.course.clearAll();
 
 		return getCreateCoursePayloadParent({
 			course: courseWithSameCode,

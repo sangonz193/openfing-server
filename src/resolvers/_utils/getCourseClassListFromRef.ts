@@ -14,12 +14,12 @@ export const getCourseClassListFromRef = async (
 		const numberId = Number(ref.byId.id);
 
 		if (numberId)
-			return dataLoaders.courseClassList.findOne({
+			return dataLoaders.courseClassList.load({
 				...options,
 				id: numberId,
 			});
 	} else if (ref.byCode)
-		return dataLoaders.courseClassList.findOne({
+		return dataLoaders.courseClassList.load({
 			...options,
 			code: ref.byCode.code,
 		});

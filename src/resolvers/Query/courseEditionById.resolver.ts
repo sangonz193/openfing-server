@@ -6,7 +6,7 @@ const resolver: Resolvers["Query"]["courseEditionById"] = async (_, args, { data
 	const parsedId = Number(args.id);
 
 	if (!isNaN(parsedId)) {
-		const courseEdition = await dataLoaders.courseEdition.findOne({ id: parsedId });
+		const courseEdition = await dataLoaders.courseEdition.load({ id: parsedId });
 
 		if (courseEdition) return getCourseEditionParent(courseEdition);
 	}
