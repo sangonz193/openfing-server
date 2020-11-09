@@ -8,7 +8,7 @@ export const updatedByResolver: ResolverFn<
 	Context,
 	{}
 > = async (parent, _, { dataLoaders }) => {
-	const user = await (parent.updatedById && dataLoaders.user.findOne({ id: parent.updatedById }));
+	const user = await (parent.updatedById && dataLoaders.user.load({ id: parent.updatedById }));
 
 	return user ? getUserParent(user) : null;
 };

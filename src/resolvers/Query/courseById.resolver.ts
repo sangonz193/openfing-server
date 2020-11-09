@@ -7,7 +7,7 @@ const resolver: Resolvers["Query"]["courseById"] = async (_, args, context) => {
 	const id = Number(args.id);
 
 	if (!isNaN(id)) {
-		const course = await dataLoaders.course.findOne({ id, includeHidden: true });
+		const course = await dataLoaders.course.load({ id, includeHidden: true });
 
 		if (course) return getCourseParent(course);
 	}

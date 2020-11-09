@@ -4,7 +4,7 @@ import { getCourseClassVideoParent } from "../CourseClassVideo/CourseClassVideo.
 const resolver: Resolvers["CourseClass"]["videos"] = async (parent, _, context) => {
 	return parent.courseClassListId
 		? (
-				await context.dataLoaders.courseClassVideo.findAll({
+				await context.repositories.courseClassVideo.findAll({
 					courseClassId: parent.id,
 				})
 		  ).map((courseClassVideo) => getCourseClassVideoParent(courseClassVideo))

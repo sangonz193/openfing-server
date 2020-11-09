@@ -4,7 +4,7 @@ import { Context } from "../../Context";
 import { UserRow } from "../../entities/User/User.entity.types";
 
 export const getUserFromSecret = async (secret: string, context: Context): Promise<UserRow | null> => {
-	const user = await context.dataLoaders.user.findOne({ email: "open@fing.edu.uy" });
+	const user = await context.dataLoaders.user.load({ email: "open@fing.edu.uy" });
 
 	if (!user) return null;
 

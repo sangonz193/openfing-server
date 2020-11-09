@@ -18,6 +18,7 @@ import { Context } from "./Context";
 import { getDataLoaders } from "./dataloaders";
 import { resolvers } from "./generated/resolvers";
 import { typeDefs } from "./generated/typeDefs";
+import { getRepositories } from "./repositories";
 
 (async () => {
 	const connection = await createConnection(appConfig.dbConnectionOptions);
@@ -34,18 +35,15 @@ import { typeDefs } from "./generated/typeDefs";
 	const expressApp = express();
 	expressApp.use(cors());
 
-	const context: ContextFunction<ExpressContext, Context> = async ({ req, res }) => {
-		let _dataLoaders: Context["dataLoaders"] | undefined;
+	const repositories = getRepositories(connection);
 
+	const context: ContextFunction<ExpressContext, Context> = async ({ req, res }) => {
 		return {
 			ormConnection: connection,
 			req,
 			res,
-			get dataLoaders(): Context["dataLoaders"] {
-				if (_dataLoaders) return _dataLoaders;
-
-				return (_dataLoaders = getDataLoaders(connection));
-			},
+			dataLoaders: getDataLoaders(repositories),
+			repositories,
 		};
 	};
 
