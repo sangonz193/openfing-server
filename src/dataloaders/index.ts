@@ -1,5 +1,4 @@
-import { Connection } from "typeorm";
-
+import { Repositories } from "../repositories";
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
 import {
@@ -17,9 +16,7 @@ import {
 	getCourseClassVideoQualityDataLoader,
 } from "./CourseClassVideoQuality.dataLoader";
 import { CourseEditionDataLoader, getCourseEditionDataLoader } from "./CourseEdition.dataLoader";
-import { FaqDataLoader, getFaqDataLoader } from "./Faq.dataLoader";
 import { getUserDataLoader, UserDataLoader } from "./User.dataLoader";
-import { getUserRoleDataLoader, UserRoleDataLoader } from "./UserRole.dataLoader";
 
 export type DataLoaders = {
 	course: CourseDataLoader;
@@ -30,21 +27,17 @@ export type DataLoaders = {
 	courseClassVideoQuality: CourseClassVideoQualityDataLoader;
 	courseClassList: CourseClassListDataLoader;
 	courseEdition: CourseEditionDataLoader;
-	faq: FaqDataLoader;
 	user: UserDataLoader;
-	userRole: UserRoleDataLoader;
 };
 
-export const getDataLoaders = (connection: Connection) => ({
-	course: getCourseDataLoader(connection),
-	courseClass: getCourseClassDataLoader(connection),
-	courseClassChapterCue: getCourseClassChapterCueDataLoader(connection),
-	courseClassVideo: getCourseClassVideoDataLoader(connection),
-	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(connection),
-	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(connection),
-	courseClassList: getCourseClassListDataLoader(connection),
-	courseEdition: getCourseEditionDataLoader(connection),
-	faq: getFaqDataLoader(connection),
-	user: getUserDataLoader(connection),
-	userRole: getUserRoleDataLoader(connection),
+export const getDataLoaders = (repositories: Repositories) => ({
+	course: getCourseDataLoader(repositories.course),
+	courseClass: getCourseClassDataLoader(repositories.courseClass),
+	courseClassChapterCue: getCourseClassChapterCueDataLoader(repositories.courseClassChapterCue),
+	courseClassVideo: getCourseClassVideoDataLoader(repositories.courseClassVideo),
+	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(repositories.courseClassVideoFormat),
+	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(repositories.courseClassVideoQuality),
+	courseClassList: getCourseClassListDataLoader(repositories.courseClassList),
+	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
+	user: getUserDataLoader(repositories.user),
 });

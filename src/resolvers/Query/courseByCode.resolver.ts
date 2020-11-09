@@ -4,7 +4,7 @@ import { getCourseParent } from "../Course/Course.parent";
 
 const resolver: Resolvers["Query"]["courseByCode"] = async (_, args, context) => {
 	const { dataLoaders } = context;
-	const course = await dataLoaders.course.findOne({ code: args.code, includeHidden: true });
+	const course = await dataLoaders.course.load({ code: args.code, includeHidden: true });
 
 	return course ? getCourseParent(course) : getNotFoundError();
 };

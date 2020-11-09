@@ -6,7 +6,7 @@ const resolver: Resolvers["Query"]["courseClassListByCode"] = async (_, args, co
 	context.includeHidden = true;
 
 	const { dataLoaders } = context;
-	const courseClassList = await dataLoaders.courseClassList.findOne({
+	const courseClassList = await dataLoaders.courseClassList.load({
 		code: args.code,
 		includeHidden: true,
 	});

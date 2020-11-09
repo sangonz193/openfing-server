@@ -1,9 +1,9 @@
 import { Resolvers } from "../../generated/graphql.types";
 import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent";
 
-const resolver: Resolvers["CourseEdition"]["courseClassLists"] = async (parent, _, { dataLoaders, includeHidden }) => {
+const resolver: Resolvers["CourseEdition"]["courseClassLists"] = async (parent, _, { repositories, includeHidden }) => {
 	return (
-		await dataLoaders.courseClassList.findAll({
+		await repositories.courseClassList.findAll({
 			courseEditionId: parent.id,
 			includeHidden,
 		})

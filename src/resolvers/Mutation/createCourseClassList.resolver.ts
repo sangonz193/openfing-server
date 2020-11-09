@@ -20,7 +20,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 
 	if (!user) return getAuthenticationError();
 
-	const { dataLoaders } = context;
+	const { dataLoaders, repositories } = context;
 
 	const validatedData = await yup
 		.object<MutationCreateCourseClassListArgs["input"]>({
@@ -33,7 +33,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 		.required()
 		.validate(args.input);
 
-	const course = await context.dataLoaders.course.findOne({
+	const course = await context.dataLoaders.course.load({
 		code: validatedData.courseCode,
 		includeDisabled: true,
 		includeHidden: true,
@@ -41,7 +41,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 
 	if (!course) return getGenericError();
 
-	const courseEditions = await context.dataLoaders.courseEdition.findAll({
+	const courseEditions = await repositories.courseEdition.findAll({
 		courseId: course.id,
 		includeDisabled: true,
 		includeHidden: true,
@@ -52,9 +52,9 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 			courseEdition.semester === validatedData.semester && courseEdition.year === validatedData.year
 	);
 
-	if (!courseEdition)
-		courseEdition = await context.dataLoaders.courseEdition.save(
-			context.dataLoaders.courseEdition.create({
+	if (!courseEdition) {
+		courseEdition = await repositories.courseEdition.save(
+			repositories.courseEdition.create({
 				courseId: course.id,
 				createdById: user.id,
 				name: `Edición ${validatedData.year}, ${
@@ -70,16 +70,19 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 				})[validatedData.visibility || "PUBLIC"],
 			})
 		);
+		// TODO: necessary?
+		dataLoaders.courseEdition.clearAll();
+	}
 
-	let courseClassListWithSameCode = await dataLoaders.courseClassList.findOne({
+	let courseClassListWithSameCode = await dataLoaders.courseClassList.load({
 		code: validatedData.code,
 		includeDisabled: true,
 		includeHidden: true,
 	});
 
 	if (!courseClassListWithSameCode) {
-		courseClassListWithSameCode = await dataLoaders.courseClassList.save(
-			dataLoaders.courseClassList.create({
+		courseClassListWithSameCode = await repositories.courseClassList.save(
+			repositories.courseClassList.create({
 				code: validatedData.code,
 				createdById: user.id,
 				courseEditionId: courseEdition.id,
@@ -91,6 +94,8 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 				})[validatedData.visibility || "PUBLIC"],
 			})
 		);
+		// TODO: necessary?
+		dataLoaders.courseClassList.clearAll();
 
 		await backupDb(context.ormConnection);
 

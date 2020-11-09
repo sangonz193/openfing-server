@@ -7,7 +7,7 @@ const resolver: Resolvers["Query"]["courseClassById"] = async (_, args, { dataLo
 		const parsedId = parseInt(args.id);
 
 		if (!isNaN(parsedId)) {
-			const courseClass = await dataLoaders.courseClass.findOne({ id: parsedId, includeHidden: true });
+			const courseClass = await dataLoaders.courseClass.load({ id: parsedId, includeHidden: true });
 
 			return courseClass ? getCourseClassParent(courseClass) : getNotFoundError();
 		}

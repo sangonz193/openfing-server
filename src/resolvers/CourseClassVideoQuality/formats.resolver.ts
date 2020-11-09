@@ -1,9 +1,9 @@
 import { Resolvers } from "../../generated/graphql.types";
 import { getCourseClassVideoFormatParent } from "../CourseClassVideoFormat/CourseClassVideoFormat.parent";
 
-const resolver: Resolvers["CourseClassVideoQuality"]["formats"] = async (parent, _, { dataLoaders }) => {
+const resolver: Resolvers["CourseClassVideoQuality"]["formats"] = async (parent, _, { repositories }) => {
 	return (
-		await dataLoaders.courseClassVideoFormat.findAll({ courseClassVideoQualityId: parent.id })
+		await repositories.courseClassVideoFormat.findAll({ courseClassVideoQualityId: parent.id })
 	).map((courseClassVideoFormat) => getCourseClassVideoFormatParent(courseClassVideoFormat));
 };
 

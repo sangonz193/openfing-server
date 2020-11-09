@@ -9,7 +9,7 @@ const resolver: Resolvers["Query"]["courseClassListById"] = async (_, args, cont
 	const parsedId = Number(args.id);
 
 	if (!isNaN(parsedId)) {
-		const courseClassList = await dataLoaders.courseClassList.findOne({
+		const courseClassList = await dataLoaders.courseClassList.load({
 			id: parsedId,
 			includeHidden: true,
 		});

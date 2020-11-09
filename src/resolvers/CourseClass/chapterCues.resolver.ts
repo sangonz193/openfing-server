@@ -4,7 +4,7 @@ import { getCourseClassChapterCueParent } from "../CourseClassChapterCue/CourseC
 const resolver: Resolvers["CourseClass"]["chapterCues"] = async (parent, _, context) => {
 	return parent.courseClassListId
 		? (
-				await context.dataLoaders.courseClassChapterCue.findAll({
+				await context.repositories.courseClassChapterCue.findAll({
 					courseClassId: parent.id,
 				})
 		  ).map((courseClassChapterCue) => getCourseClassChapterCueParent(courseClassChapterCue))

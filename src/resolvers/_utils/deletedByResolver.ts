@@ -8,7 +8,7 @@ export const deletedByResolver: ResolverFn<
 	Context,
 	{}
 > = async (parent, _, { dataLoaders }) => {
-	const user = await (parent.deletedById && dataLoaders.user.findOne({ id: parent.deletedById }));
+	const user = await (parent.deletedById && dataLoaders.user.load({ id: parent.deletedById }));
 
 	return user ? getUserParent(user) : null;
 };

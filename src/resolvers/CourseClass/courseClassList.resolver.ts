@@ -4,7 +4,7 @@ import { getCourseClassListParent } from "../CourseClassList/CourseClassList.par
 const resolver: Resolvers["CourseClass"]["courseClassList"] = async (parent, _, context) => {
 	const courseClassList =
 		parent.courseClassListId !== null
-			? await context.dataLoaders.courseClassList.findOne({
+			? await context.dataLoaders.courseClassList.load({
 					id: parent.courseClassListId,
 					includeHidden: true,
 			  })
