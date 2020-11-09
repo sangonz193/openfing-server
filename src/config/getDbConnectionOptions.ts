@@ -5,8 +5,11 @@ import { SafeOmit } from "../_utils/utilTypes";
 import { entities } from "../entities";
 import { isProduction } from "./isProduction";
 
-export const getDbConnectionOptions = (): SafeOmit<PostgresConnectionOptions, "password"> & { password: string } => {
-	const valdatedEnv = yup
+export const getDbConnectionOptions = (): SafeOmit<PostgresConnectionOptions, "password" | "schema"> & {
+	password: string;
+	schema: string;
+} => {
+	const validatedEnv = yup
 		.object({
 			WRITE_DB_NAME: yup.string().trim().required(),
 			WRITE_DB_HOST: yup.string().trim().required(),
@@ -19,11 +22,11 @@ export const getDbConnectionOptions = (): SafeOmit<PostgresConnectionOptions, "p
 
 	return {
 		type: "postgres",
-		database: valdatedEnv.WRITE_DB_NAME,
-		host: valdatedEnv.WRITE_DB_HOST,
-		port: valdatedEnv.WRITE_DB_PORT,
-		username: valdatedEnv.WRITE_DB_USERNAME,
-		password: valdatedEnv.WRITE_DB_PASSWORD,
+		database: validatedEnv.WRITE_DB_NAME,
+		host: validatedEnv.WRITE_DB_HOST,
+		port: validatedEnv.WRITE_DB_PORT,
+		username: validatedEnv.WRITE_DB_USERNAME,
+		password: validatedEnv.WRITE_DB_PASSWORD,
 		schema: "openfing",
 		entities: Object.values(entities),
 		logging: !isProduction,

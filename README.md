@@ -11,8 +11,8 @@ Para levantar el proyecto, es necesario tener instalado [Node.js](https://nodejs
 -   Crear un archivo de variables de entorno `.env` en la misma carpeta. El archivo deberá tener las mismas entradas que el archivo `.env.example`. Usar los comentarios en este último archivo para asignar los valores correctos.
 -   Crear una base de datos en la instalación de PostgreSQL con el mismo nombre asignado a la variable de ambiente `WRITE_DB_NAME` en el paso anterior.
 -   Correr el comando `node cli typeorm -- query "CREATE SCHEMA openfing"` para crear el schema openfing, y luego `node cli typeorm -- schema:sync` para crear las tablas definidas en este proyecto.
--   Correr el comando `npm run start-dev:watch`. Dependiendo del valor de la variable de ambiente `PORT`, el servidor estará escuchando en `http://localhost:$PORT/`.
--   Para acceder al Playground de GraphQL, acceder desde el navegador a la url anterior agregando `v1/graphql` al final. Por ejemplo, si `PORT=5000` entonces acceder a http://localhost:5000/v1/graphql
+-   Correr el comando `npm run start-dev:watch`. Dependiendo del valor de la variable de ambiente `PORT`, el servidor estará escuchando en `http://localhost:$PORT`.
+-   Para acceder al Playground de GraphQL, acceder desde el navegador a la url anterior agregando `/graphql` al final. Por ejemplo, si `PORT=5000` entonces acceder a http://localhost:5000/graphql
 
 ## Datos de prueba
 
