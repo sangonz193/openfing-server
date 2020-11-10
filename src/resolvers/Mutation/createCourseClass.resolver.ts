@@ -83,6 +83,7 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 			createdById: user.id,
 			courseClassListId: courseClassList.id,
 			name: validatedData.name,
+			publishedAt: new Date(),
 			visibility: identity<Record<Extract<CreateCourseClassInputVisibility, string>, string>>({
 				DISABLED: CourseClassVisibility.disabled,
 				HIDDEN: CourseClassVisibility.hidden,

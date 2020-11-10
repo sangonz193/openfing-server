@@ -27,6 +27,11 @@ export const courseClassColumns: CourseClassColumns = {
 		type: "varchar",
 		nullable: true,
 	},
+	publishedAt: {
+		name: "published_at",
+		type: "timestamp with time zone",
+		nullable: true,
+	},
 
 	createdAt: commonManagedAtColumns.createdAt,
 	updatedAt: commonManagedAtColumns.updatedAt,

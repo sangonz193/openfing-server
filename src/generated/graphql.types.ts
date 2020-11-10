@@ -109,12 +109,11 @@ export type CourseClass = {
 	videos: CourseClassVideo[];
 	chapterCues: CourseClassChapterCue[];
 	courseClassList?: Maybe<CourseClassList>;
+	publishedAt?: Maybe<Scalars["String"]>;
 	createdAt?: Maybe<Scalars["String"]>;
 	updatedAt?: Maybe<Scalars["String"]>;
-	deletedAt?: Maybe<Scalars["String"]>;
 	createdBy?: Maybe<User>;
 	updatedBy?: Maybe<User>;
-	deletedBy?: Maybe<User>;
 };
 
 export type CourseClassRefById = {
@@ -661,12 +660,11 @@ export type CourseClassResolvers<
 	videos: Resolver<Array<ResolversTypes["CourseClassVideo"]>, ParentType, ContextType>;
 	chapterCues: Resolver<Array<ResolversTypes["CourseClassChapterCue"]>, ParentType, ContextType>;
 	courseClassList: Resolver<Maybe<ResolversTypes["CourseClassList"]>, ParentType, ContextType>;
+	publishedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	createdAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	updatedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-	deletedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
