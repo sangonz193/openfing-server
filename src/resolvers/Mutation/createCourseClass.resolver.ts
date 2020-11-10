@@ -26,7 +26,7 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	const { dataLoaders, repositories } = context;
 
-	const validatedData = await yup
+	const validatedDataPromise = yup
 		.object<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>({
 			name: yup.string().trim().max(200).required(),
 			number: yup.number().moreThan(0).lessThan(1000).required(),
@@ -43,6 +43,14 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 		.required()
 		.validate(args.input);
 
+	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
+	try {
+		validatedData = await validatedDataPromise;
+	} catch (e) {
+		console.log(e);
+		return getGenericError();
+	}
+
 	const courseClassList = await getCourseClassListFromRef(
 		args.input.courseClassListRef,
 		{
@@ -52,7 +60,10 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 		context
 	);
 
-	if (!courseClassList) return getGenericError();
+	if (!courseClassList) {
+		console.log("course class list not found");
+		return getGenericError();
+	}
 
 	const courseClasses = await repositories.courseClass.findAll({
 		courseClassListId: courseClassList.id,
@@ -62,109 +73,110 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	const courseClassWithSameNumber = courseClasses.find((courseClass) => courseClass.number === validatedData.number);
 
-	if (!courseClassWithSameNumber) {
-		const courseClass = await repositories.courseClass.insert(
-			repositories.courseClass.create({
+	if (courseClassWithSameNumber) {
+		console.log("course class with same number found");
+		return getGenericError();
+	}
+
+	const courseClass = await repositories.courseClass.insert(
+		repositories.courseClass.create({
+			createdById: user.id,
+			courseClassListId: courseClassList.id,
+			name: validatedData.name,
+			visibility: identity<Record<Extract<CreateCourseClassInputVisibility, string>, string>>({
+				DISABLED: CourseClassVisibility.disabled,
+				HIDDEN: CourseClassVisibility.hidden,
+				PUBLIC: CourseClassVisibility.public,
+			})[validatedData.visibility || "PUBLIC"],
+			number: validatedData.number,
+		})
+	);
+	// TODO: necessary?
+	dataLoaders.courseClass.clearAll();
+
+	await backupDb(context.ormConnection);
+
+	const baseVideoUrl = `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
+		courseClassList.code
+	}_${validatedData.number.toString().padStart(2, "0")}`;
+	const possibleFormatNames = ["webm", "mp4"];
+
+	const videoResolutions: Array<{
+		formats: Array<{ url: string; name: string }>;
+		height: number;
+		width: number;
+	}> = [];
+
+	await Promise.all(
+		possibleFormatNames.map(async (formatName) => {
+			const url = `${baseVideoUrl}.${formatName}`;
+			const resolution = await getResolutionFromVideoUrl(url);
+
+			if (resolution) {
+				const quality = videoResolutions.find((q) => q.height === resolution.height);
+				const format = {
+					url,
+					name: formatName,
+				};
+
+				if (quality) quality.formats.push(format);
+				else
+					videoResolutions.push({
+						height: resolution.height,
+						width: resolution.width,
+						formats: [format],
+					});
+			}
+		})
+	);
+
+	if (videoResolutions.length > 0) {
+		const courseClassVideo = await repositories.courseClassVideo.save(
+			repositories.courseClassVideo.create({
+				courseClassId: courseClass.id,
 				createdById: user.id,
-				courseClassListId: courseClassList.id,
-				name: validatedData.name,
-				visibility: identity<Record<Extract<CreateCourseClassInputVisibility, string>, string>>({
-					DISABLED: CourseClassVisibility.disabled,
-					HIDDEN: CourseClassVisibility.hidden,
-					PUBLIC: CourseClassVisibility.public,
-				})[validatedData.visibility || "PUBLIC"],
-				number: validatedData.number,
+				name: "Clase",
+				position: 1,
+				visibility: CourseClassVideoVisibility.public,
 			})
 		);
 		// TODO: necessary?
-		dataLoaders.courseClass.clearAll();
+		dataLoaders.courseClassVideo.clearAll();
 
-		await backupDb(context.ormConnection);
-
-		const baseVideoUrl = `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
-			courseClassList.code
-		}_${validatedData.number.toString().padStart(2, "0")}`;
-		const possibleFormatNames = ["webm", "mp4"];
-
-		const videoResolutions: Array<{
-			formats: Array<{ url: string; name: string }>;
-			height: number;
-			width: number;
-		}> = [];
-
-		await Promise.all(
-			possibleFormatNames.map(async (formatName) => {
-				const url = `${baseVideoUrl}.${formatName}`;
-				const resolution = await getResolutionFromVideoUrl(url);
-
-				if (resolution) {
-					const quality = videoResolutions.find((q) => q.height === resolution.height);
-					const format = {
-						url,
-						name: formatName,
-					};
-
-					if (quality) quality.formats.push(format);
-					else
-						videoResolutions.push({
-							height: resolution.height,
-							width: resolution.width,
-							formats: [format],
-						});
-				}
+		const courseClassVideoQuality = await repositories.courseClassVideoQuality.save(
+			repositories.courseClassVideoQuality.create({
+				courseClassVideoId: courseClassVideo.id,
+				createdById: user.id,
+				height: null,
+				width: null,
 			})
 		);
+		// TODO: necessary?
+		dataLoaders.courseClassVideoQuality.clearAll();
 
-		if (videoResolutions.length > 0) {
-			const courseClassVideo = await repositories.courseClassVideo.save(
-				repositories.courseClassVideo.create({
-					courseClassId: courseClass.id,
-					createdById: user.id,
-					name: "Clase",
-					position: 1,
-					visibility: CourseClassVideoVisibility.public,
-				})
-			);
-			// TODO: necessary?
-			dataLoaders.courseClassVideo.clearAll();
-
-			const courseClassVideoQuality = await repositories.courseClassVideoQuality.save(
-				repositories.courseClassVideoQuality.create({
-					courseClassVideoId: courseClassVideo.id,
-					createdById: user.id,
-					height: null,
-					width: null,
-				})
-			);
-			// TODO: necessary?
-			dataLoaders.courseClassVideoQuality.clearAll();
-
-			await Promise.all(
-				videoResolutions.map(async (videoResolution) => {
-					await Promise.all(
-						videoResolution.formats.map(async (videoFormat) => {
-							await repositories.courseClassVideoFormat.save(
-								repositories.courseClassVideoFormat.create({
-									courseClassVideoQualityId: courseClassVideoQuality.id,
-									createdById: user.id,
-									name: videoFormat.name,
-									url: videoFormat.url,
-								})
-							);
-							// TODO: necessary?
-							dataLoaders.courseClassVideoFormat.clearAll();
-						})
-					);
-				})
-			);
-		}
-
-		return getCreateCourseClassPayloadParent({
-			courseClass,
-		});
+		await Promise.all(
+			videoResolutions.map(async (videoResolution) => {
+				await Promise.all(
+					videoResolution.formats.map(async (videoFormat) => {
+						await repositories.courseClassVideoFormat.save(
+							repositories.courseClassVideoFormat.create({
+								courseClassVideoQualityId: courseClassVideoQuality.id,
+								createdById: user.id,
+								name: videoFormat.name,
+								url: videoFormat.url,
+							})
+						);
+						// TODO: necessary?
+						dataLoaders.courseClassVideoFormat.clearAll();
+					})
+				);
+			})
+		);
 	}
 
-	return getGenericError();
+	return getCreateCourseClassPayloadParent({
+		courseClass,
+	});
 };
 
 export default resolver;
