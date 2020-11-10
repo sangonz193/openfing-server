@@ -38,6 +38,7 @@ export type Mutation = {
 	createCourse: CreateCourseResult;
 	createCourseClass: CreateCourseClassResult;
 	createCourseClassList: CreateCourseClassListResult;
+	resetDatabaseFromBackup?: Maybe<Scalars["String"]>;
 	updateCourseClassVideos?: Maybe<NotFoundError>;
 };
 
@@ -57,6 +58,10 @@ export type MutationCreateCourseClassArgs = {
 
 export type MutationCreateCourseClassListArgs = {
 	input: CreateCourseClassListInput;
+	secret: Scalars["String"];
+};
+
+export type MutationResetDatabaseFromBackupArgs = {
 	secret: Scalars["String"];
 };
 
@@ -425,7 +430,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
 	info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+	obj: T,
+	context: TContext,
+	info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -585,6 +594,12 @@ export type MutationResolvers<
 		ContextType,
 		RequireFields<MutationCreateCourseClassListArgs, "input" | "secret">
 	>;
+	resetDatabaseFromBackup: Resolver<
+		Maybe<ResolversTypes["String"]>,
+		ParentType,
+		ContextType,
+		RequireFields<MutationResetDatabaseFromBackupArgs, "secret">
+	>;
 	updateCourseClassVideos: Resolver<
 		Maybe<ResolversTypes["NotFoundError"]>,
 		ParentType,
@@ -598,7 +613,7 @@ export type GenericErrorResolvers<
 	ParentType extends ResolversParentTypes["GenericError"] = ResolversParentTypes["GenericError"]
 > = {
 	_: Resolver<Maybe<ResolversTypes["Void"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type NotFoundErrorResolvers<
@@ -606,7 +621,7 @@ export type NotFoundErrorResolvers<
 	ParentType extends ResolversParentTypes["NotFoundError"] = ResolversParentTypes["NotFoundError"]
 > = {
 	_: Resolver<Maybe<ResolversTypes["Void"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AuthenticationErrorResolvers<
@@ -614,7 +629,7 @@ export type AuthenticationErrorResolvers<
 	ParentType extends ResolversParentTypes["AuthenticationError"] = ResolversParentTypes["AuthenticationError"]
 > = {
 	_: Resolver<Maybe<ResolversTypes["Void"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseResolvers<
@@ -633,7 +648,7 @@ export type CourseResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassResolvers<
@@ -652,7 +667,7 @@ export type CourseClassResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassChapterCueResolvers<
@@ -670,7 +685,7 @@ export type CourseClassChapterCueResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassListResolvers<
@@ -688,7 +703,7 @@ export type CourseClassListResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassVideoResolvers<
@@ -705,7 +720,7 @@ export type CourseClassVideoResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassVideoFormatResolvers<
@@ -723,7 +738,7 @@ export type CourseClassVideoFormatResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseClassVideoQualityResolvers<
@@ -741,7 +756,7 @@ export type CourseClassVideoQualityResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CourseEditionResolvers<
@@ -760,7 +775,7 @@ export type CourseEditionResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FaqResolvers<
@@ -777,7 +792,7 @@ export type FaqResolvers<
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CreateCoursePayloadResolvers<
@@ -785,7 +800,7 @@ export type CreateCoursePayloadResolvers<
 	ParentType extends ResolversParentTypes["CreateCoursePayload"] = ResolversParentTypes["CreateCoursePayload"]
 > = {
 	course: Resolver<ResolversTypes["Course"], ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CreateCourseResultResolvers<
@@ -804,7 +819,7 @@ export type CreateCourseClassPayloadResolvers<
 	ParentType extends ResolversParentTypes["CreateCourseClassPayload"] = ResolversParentTypes["CreateCourseClassPayload"]
 > = {
 	courseClass: Resolver<ResolversTypes["CourseClass"], ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CreateCourseClassResultResolvers<
@@ -823,7 +838,7 @@ export type CreateCourseClassListPayloadResolvers<
 	ParentType extends ResolversParentTypes["CreateCourseClassListPayload"] = ResolversParentTypes["CreateCourseClassListPayload"]
 > = {
 	courseClassList: Resolver<ResolversTypes["CourseClassList"], ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CreateCourseClassListResultResolvers<
@@ -938,7 +953,7 @@ export type UserResolvers<
 	createdAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	updatedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 	deletedAt: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserRoleResolvers<
@@ -947,7 +962,7 @@ export type UserRoleResolvers<
 > = {
 	id: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
 	code: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-	__isTypeOf?: IsTypeOfResolverFn<ParentType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type _Resolvers<ContextType = Context> = {

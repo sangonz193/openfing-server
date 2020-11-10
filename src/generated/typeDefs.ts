@@ -14,6 +14,7 @@ import backupDbDoc from "../schemas/Mutation/backupDb.schema";
 import createCourseDoc from "../schemas/Mutation/createCourse.schema";
 import createCourseClassDoc from "../schemas/Mutation/createCourseClass.schema";
 import createCourseClassListDoc from "../schemas/Mutation/createCourseClassList.schema";
+import resetDatabaseFromBackupDoc from "../schemas/Mutation/resetDatabaseFromBackup.schema";
 import updateCourseClassVideosDoc from "../schemas/Mutation/updateCourseClassVideos.schema";
 import courseByCodeDoc from "../schemas/Query/courseByCode.schema";
 import courseByIdDoc from "../schemas/Query/courseById.schema";
