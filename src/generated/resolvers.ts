@@ -7,7 +7,6 @@ import Course_updatedByResolver from "../resolvers/Course/updatedBy.resolver";
 import CourseClass_chapterCuesResolver from "../resolvers/CourseClass/chapterCues.resolver";
 import CourseClass_courseClassListResolver from "../resolvers/CourseClass/courseClassList.resolver";
 import CourseClass_createdByResolver from "../resolvers/CourseClass/createdBy.resolver";
-import CourseClass_deletedByResolver from "../resolvers/CourseClass/deletedBy.resolver";
 import CourseClass_idResolver from "../resolvers/CourseClass/id.resolver";
 import CourseClass_updatedByResolver from "../resolvers/CourseClass/updatedBy.resolver";
 import CourseClass_videosResolver from "../resolvers/CourseClass/videos.resolver";
@@ -96,7 +95,6 @@ export const resolvers: Resolvers = {
 		chapterCues: CourseClass_chapterCuesResolver,
 		courseClassList: CourseClass_courseClassListResolver,
 		createdBy: CourseClass_createdByResolver,
-		deletedBy: CourseClass_deletedByResolver,
 		id: CourseClass_idResolver,
 		updatedBy: CourseClass_updatedByResolver,
 		videos: CourseClass_videosResolver,

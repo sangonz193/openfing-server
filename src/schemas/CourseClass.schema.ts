@@ -10,14 +10,13 @@ export default gql`
 		videos: [CourseClassVideo!]!
 		chapterCues: [CourseClassChapterCue!]!
 		courseClassList: CourseClassList
+		publishedAt: String
 
 		createdAt: String
 		updatedAt: String
-		deletedAt: String
 
 		createdBy: User
 		updatedBy: User
-		deletedBy: User
 	}
 
 	input CourseClassRefById {

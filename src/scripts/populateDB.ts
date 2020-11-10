@@ -458,6 +458,7 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 					number: readVideo.number,
 					visibility: readVideo.disabled ? CourseClassVisibility.disabled : courseClassList.visibility,
 					name: courseClassTitle,
+					publishedAt: createdAt,
 					createdAt,
 					createdById,
 					updatedAt,

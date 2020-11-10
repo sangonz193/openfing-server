@@ -18,6 +18,7 @@ export type CourseClass_id = PrimaryColumn<{ name: "id"; type: "integer"; entity
 export type CourseClass_name = Column<{ name: "name"; type: "varchar" }>;
 export type CourseClass_number = Column<{ name: "number"; type: "smallint" }>;
 export type CourseClass_visibility = Column<{ name: "visibility"; type: "varchar" }>;
+export type CourseClass_publishedAt = Column<{ name: "published_at"; type: "timestamp with time zone" }>;
 export type CourseClass_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
 export type CourseClass_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
 export type CourseClass_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
@@ -56,6 +57,7 @@ export type CourseClassColumns = {
 	name: CourseClass_name;
 	number: CourseClass_number;
 	visibility: CourseClass_visibility;
+	publishedAt: CourseClass_publishedAt;
 
 	createdAt: CourseClass_createdAt;
 	updatedAt: CourseClass_updatedAt;
