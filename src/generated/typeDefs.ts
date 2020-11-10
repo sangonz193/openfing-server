@@ -56,6 +56,7 @@ export const typeDefs: DocumentNode[] = [
 	createCourseDoc,
 	faqsDoc,
 	latestCourseClassesDoc,
+	resetDatabaseFromBackupDoc,
 	updateCourseClassVideosDoc,
 	userRolesDoc,
 ];

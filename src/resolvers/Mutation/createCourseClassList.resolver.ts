@@ -22,7 +22,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 
 	const { dataLoaders, repositories } = context;
 
-	const validatedData = await yup
+	const validatedDataPromise = yup
 		.object<MutationCreateCourseClassListArgs["input"]>({
 			courseCode: yup.string().trim().required(),
 			code: yup.string().trim().max(20).required(),
@@ -33,13 +33,24 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 		.required()
 		.validate(args.input);
 
+	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
+	try {
+		validatedData = await validatedDataPromise;
+	} catch (e) {
+		console.log(e);
+		return getGenericError();
+	}
+
 	const course = await context.dataLoaders.course.load({
 		code: validatedData.courseCode,
 		includeDisabled: true,
 		includeHidden: true,
 	});
 
-	if (!course) return getGenericError();
+	if (!course) {
+		console.log("no course found");
+		return getGenericError();
+	}
 
 	const courseEditions = await repositories.courseEdition.findAll({
 		courseId: course.id,
@@ -104,6 +115,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 		});
 	}
 
+	console.log("courseClassList with same code found");
 	return getGenericError();
 };
 

@@ -43,6 +43,7 @@ const command: CommandModule<{}, {}> = {
 				{
 					name: deployConfig.PM2_PROCESS_NAME,
 					script: "dist",
+					interpreter: path.resolve(deployConfig.DESTINATION_PATH, "node_modules", ".bin", "node"),
 					max_restarts: 3,
 					min_uptime: "1m",
 					env: {
