@@ -3,8 +3,10 @@ import { Brackets, Connection } from "typeorm";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { Course, courseColumns, CourseVisibility } from "../../entities/Course";
+import { Course, courseColumns, courseRelations, CourseVisibility } from "../../entities/Course";
 import { CourseRow } from "../../entities/Course/Course.entity.types";
+import { courseEditionColumns, CourseEditionVisibility } from "../../entities/CourseEdition";
+import { CourseEditionRow } from "../../entities/CourseEdition/CourseEdition.entity.types";
 import { CourseRepository } from "./Course.repository.types";
 
 export const getCourseRepository = (connection: Connection): CourseRepository => {
@@ -26,22 +28,38 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 		_typedRepository: repo,
 
 		findAll: () => {
-			const queryBuilder = repo.createQueryBuilder("c");
+			const queryBuilder = repo
+				.createQueryBuilder("c")
+				.addSelect(`count(ce.${courseEditionColumns.id.name})`, `courseEditionsCount`)
+				.innerJoin(`c.${courseRelations.courseEditions.name}`, "ce");
 
-			queryBuilder.andWhere(`c.${courseColumns.deletedAt.name} is null`);
-
-			queryBuilder.andWhere(
-				new Brackets((qb) => {
-					qb.orWhere(
-						`c.${courseColumns.visibility.name} = :publicVisibility`,
-						identity<{ publicVisibility: CourseRow["visibility"] }>({
-							publicVisibility: "public",
-						})
-					);
-					qb.orWhere(`c.${courseColumns.visibility.name} is null`);
-				})
-			);
-			queryBuilder.orderBy(courseColumns.name.name, "ASC");
+			queryBuilder
+				.andWhere(`c.${courseColumns.deletedAt.name} is null`)
+				.andWhere(
+					new Brackets((qb) => {
+						qb.orWhere(
+							`c.${courseColumns.visibility.name} = :publicVisibility`,
+							identity<{ publicVisibility: CourseRow["visibility"] }>({
+								publicVisibility: "public",
+							})
+						);
+						qb.orWhere(`c.${courseColumns.visibility.name} is null`);
+					})
+				)
+				.andWhere(
+					new Brackets((qb) =>
+						qb
+							.where(
+								`ce.${courseEditionColumns.visibility.name} in (:...ceVisibilities)`,
+								identity<{ ceVisibilities: Array<CourseEditionRow["visibility"]> }>({
+									ceVisibilities: [CourseEditionVisibility.public],
+								})
+							)
+							.orWhere(`ce.${courseEditionColumns.visibility.name} is null`)
+					)
+				)
+				.orderBy(`c.${courseColumns.name.name}`, "ASC")
+				.groupBy(`c.${courseColumns.id.name}`);
 
 			return queryBuilder.getMany();
 		},
@@ -91,6 +109,6 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 			deletedById: data.deletedById || null,
 		}),
 
-		save: (data) => repo.save(data),
+		save: (course) => repo.save(course),
 	};
 };
