@@ -1,12 +1,14 @@
-import { commonManagedAtColumns, commonManagedByColumns } from "../_utils/common";
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { RelationsOptions } from "../_utils/RelationsOptions";
 import {
-	CourseClassVideoQuality as CourseClassVideoQualityType,
 	CourseClassVideoQualityColumns,
+	CourseClassVideoQualityEntitySchema,
 	CourseClassVideoQualityRelations,
 } from "./CourseClassVideoQuality.entity.types";
 
-export const courseClassVideoQualityColumns: CourseClassVideoQualityColumns = {
+export const courseClassVideoQualityColumns: ColumnsOptions<CourseClassVideoQualityColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
@@ -25,23 +27,24 @@ export const courseClassVideoQualityColumns: CourseClassVideoQualityColumns = {
 		nullable: true,
 	},
 
-	createdAt: commonManagedAtColumns.createdAt,
-	updatedAt: commonManagedAtColumns.updatedAt,
-	deletedAt: commonManagedAtColumns.deletedAt,
+	created_at: commonManagedColumnsOptions.created_at,
+	updated_at: commonManagedColumnsOptions.updated_at,
+	deleted_at: commonManagedColumnsOptions.deleted_at,
 
-	courseClassVideoId: {
+	course_class_video_id: {
 		name: "course_class_video_id",
 		type: "integer",
 		nullable: true,
 	},
 
-	createdById: commonManagedByColumns.createdById,
-	updatedById: commonManagedByColumns.updatedById,
-	deletedById: commonManagedByColumns.deletedById,
+	created_by_id: commonManagedColumnsOptions.created_by_id,
+	updated_by_id: commonManagedColumnsOptions.updated_by_id,
+	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
 };
 
-export const courseClassVideoQualityRelations: CourseClassVideoQualityRelations = {
+export const courseClassVideoQualityRelations: RelationsOptions<CourseClassVideoQualityRelations> = {
 	courseClassVideo: {
+		name: "courseClassVideo",
 		type: "many-to-one",
 		inverseSide: "courseClassVideoQualities",
 		target: "course_class_video",
@@ -49,16 +52,16 @@ export const courseClassVideoQualityRelations: CourseClassVideoQualityRelations 
 			name: "course_class_video_id",
 			referencedColumnName: "id",
 		},
-		name: "courseClassVideo",
 	},
 	courseClassVideoFormats: {
+		name: "courseClassVideoFormats",
 		type: "one-to-many",
 		inverseSide: "courseClassVideoQuality",
 		target: "course_class_video_format",
-		name: "courseClassVideoFormats",
 	},
 
 	createdBy: {
+		name: "createdBy",
 		type: "many-to-one",
 		inverseSide: "createdCourseClassVideoQualities",
 		target: "user",
@@ -66,9 +69,9 @@ export const courseClassVideoQualityRelations: CourseClassVideoQualityRelations 
 			name: "created_by_id",
 			referencedColumnName: "id",
 		},
-		name: "createdBy",
 	},
 	updatedBy: {
+		name: "updatedBy",
 		type: "many-to-one",
 		inverseSide: "updatedCourseClassVideoQualities",
 		target: "user",
@@ -76,9 +79,9 @@ export const courseClassVideoQualityRelations: CourseClassVideoQualityRelations 
 			name: "updated_by_id",
 			referencedColumnName: "id",
 		},
-		name: "updatedBy",
 	},
 	deletedBy: {
+		name: "deletedBy",
 		type: "many-to-one",
 		inverseSide: "deletedCourseClassVideoQualities",
 		target: "user",
@@ -86,13 +89,10 @@ export const courseClassVideoQualityRelations: CourseClassVideoQualityRelations 
 			name: "deleted_by_id",
 			referencedColumnName: "id",
 		},
-		name: "deletedBy",
 	},
 };
 
-export const CourseClassVideoQuality: CourseClassVideoQualityType = createTypedEntitySchema<
-	CourseClassVideoQualityType
->({
+export const courseClassVideoQualityEntitySchema = createTypedEntitySchema<CourseClassVideoQualityEntitySchema>({
 	name: "course_class_video_quality",
 	columns: courseClassVideoQualityColumns,
 	relations: courseClassVideoQualityRelations,

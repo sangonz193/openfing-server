@@ -11,7 +11,10 @@ import { entities } from "../entities";
 export const backupDb = async (connection: Connection) => {
 	const { DATABASE_BACKUP_REPO_PATH, dbConnectionOptions } = appConfig;
 
-	if (!DATABASE_BACKUP_REPO_PATH) return;
+	if (!DATABASE_BACKUP_REPO_PATH || appConfig.SKIP_DATABASE_BACKUP) {
+		console.log("skipping backup");
+		return;
+	}
 
 	const tableNames = entities.map((entity) => connection.getRepository(entity).metadata.tableName);
 

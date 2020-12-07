@@ -1,12 +1,14 @@
-import { commonManagedAtColumns, commonManagedByColumns } from "../_utils/common";
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { RelationsOptions } from "../_utils/RelationsOptions";
 import {
-	CourseClassChapterCue as CourseClassChapterCueType,
 	CourseClassChapterCueColumns,
+	CourseClassChapterCueEntitySchema,
 	CourseClassChapterCueRelations,
 } from "./CourseClassChapterCue.entity.types";
 
-export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
+export const courseClassChapterCueColumns: ColumnsOptions<CourseClassChapterCueColumns> = {
 	id: {
 		name: "id",
 		type: "uuid",
@@ -16,36 +18,33 @@ export const courseClassChapterCueColumns: CourseClassChapterCueColumns = {
 	name: {
 		name: "name",
 		type: "varchar",
-		nullable: false,
 	},
-	startSeconds: {
+	start_seconds: {
 		name: "start_seconds",
-		nullable: false,
 		type: "decimal",
 	},
-	endSeconds: {
+	end_seconds: {
 		name: "end_seconds",
-		nullable: false,
 		type: "decimal",
 	},
 
-	createdAt: commonManagedAtColumns.createdAt,
-	updatedAt: commonManagedAtColumns.updatedAt,
-	deletedAt: commonManagedAtColumns.deletedAt,
+	created_at: commonManagedColumnsOptions.created_at,
+	updated_at: commonManagedColumnsOptions.updated_at,
+	deleted_at: commonManagedColumnsOptions.deleted_at,
 
-	courseClassId: {
+	course_class_id: {
 		name: "course_class_id",
 		type: "integer",
-		nullable: false,
 	},
 
-	createdById: commonManagedByColumns.createdById,
-	updatedById: commonManagedByColumns.updatedById,
-	deletedById: commonManagedByColumns.deletedById,
+	created_by_id: commonManagedColumnsOptions.created_by_id,
+	updated_by_id: commonManagedColumnsOptions.updated_by_id,
+	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
 };
 
-export const courseClassChapterCueRelations: CourseClassChapterCueRelations = {
+export const courseClassChapterCueRelations: RelationsOptions<CourseClassChapterCueRelations> = {
 	courseClass: {
+		name: "courseClass",
 		type: "many-to-one",
 		inverseSide: "courseClassChapterCue",
 		target: "course_class",
@@ -53,10 +52,10 @@ export const courseClassChapterCueRelations: CourseClassChapterCueRelations = {
 			name: "course_class_id",
 			referencedColumnName: "id",
 		},
-		name: "courseClass",
 	},
 
 	createdBy: {
+		name: "createdBy",
 		type: "many-to-one",
 		inverseSide: "createdCourseClassChapterCues",
 		target: "user",
@@ -64,9 +63,9 @@ export const courseClassChapterCueRelations: CourseClassChapterCueRelations = {
 			name: "created_by_id",
 			referencedColumnName: "id",
 		},
-		name: "createdBy",
 	},
 	updatedBy: {
+		name: "updatedBy",
 		type: "many-to-one",
 		inverseSide: "updatedCourseClassChapterCues",
 		target: "user",
@@ -74,9 +73,9 @@ export const courseClassChapterCueRelations: CourseClassChapterCueRelations = {
 			name: "updated_by_id",
 			referencedColumnName: "id",
 		},
-		name: "updatedBy",
 	},
 	deletedBy: {
+		name: "deletedBy",
 		type: "many-to-one",
 		inverseSide: "deletedCourseClassChapterCues",
 		target: "user",
@@ -84,11 +83,12 @@ export const courseClassChapterCueRelations: CourseClassChapterCueRelations = {
 			name: "deleted_by_id",
 			referencedColumnName: "id",
 		},
-		name: "deletedBy",
 	},
 };
 
-export const CourseClassChapterCue: CourseClassChapterCueType = createTypedEntitySchema<CourseClassChapterCueType>({
+export const courseClassChapterCueEntitySchema: CourseClassChapterCueEntitySchema = createTypedEntitySchema<
+	CourseClassChapterCueEntitySchema
+>({
 	name: "course_class_chapter_cue",
 	columns: courseClassChapterCueColumns,
 	relations: courseClassChapterCueRelations,

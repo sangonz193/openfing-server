@@ -1,24 +1,27 @@
+import omitBy from "lodash/omitBy";
 import { Brackets, Connection } from "typeorm";
 
+import { createUpdate } from "../_utils/createUpdate";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { Course, courseColumns, CourseVisibility } from "../../entities/Course";
+import { courseColumns, courseEntitySchema } from "../../entities/Course";
 import { CourseRow } from "../../entities/Course/Course.entity.types";
 import { CourseRepository } from "./Course.repository.types";
 
 export const getCourseRepository = (connection: Connection): CourseRepository => {
-	const repo = getTypedRepository(Course, connection);
+	const repo = getTypedRepository(courseEntitySchema, connection);
+	const update = createUpdate(repo);
 
 	const is: CourseRepository["is"] = (course, options) => {
 		if (hasProperty(options, "id") ? course.id !== options.id : course.code !== options.code) return false;
 
 		return (
-			course.deletedAt === null &&
+			course.deleted_at === null &&
 			(options.includeHidden ||
-				course.visibility === CourseVisibility.public ||
+				course.visibility === "public" ||
 				options.includeDisabled ||
-				course.visibility === CourseVisibility.disabled)
+				course.visibility === "disabled")
 		);
 	};
 
@@ -28,7 +31,7 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 		findAll: () => {
 			const queryBuilder = repo.createQueryBuilder("c");
 
-			queryBuilder.andWhere(`c.${courseColumns.deletedAt.name} is null`);
+			queryBuilder.andWhere(`c.${courseColumns.deleted_at.name} is null`);
 
 			queryBuilder.andWhere(
 				new Brackets((qb) => {
@@ -57,7 +60,7 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 				else codes.push(i.code);
 			});
 
-			queryBuilder.andWhere(`c.${courseColumns.deletedAt.name} is null`);
+			queryBuilder.andWhere(`c.${courseColumns.deleted_at.name} is null`);
 
 			queryBuilder.andWhere(
 				new Brackets((qb) => {
@@ -84,13 +87,46 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
-		save: (data) => repo.save(data),
+		insert: (data) => repo.save(data),
+
+		createAndInsert(...args) {
+			return this.insert(this.create(...args));
+		},
+
+		update: async (id, newValues) => {
+			const acceptedKeysMap = identity<Record<keyof typeof newValues, true>>({
+				created_at: true,
+				created_by_id: true,
+				deleted_at: true,
+				deleted_by_id: true,
+				name: true,
+				code: true,
+				eva: true,
+				icon_url: true,
+				updated_by_id: true,
+				visibility: true,
+			});
+
+			return update(id, {
+				...omitBy(newValues, (_, key) => {
+					return !acceptedKeysMap[key as keyof typeof acceptedKeysMap];
+				}),
+				updated_at: new Date(),
+			});
+		},
+
+		delete(id, data) {
+			return update(id, {
+				deleted_at: new Date(),
+				deleted_by_id: data.deleted_by_id,
+			});
+		},
 	};
 };

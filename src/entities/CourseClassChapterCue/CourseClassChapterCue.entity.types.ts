@@ -1,20 +1,31 @@
-import { Column, EntityRow, PrimaryColumn, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { FieldColumn, PrimaryColumn } from "../_utils/Column";
+import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { NamedColumns } from "../_utils/NamedColumns";
+import { NamedRelations } from "../_utils/NamedRelations";
 import { CourseClassToCourseClassChapterCue_chapterCues } from "../CourseClass/CourseClass.entity.types";
 import {
-	UserToCourseClassChapterCue_created,
-	UserToCourseClassChapterCue_deleted,
-	UserToCourseClassChapterCue_updated,
+	UserToCourseClassChapterCue_createdBy,
+	UserToCourseClassChapterCue_deletedBy,
+	UserToCourseClassChapterCue_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassChapterCue_id = PrimaryColumn<{ name: "id"; type: "uuid"; entity: CourseClassChapterCue }>;
-export type CourseClassChapterCue_name = Column<{ name: "name"; type: "varchar"; nullable: false }>;
-export type CourseClassChapterCue_startSeconds = Column<{ name: "start_seconds"; type: "decimal"; nullable: false }>;
-export type CourseClassChapterCue_endSeconds = Column<{ name: "end_seconds"; type: "decimal"; nullable: false }>;
-export type CourseClassChapterCue_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
-export type CourseClassChapterCue_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
-export type CourseClassChapterCue_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
+export type CourseClassChapterCue_id = PrimaryColumn<"uuid">;
+export type CourseClassChapterCue_name = FieldColumn<{ name: "name"; sqlType: "varchar"; nullable: false }>;
+export type CourseClassChapterCue_startSeconds = FieldColumn<{
+	name: "start_seconds";
+	sqlType: "decimal";
+	nullable: false;
+}>;
+export type CourseClassChapterCue_endSeconds = FieldColumn<{
+	name: "end_seconds";
+	sqlType: "decimal";
+	nullable: false;
+}>;
+export type CourseClassChapterCue_createdAt = FieldColumn<{ name: "created_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClassChapterCue_updatedAt = FieldColumn<{ name: "updated_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClassChapterCue_deletedAt = FieldColumn<{ name: "deleted_at"; sqlType: "timestamp with time zone" }>;
 
-export type CourseClassChapterCueColumns = {
+export type CourseClassChapterCueColumns = NamedColumns<{
 	id: CourseClassChapterCue_id;
 
 	name: CourseClassChapterCue_name;
@@ -27,23 +38,23 @@ export type CourseClassChapterCueColumns = {
 
 	courseClassId: CourseClassToCourseClassChapterCue_chapterCues["to"]["column"];
 
-	createdById: UserToCourseClassChapterCue_created["to"]["column"];
-	updatedById: UserToCourseClassChapterCue_updated["to"]["column"];
-	deletedById: UserToCourseClassChapterCue_deleted["to"]["column"];
-};
+	createdById: UserToCourseClassChapterCue_createdBy["to"]["column"];
+	updatedById: UserToCourseClassChapterCue_updatedBy["to"]["column"];
+	deletedById: UserToCourseClassChapterCue_deletedBy["to"]["column"];
+}>;
 
-export type CourseClassChapterCueRelations = {
+export type CourseClassChapterCueRelations = NamedRelations<{
 	courseClass: CourseClassToCourseClassChapterCue_chapterCues["to"]["relation"];
 
-	createdBy: UserToCourseClassChapterCue_created["to"]["relation"];
-	updatedBy: UserToCourseClassChapterCue_updated["to"]["relation"];
-	deletedBy: UserToCourseClassChapterCue_deleted["to"]["relation"];
-};
+	createdBy: UserToCourseClassChapterCue_createdBy["to"]["relation"];
+	updatedBy: UserToCourseClassChapterCue_updatedBy["to"]["relation"];
+	deletedBy: UserToCourseClassChapterCue_deletedBy["to"]["relation"];
+}>;
 
-export type CourseClassChapterCue = TypedEntitySchema<{
+export type CourseClassChapterCueEntitySchema = TypedEntitySchema<{
 	name: "course_class_chapter_cue";
 	columns: CourseClassChapterCueColumns;
 	relations: CourseClassChapterCueRelations;
 }>;
 
-export type CourseClassChapterCueRow = EntityRow<CourseClassChapterCue>;
+export type CourseClassChapterCueRow = EntityRow<CourseClassChapterCueEntitySchema>;

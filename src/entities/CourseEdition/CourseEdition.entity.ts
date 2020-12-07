@@ -1,14 +1,10 @@
-import { commonManagedAtColumns, commonManagedByColumns, commonVisibility } from "../_utils/common";
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import {
-	CourseEdition as CourseEditionType,
-	CourseEditionColumns,
-	CourseEditionRelations,
-} from "./CourseEdition.entity.types";
+import { RelationsOptions } from "../_utils/RelationsOptions";
+import { CourseEditionColumns, CourseEditionEntitySchema, CourseEditionRelations } from "./CourseEdition.entity.types";
 
-export const CourseEditionVisibility = { ...commonVisibility };
-
-export const courseEditionColumns: CourseEditionColumns = {
+export const courseEditionColumns: ColumnsOptions<CourseEditionColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
@@ -24,7 +20,6 @@ export const courseEditionColumns: CourseEditionColumns = {
 	semester: {
 		name: "semester",
 		type: "integer",
-		nullable: false,
 	},
 	year: {
 		name: "year",
@@ -37,23 +32,24 @@ export const courseEditionColumns: CourseEditionColumns = {
 		nullable: true,
 	},
 
-	createdAt: commonManagedAtColumns.createdAt,
-	updatedAt: commonManagedAtColumns.updatedAt,
-	deletedAt: commonManagedAtColumns.deletedAt,
+	created_at: commonManagedColumnsOptions.created_at,
+	updated_at: commonManagedColumnsOptions.updated_at,
+	deleted_at: commonManagedColumnsOptions.deleted_at,
 
-	courseId: {
+	course_id: {
 		name: "course_id",
 		type: "integer",
 		nullable: true,
 	},
 
-	createdById: commonManagedByColumns.createdById,
-	updatedById: commonManagedByColumns.updatedById,
-	deletedById: commonManagedByColumns.deletedById,
+	created_by_id: commonManagedColumnsOptions.created_by_id,
+	updated_by_id: commonManagedColumnsOptions.updated_by_id,
+	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
 };
 
-export const courseEditionRelations: CourseEditionRelations = {
+export const courseEditionRelations: RelationsOptions<CourseEditionRelations> = {
 	course: {
+		name: "course",
 		type: "many-to-one",
 		inverseSide: "courseEditions",
 		target: "course",
@@ -61,16 +57,16 @@ export const courseEditionRelations: CourseEditionRelations = {
 			name: "course_id",
 			referencedColumnName: "id",
 		},
-		name: "course",
 	},
 	courseClassLists: {
+		name: "courseClassLists",
 		type: "one-to-many",
 		inverseSide: "courseEdition",
 		target: "course_class_list",
-		name: "courseClassLists",
 	},
 
 	createdBy: {
+		name: "createdBy",
 		type: "many-to-one",
 		inverseSide: "createdCourseEditions",
 		target: "user",
@@ -78,9 +74,9 @@ export const courseEditionRelations: CourseEditionRelations = {
 			name: "created_by_id",
 			referencedColumnName: "id",
 		},
-		name: "createdBy",
 	},
 	updatedBy: {
+		name: "updatedBy",
 		type: "many-to-one",
 		inverseSide: "updatedCourseEditions",
 		target: "user",
@@ -88,13 +84,12 @@ export const courseEditionRelations: CourseEditionRelations = {
 			name: "updated_by_id",
 			referencedColumnName: "id",
 		},
-		name: "updatedBy",
 	},
 	deletedBy: {
+		name: "deletedBy",
 		type: "many-to-one",
 		inverseSide: "deletedCourseEditions",
 		target: "user",
-		name: "deletedBy",
 		joinColumn: {
 			name: "deleted_by_id",
 			referencedColumnName: "id",
@@ -102,7 +97,7 @@ export const courseEditionRelations: CourseEditionRelations = {
 	},
 };
 
-export const CourseEdition: CourseEditionType = createTypedEntitySchema<CourseEditionType>({
+export const courseEditionEntitySchema = createTypedEntitySchema<CourseEditionEntitySchema>({
 	name: "course_edition",
 	columns: courseEditionColumns,
 	relations: courseEditionRelations,

@@ -4,10 +4,9 @@ import * as yup from "yup";
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getGenericError } from "../_utils/getGenericError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
-import { identity } from "../../_utils/identity";
+import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { isAxiosError } from "../../_utils/isAxiosError";
-import { CourseVisibility } from "../../entities/Course";
-import { CreateCourseInputVisibility, MutationCreateCourseArgs, Resolvers } from "../../generated/graphql.types";
+import { MutationCreateCourseArgs, Resolvers } from "../../generated/graphql.types";
 import { getCreateCoursePayloadParent } from "../CreateCoursePayload/CreateCoursePayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context) => {
@@ -39,21 +38,14 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 	});
 
 	if (!courseWithSameCode) {
-		courseWithSameCode = await repositories.course.save(
-			repositories.course.create({
-				code: validatedData.code,
-				createdById: user.id,
-				eva: validatedData.eva || null,
-				iconUrl,
-				name: validatedData.name,
-				// TODO: type visibility!
-				visibility: identity<Record<Extract<CreateCourseInputVisibility, string>, string>>({
-					DISABLED: CourseVisibility.disabled,
-					HIDDEN: CourseVisibility.hidden,
-					PUBLIC: CourseVisibility.public,
-				})[validatedData.visibility || "PUBLIC"],
-			})
-		);
+		courseWithSameCode = await repositories.course.createAndInsert({
+			code: validatedData.code,
+			created_by_id: user.id,
+			eva: validatedData.eva || null,
+			icon_url: iconUrl,
+			name: validatedData.name,
+			visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
+		});
 		// TODO: necessary?
 		dataLoaders.course.clearAll();
 

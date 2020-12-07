@@ -1,17 +1,17 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
-import { Faq, FaqRow } from "../../entities/Faq/Faq.entity.types";
+import { FaqEntitySchema, FaqRow } from "../../entities/Faq/Faq.entity.types";
 
 export type SaveFaqData = SafeOmit<FaqRow, "id">;
 
 export type CreateFaqData = SafeOmit<
 	FaqRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
-	Partial<Pick<FaqRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">>;
+	Partial<Pick<FaqRow, "id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id">>;
 
 export type FaqRepository = {
-	_typedRepository: TypedRepository<Faq>;
+	_typedRepository: TypedRepository<FaqEntitySchema>;
 
 	findAll: () => Promise<FaqRow[]>;
 

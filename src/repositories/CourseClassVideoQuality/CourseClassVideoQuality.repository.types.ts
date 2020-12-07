@@ -1,7 +1,7 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
 import {
-	CourseClassVideoQuality,
+	CourseClassVideoQualityEntitySchema,
 	CourseClassVideoQualityRow,
 } from "../../entities/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
 
@@ -10,21 +10,24 @@ export type CourseClassVideoQualityFindOneOptions = {
 };
 
 export type CourseClassVideoQualityFindAllOptions = {
-	courseClassVideoId: CourseClassVideoQualityRow["courseClassVideoId"];
+	courseClassVideoId: CourseClassVideoQualityRow["course_class_video_id"];
 };
 
 export type SaveCourseClassVideoQualityData = SafeOmit<CourseClassVideoQualityRow, "id">;
 
 export type CreateCourseClassVideoQualityData = SafeOmit<
 	CourseClassVideoQualityRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
 	Partial<
-		Pick<CourseClassVideoQualityRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">
+		Pick<
+			CourseClassVideoQualityRow,
+			"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
+		>
 	>;
 
 export type CourseClassVideoQualityRepository = {
-	_typedRepository: TypedRepository<CourseClassVideoQuality>;
+	_typedRepository: TypedRepository<CourseClassVideoQualityEntitySchema>;
 
 	findAll: (options: CourseClassVideoQualityFindAllOptions) => Promise<CourseClassVideoQualityRow[]>;
 	findBatch: (

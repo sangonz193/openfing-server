@@ -1,440 +1,393 @@
-import {
-	Column,
-	EntityRow,
-	OneToManyRelation,
-	PrimaryColumn,
-	TypedEntitySchema,
-} from "../_utils/createTypedEntitySchema";
-import { Course } from "../Course/Course.entity.types";
-import { CourseClass } from "../CourseClass/CourseClass.entity.types";
-import { CourseClassChapterCue } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
-import { CourseClassList } from "../CourseClassList/CourseClassList.entity.types";
-import { CourseClassVideo } from "../CourseClassVideo/CourseClassVideo.entity.types";
-import { CourseClassVideoFormat } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
-import { CourseClassVideoQuality } from "../CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
-import { CourseEdition } from "../CourseEdition/CourseEdition.entity.types";
-import { Faq } from "../Faq/Faq.entity.types";
-import { UserToUserRole } from "../UserToUserRole/UserToUserRole.entity.types";
+import { BidirectionalRelation } from "../_utils/BidirectionalRelation";
+import { FieldColumn, PrimaryColumn } from "../_utils/Column";
+import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { NamedColumns } from "../_utils/NamedColumns";
+import { NamedRelations } from "../_utils/NamedRelations";
+import { CourseEntitySchema } from "../Course/Course.entity.types";
+import { CourseClassEntitySchema } from "../CourseClass/CourseClass.entity.types";
+import { CourseClassChapterCueEntitySchema } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
+import { CourseClassListEntitySchema } from "../CourseClassList/CourseClassList.entity.types";
+import { CourseClassVideoEntitySchema } from "../CourseClassVideo/CourseClassVideo.entity.types";
+import { CourseClassVideoFormatEntitySchema } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
+import { CourseClassVideoQualityEntitySchema } from "../CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
+import { CourseEditionEntitySchema } from "../CourseEdition/CourseEdition.entity.types";
+import { FaqEntitySchema } from "../Faq/Faq.entity.types";
+import { UserToUserRoleEntitySchema } from "../UserToUserRole/UserToUserRole.entity.types";
 
-export type User_id = PrimaryColumn<{ name: "id"; type: "integer"; entity: User }>;
-export type User_email = Column<{ name: "email"; type: "varchar"; nullable: false }>;
-export type User_uid = Column<{ name: "uid"; type: "varchar" }>;
-export type User_password = Column<{ name: "password"; type: "text"; nullable: false }>;
-export type User_name = Column<{ name: "name"; type: "varchar" }>;
-export type User_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
-export type User_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
-export type User_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
+export type User_id = PrimaryColumn<"integer">;
+export type User_email = FieldColumn<{ name: "email"; sqlType: "varchar"; nullable: false }>;
+export type User_uid = FieldColumn<{ name: "uid"; sqlType: "varchar" }>;
+export type User_password = FieldColumn<{ name: "password"; sqlType: "text"; nullable: false }>;
+export type User_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
+export type User_createdAt = FieldColumn<{ name: "created_at"; sqlType: "timestamp with time zone" }>;
+export type User_updatedAt = FieldColumn<{ name: "updated_at"; sqlType: "timestamp with time zone" }>;
+export type User_deletedAt = FieldColumn<{ name: "deleted_at"; sqlType: "timestamp with time zone" }>;
 
-export type UserToCourse_created = OneToManyRelation<{
+export type UserToCourse_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourses";
 	};
 	to: {
-		entity: () => Course;
+		entity: CourseEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourse_updated = OneToManyRelation<{
+export type UserToCourse_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourses";
 	};
 	to: {
-		entity: () => Course;
+		entity: CourseEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourse_deleted = OneToManyRelation<{
+export type UserToCourse_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourses";
 	};
 	to: {
-		entity: () => Course;
+		entity: CourseEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseEdition management
-export type UserToCourseEdition_created = OneToManyRelation<{
+export type UserToCourseEdition_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseEditions";
 	};
 	to: {
-		entity: () => CourseEdition;
+		entity: CourseEditionEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseEdition_updated = OneToManyRelation<{
+export type UserToCourseEdition_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseEditions";
 	};
 	to: {
-		entity: () => CourseEdition;
+		entity: CourseEditionEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseEdition_deleted = OneToManyRelation<{
+export type UserToCourseEdition_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseEditions";
 	};
 	to: {
-		entity: () => CourseEdition;
+		entity: CourseEditionEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClassList management
-export type UserToCourseClassList_created = OneToManyRelation<{
+export type UserToCourseClassList_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClassLists";
 	};
 	to: {
-		entity: () => CourseClassList;
+		entity: CourseClassListEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassList_updated = OneToManyRelation<{
+export type UserToCourseClassList_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClassLists";
 	};
 	to: {
-		entity: () => CourseClassList;
+		entity: CourseClassListEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassList_deleted = OneToManyRelation<{
+export type UserToCourseClassList_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClassLists";
 	};
 	to: {
-		entity: () => CourseClassList;
+		entity: CourseClassListEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClass management
-export type UserToCourseClass_created = OneToManyRelation<{
+export type UserToCourseClass_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClasses";
 	};
 	to: {
-		entity: () => CourseClass;
+		entity: CourseClassEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClass_updated = OneToManyRelation<{
+export type UserToCourseClass_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClasses";
 	};
 	to: {
-		entity: () => CourseClass;
+		entity: CourseClassEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClass_deleted = OneToManyRelation<{
+export type UserToCourseClass_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClasses";
 	};
 	to: {
-		entity: () => CourseClass;
+		entity: CourseClassEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClassVideo management
-export type UserToCourseClassVideo_created = OneToManyRelation<{
+export type UserToCourseClassVideo_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClassVideos";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: CourseClassVideoEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideo_updated = OneToManyRelation<{
+export type UserToCourseClassVideo_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClassVideos";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: CourseClassVideoEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideo_deleted = OneToManyRelation<{
+export type UserToCourseClassVideo_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClassVideos";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: CourseClassVideoEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClassChapterCue management
-export type UserToCourseClassChapterCue_created = OneToManyRelation<{
+export type UserToCourseClassChapterCue_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClassChapterCues";
 	};
 	to: {
-		entity: () => CourseClassChapterCue;
+		entity: CourseClassChapterCueEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassChapterCue_updated = OneToManyRelation<{
+export type UserToCourseClassChapterCue_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClassChapterCues";
 	};
 	to: {
-		entity: () => CourseClassChapterCue;
+		entity: CourseClassChapterCueEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassChapterCue_deleted = OneToManyRelation<{
+export type UserToCourseClassChapterCue_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClassChapterCues";
 	};
 	to: {
-		entity: () => CourseClassChapterCue;
+		entity: CourseClassChapterCueEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClassVideoQuality management
-export type UserToCourseClassVideoQuality_created = OneToManyRelation<{
+export type UserToCourseClassVideoQuality_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClassVideoQualities";
 	};
 	to: {
-		entity: () => CourseClassVideoQuality;
+		entity: CourseClassVideoQualityEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideoQuality_updated = OneToManyRelation<{
+export type UserToCourseClassVideoQuality_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClassVideoQualities";
 	};
 	to: {
-		entity: () => CourseClassVideoQuality;
+		entity: CourseClassVideoQualityEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideoQuality_deleted = OneToManyRelation<{
+export type UserToCourseClassVideoQuality_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClassVideoQualities";
 	};
 	to: {
-		entity: () => CourseClassVideoQuality;
+		entity: CourseClassVideoQualityEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region CourseClassVideoFormat management
-export type UserToCourseClassVideoFormat_created = OneToManyRelation<{
+export type UserToCourseClassVideoFormat_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdCourseClassVideoFormats";
 	};
 	to: {
-		entity: () => CourseClassVideoFormat;
+		entity: CourseClassVideoFormatEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideoFormat_updated = OneToManyRelation<{
+export type UserToCourseClassVideoFormat_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedCourseClassVideoFormats";
 	};
 	to: {
-		entity: () => CourseClassVideoFormat;
+		entity: CourseClassVideoFormatEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToCourseClassVideoFormat_deleted = OneToManyRelation<{
+export type UserToCourseClassVideoFormat_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedCourseClassVideoFormats";
 	};
 	to: {
-		entity: () => CourseClassVideoFormat;
+		entity: CourseClassVideoFormatEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-// region Faq management
-export type UserToFaq_created = OneToManyRelation<{
+export type UserToFaq_createdBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "createdFaqs";
 	};
 	to: {
-		entity: () => Faq;
+		entity: FaqEntitySchema;
 		columnName: "created_by_id";
 		relationName: "createdBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToFaq_updated = OneToManyRelation<{
+export type UserToFaq_updatedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "updatedFaqs";
 	};
 	to: {
-		entity: () => Faq;
+		entity: FaqEntitySchema;
 		columnName: "updated_by_id";
 		relationName: "updatedBy";
 		nullable: true;
 	};
 }>;
 
-export type UserToFaq_deleted = OneToManyRelation<{
+export type UserToFaq_deletedBy = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "deletedFaqs";
 	};
 	to: {
-		entity: () => Faq;
+		entity: FaqEntitySchema;
 		columnName: "deleted_by_id";
 		relationName: "deletedBy";
 		nullable: true;
 	};
 }>;
-// endregion
 
-export type UserToUserToUserRole_userToUserRoles = OneToManyRelation<{
+export type UserToUserToUserRole_userToUserRoles = BidirectionalRelation<{
 	from: {
-		entity: () => User;
-		primaryColumn: User_id;
+		entity: UserEntitySchema;
 		relationName: "userToUserRoles";
 	};
 	to: {
-		entity: () => UserToUserRole;
+		entity: UserToUserRoleEntitySchema;
 		columnName: "user_id";
 		relationName: "user";
 		nullable: false;
 	};
 }>;
 
-export type UserColumns = {
+export type UserColumns = NamedColumns<{
 	id: User_id;
 
 	email: User_email;
@@ -445,48 +398,48 @@ export type UserColumns = {
 	createdAt: User_createdAt;
 	updatedAt: User_updatedAt;
 	deletedAt: User_deletedAt;
-};
+}>;
 
-export type UserRelations = {
-	createdCourses: UserToCourse_created["from"]["relation"];
-	updatedCourses: UserToCourse_updated["from"]["relation"];
-	deletedCourses: UserToCourse_deleted["from"]["relation"];
+export type UserRelations = NamedRelations<{
+	createdCourses: UserToCourse_createdBy["from"]["relation"];
+	updatedCourses: UserToCourse_updatedBy["from"]["relation"];
+	deletedCourses: UserToCourse_deletedBy["from"]["relation"];
 
-	createdCourseEditions: UserToCourseEdition_created["from"]["relation"];
-	updatedCourseEditions: UserToCourseEdition_updated["from"]["relation"];
-	deletedCourseEditions: UserToCourseEdition_deleted["from"]["relation"];
+	createdCourseEditions: UserToCourseEdition_createdBy["from"]["relation"];
+	updatedCourseEditions: UserToCourseEdition_updatedBy["from"]["relation"];
+	deletedCourseEditions: UserToCourseEdition_deletedBy["from"]["relation"];
 
-	createdCourseClassLists: UserToCourseClassList_created["from"]["relation"];
-	updatedCourseClassLists: UserToCourseClassList_updated["from"]["relation"];
-	deletedCourseClassLists: UserToCourseClassList_deleted["from"]["relation"];
+	createdCourseClassLists: UserToCourseClassList_createdBy["from"]["relation"];
+	updatedCourseClassLists: UserToCourseClassList_updatedBy["from"]["relation"];
+	deletedCourseClassLists: UserToCourseClassList_deletedBy["from"]["relation"];
 
-	createdCourseClasses: UserToCourseClass_created["from"]["relation"];
-	updatedCourseClasses: UserToCourseClass_updated["from"]["relation"];
-	deletedCourseClasses: UserToCourseClass_deleted["from"]["relation"];
+	createdCourseClasses: UserToCourseClass_createdBy["from"]["relation"];
+	updatedCourseClasses: UserToCourseClass_updatedBy["from"]["relation"];
+	deletedCourseClasses: UserToCourseClass_deletedBy["from"]["relation"];
 
-	createdCourseClassVideos: UserToCourseClassVideo_created["from"]["relation"];
-	updatedCourseClassVideos: UserToCourseClassVideo_updated["from"]["relation"];
-	deletedCourseClassVideos: UserToCourseClassVideo_deleted["from"]["relation"];
+	createdCourseClassVideos: UserToCourseClassVideo_createdBy["from"]["relation"];
+	updatedCourseClassVideos: UserToCourseClassVideo_updatedBy["from"]["relation"];
+	deletedCourseClassVideos: UserToCourseClassVideo_deletedBy["from"]["relation"];
 
-	createdCourseClassVideoQualities: UserToCourseClassVideoQuality_created["from"]["relation"];
-	updatedCourseClassVideoQualities: UserToCourseClassVideoQuality_updated["from"]["relation"];
-	deletedCourseClassVideoQualities: UserToCourseClassVideoQuality_deleted["from"]["relation"];
+	createdCourseClassVideoQualities: UserToCourseClassVideoQuality_createdBy["from"]["relation"];
+	updatedCourseClassVideoQualities: UserToCourseClassVideoQuality_updatedBy["from"]["relation"];
+	deletedCourseClassVideoQualities: UserToCourseClassVideoQuality_deletedBy["from"]["relation"];
 
-	createdCourseClassVideoFormats: UserToCourseClassVideoFormat_created["from"]["relation"];
-	updatedCourseClassVideoFormats: UserToCourseClassVideoFormat_updated["from"]["relation"];
-	deletedCourseClassVideoFormats: UserToCourseClassVideoFormat_deleted["from"]["relation"];
+	createdCourseClassVideoFormats: UserToCourseClassVideoFormat_createdBy["from"]["relation"];
+	updatedCourseClassVideoFormats: UserToCourseClassVideoFormat_updatedBy["from"]["relation"];
+	deletedCourseClassVideoFormats: UserToCourseClassVideoFormat_deletedBy["from"]["relation"];
 
-	createdFaqs: UserToFaq_created["from"]["relation"];
-	updatedFaqs: UserToFaq_updated["from"]["relation"];
-	deletedFaqs: UserToFaq_deleted["from"]["relation"];
+	createdFaqs: UserToFaq_createdBy["from"]["relation"];
+	updatedFaqs: UserToFaq_updatedBy["from"]["relation"];
+	deletedFaqs: UserToFaq_deletedBy["from"]["relation"];
 
 	userToUserRoles: UserToUserToUserRole_userToUserRoles["from"]["relation"];
-};
+}>;
 
-export type User = TypedEntitySchema<{
+export type UserEntitySchema = TypedEntitySchema<{
 	name: "user";
 	columns: UserColumns;
 	relations: UserRelations;
 }>;
 
-export type UserRow = EntityRow<User>;
+export type UserRow = EntityRow<UserEntitySchema>;

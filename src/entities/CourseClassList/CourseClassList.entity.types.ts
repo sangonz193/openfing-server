@@ -1,41 +1,44 @@
-import {
-	Column,
-	EntityRow,
-	OneToManyRelation,
-	PrimaryColumn,
-	TypedEntitySchema,
-} from "../_utils/createTypedEntitySchema";
-import { CourseClass } from "../CourseClass/CourseClass.entity.types";
+import { BidirectionalRelation } from "../_utils/BidirectionalRelation";
+import { FieldColumn, PrimaryColumn } from "../_utils/Column";
+import { CommonVisibility } from "../_utils/CommonVisibility";
+import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { NamedColumns } from "../_utils/NamedColumns";
+import { NamedRelations } from "../_utils/NamedRelations";
+import { CourseClassEntitySchema } from "../CourseClass/CourseClass.entity.types";
 import { CourseEditionToCourseClassList_courseClassLists } from "../CourseEdition/CourseEdition.entity.types";
 import {
-	UserToCourseClassList_created,
-	UserToCourseClassList_deleted,
-	UserToCourseClassList_updated,
+	UserToCourseClassList_createdBy,
+	UserToCourseClassList_deletedBy,
+	UserToCourseClassList_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassList_id = PrimaryColumn<{ name: "id"; type: "integer"; entity: CourseClassList }>;
-export type CourseClassList_name = Column<{ name: "name"; type: "varchar" }>;
-export type CourseClassList_code = Column<{ name: "code"; type: "varchar" }>;
-export type CourseClassList_visibility = Column<{ name: "visibility"; type: "varchar" }>;
-export type CourseClassList_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
-export type CourseClassList_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
-export type CourseClassList_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
+export type CourseClassList_id = PrimaryColumn<"integer">;
+export type CourseClassList_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
+export type CourseClassList_code = FieldColumn<{ name: "code"; sqlType: "varchar" }>;
+export type CourseClassList_visibility = FieldColumn<{
+	name: "visibility";
+	sqlType: "varchar";
+	typescriptType: CommonVisibility;
+}>;
+export type CourseClassList_createdAt = FieldColumn<{ name: "created_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClassList_updatedAt = FieldColumn<{ name: "updated_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClassList_deletedAt = FieldColumn<{ name: "deleted_at"; sqlType: "timestamp with time zone" }>;
 
-export type CourseClassListToCourseClass_courseClasses = OneToManyRelation<{
+export type CourseClassListToCourseClass_courseClasses = BidirectionalRelation<{
 	from: {
-		entity: () => CourseClassList;
+		entity: CourseClassListEntitySchema;
 		primaryColumn: CourseClassList_id;
 		relationName: "courseClasses";
 	};
 	to: {
-		entity: () => CourseClass;
+		entity: CourseClassEntitySchema;
 		columnName: "course_class_list_id";
 		relationName: "courseClassList";
 		nullable: true;
 	};
 }>;
 
-export type CourseClassListColumns = {
+export type CourseClassListColumns = NamedColumns<{
 	id: CourseClassList_id;
 
 	name: CourseClassList_name;
@@ -48,24 +51,24 @@ export type CourseClassListColumns = {
 
 	courseEditionId: CourseEditionToCourseClassList_courseClassLists["to"]["column"];
 
-	createdById: UserToCourseClassList_created["to"]["column"];
-	updatedById: UserToCourseClassList_updated["to"]["column"];
-	deletedById: UserToCourseClassList_deleted["to"]["column"];
-};
+	createdById: UserToCourseClassList_createdBy["to"]["column"];
+	updatedById: UserToCourseClassList_updatedBy["to"]["column"];
+	deletedById: UserToCourseClassList_deletedBy["to"]["column"];
+}>;
 
-export type CourseClassListRelations = {
+export type CourseClassListRelations = NamedRelations<{
 	courseEdition: CourseEditionToCourseClassList_courseClassLists["to"]["relation"];
 	courseClasses: CourseClassListToCourseClass_courseClasses["from"]["relation"];
 
-	createdBy: UserToCourseClassList_created["to"]["relation"];
-	updatedBy: UserToCourseClassList_updated["to"]["relation"];
-	deletedBy: UserToCourseClassList_deleted["to"]["relation"];
-};
+	createdBy: UserToCourseClassList_createdBy["to"]["relation"];
+	updatedBy: UserToCourseClassList_updatedBy["to"]["relation"];
+	deletedBy: UserToCourseClassList_deletedBy["to"]["relation"];
+}>;
 
-export type CourseClassList = TypedEntitySchema<{
+export type CourseClassListEntitySchema = TypedEntitySchema<{
 	name: "course_class_list";
 	columns: CourseClassListColumns;
 	relations: CourseClassListRelations;
 }>;
 
-export type CourseClassListRow = EntityRow<CourseClassList>;
+export type CourseClassListRow = EntityRow<CourseClassListEntitySchema>;

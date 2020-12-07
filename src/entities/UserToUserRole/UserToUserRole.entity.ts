@@ -1,31 +1,30 @@
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { RelationsOptions } from "../_utils/RelationsOptions";
 import {
-	UserToUserRole as UserToUserRoleType,
 	UserToUserRoleColumns,
+	UserToUserRoleEntitySchema,
 	UserToUserRoleRelations,
 } from "./UserToUserRole.entity.types";
 
-export const userToUserRoleColumns: UserToUserRoleColumns = {
+export const userToUserRoleColumns: ColumnsOptions<UserToUserRoleColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
 		primary: true,
 		generated: "increment",
 	},
-
-	userId: {
+	user_id: {
 		name: "user_id",
 		type: "integer",
-		nullable: false,
 	},
-	userRoleId: {
+	user_role_id: {
 		name: "user_role_id",
 		type: "integer",
-		nullable: false,
 	},
 };
 
-export const userToUserRoleRelations: UserToUserRoleRelations = {
+export const userToUserRoleRelations: RelationsOptions<UserToUserRoleRelations> = {
 	user: {
 		name: "user",
 		type: "many-to-one",
@@ -37,10 +36,10 @@ export const userToUserRoleRelations: UserToUserRoleRelations = {
 		},
 	},
 	userRole: {
+		name: "userRole",
 		type: "many-to-one",
 		inverseSide: "userToUserRoles",
 		target: "user_role",
-		name: "userRole",
 		joinColumn: {
 			name: "user_role_id",
 			referencedColumnName: "id",
@@ -48,7 +47,7 @@ export const userToUserRoleRelations: UserToUserRoleRelations = {
 	},
 };
 
-export const UserToUserRole: UserToUserRoleType = createTypedEntitySchema<UserToUserRoleType>({
+export const userToUserRoleEntitySchema = createTypedEntitySchema<UserToUserRoleEntitySchema>({
 	name: "user_to_user_role",
 	columns: userToUserRoleColumns,
 	relations: userToUserRoleRelations,

@@ -9,7 +9,8 @@ const validatedEnv = yup
 		GRAPHQL_PATH: yup.string().required().min(1),
 		FILES_PATH: yup.string().required().min(1),
 		FILES_URL: yup.string().required().min(1),
-		DATABASE_BACKUP_REPO_PATH: yup.string(),
+		DATABASE_BACKUP_REPO_PATH: yup.string().notRequired(),
+		SKIP_DATABASE_BACKUP: yup.boolean().default(true).required(),
 		ACCESS_TOKEN_SECRET: yup.string().required().min(1),
 		ACCESS_TOKEN_DURATION: yup.string().required().min(1),
 		REFRESH_TOKEN_SECRET: yup.string().required().min(1),
@@ -31,8 +32,32 @@ const ASSETS_URL = urlJoin(validatedEnv.FILES_URL, "assets");
 const COURSE_ICONS_PATH = path.join(ASSETS_PATH, "course-icons");
 const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons");
 
+let openFingVideoSftpConnectionOptions:
+	| { host: string; username: string; privateKeyBase64: string }
+	| undefined = undefined;
+
+try {
+	const validatedData = yup
+		.object({
+			OPEN_FING_VIDEO_SSH_KEY: yup.string().required(),
+			OPEN_FING_VIDEO_SSH_HOST: yup.string().required(),
+			OPEN_FING_VIDEO_SSH_USERNAME: yup.string().required(),
+		})
+		.required()
+		.validateSync(process.env, {
+			stripUnknown: true,
+		});
+
+	openFingVideoSftpConnectionOptions = {
+		host: validatedData.OPEN_FING_VIDEO_SSH_HOST,
+		username: validatedData.OPEN_FING_VIDEO_SSH_USERNAME,
+		privateKeyBase64: validatedData.OPEN_FING_VIDEO_SSH_KEY,
+	};
+} catch (e) {}
+
 export const appConfig = {
 	dbConnectionOptions: getDbConnectionOptions(),
+	openFingVideoSftpConnectionOptions,
 
 	...validatedEnv,
 

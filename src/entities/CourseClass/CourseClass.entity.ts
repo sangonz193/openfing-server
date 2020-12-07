@@ -1,10 +1,13 @@
-import { commonManagedAtColumns, commonManagedByColumns, commonVisibility } from "../_utils/common";
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
+import { CommonVisibility } from "../_utils/CommonVisibility";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { CourseClass as CourseClassType, CourseClassColumns, CourseClassRelations } from "./CourseClass.entity.types";
+import { RelationsOptions } from "../_utils/RelationsOptions";
+import { CourseClassColumns, CourseClassEntitySchema, CourseClassRelations } from "./CourseClass.entity.types";
 
-export const CourseClassVisibility = { ...commonVisibility };
+export type CourseClassVisibility = CommonVisibility;
 
-export const courseClassColumns: CourseClassColumns = {
+export const courseClassColumns: ColumnsOptions<CourseClassColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
@@ -27,28 +30,28 @@ export const courseClassColumns: CourseClassColumns = {
 		type: "varchar",
 		nullable: true,
 	},
-	publishedAt: {
+	published_at: {
 		name: "published_at",
 		type: "timestamp with time zone",
 		nullable: true,
 	},
 
-	createdAt: commonManagedAtColumns.createdAt,
-	updatedAt: commonManagedAtColumns.updatedAt,
-	deletedAt: commonManagedAtColumns.deletedAt,
-
-	courseClassListId: {
+	course_class_list_id: {
 		name: "course_class_list_id",
 		type: "integer",
 		nullable: true,
 	},
 
-	createdById: commonManagedByColumns.createdById,
-	updatedById: commonManagedByColumns.updatedById,
-	deletedById: commonManagedByColumns.deletedById,
+	created_at: commonManagedColumnsOptions.created_at,
+	updated_at: commonManagedColumnsOptions.updated_at,
+	deleted_at: commonManagedColumnsOptions.deleted_at,
+
+	created_by_id: commonManagedColumnsOptions.created_by_id,
+	updated_by_id: commonManagedColumnsOptions.updated_by_id,
+	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
 };
 
-export const courseClassRelations: CourseClassRelations = {
+export const courseClassRelations: RelationsOptions<CourseClassRelations> = {
 	courseClassList: {
 		name: "courseClassList",
 		type: "many-to-one",
@@ -67,6 +70,7 @@ export const courseClassRelations: CourseClassRelations = {
 	},
 
 	createdBy: {
+		name: "createdBy",
 		type: "many-to-one",
 		inverseSide: "createdCourseClasses",
 		target: "user",
@@ -74,9 +78,9 @@ export const courseClassRelations: CourseClassRelations = {
 			name: "created_by_id",
 			referencedColumnName: "id",
 		},
-		name: "createdBy",
 	},
 	updatedBy: {
+		name: "updatedBy",
 		type: "many-to-one",
 		inverseSide: "updatedCourseClasses",
 		target: "user",
@@ -84,9 +88,9 @@ export const courseClassRelations: CourseClassRelations = {
 			name: "updated_by_id",
 			referencedColumnName: "id",
 		},
-		name: "updatedBy",
 	},
 	deletedBy: {
+		name: "deletedBy",
 		type: "many-to-one",
 		inverseSide: "deletedCourseClasses",
 		target: "user",
@@ -94,11 +98,10 @@ export const courseClassRelations: CourseClassRelations = {
 			name: "deleted_by_id",
 			referencedColumnName: "id",
 		},
-		name: "deletedBy",
 	},
 };
 
-export const CourseClass: CourseClassType = createTypedEntitySchema<CourseClassType>({
+export const courseClassEntitySchema = createTypedEntitySchema<CourseClassEntitySchema>({
 	name: "course_class",
 	columns: courseClassColumns,
 	relations: courseClassRelations,

@@ -4,15 +4,8 @@ import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getGenericError } from "../_utils/getGenericError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
-import { identity } from "../../_utils/identity";
-import { CourseVisibility } from "../../entities/Course";
-import { CourseEditionVisibility } from "../../entities/CourseEdition";
-import {
-	CreateCourseClassListInputVisibility,
-	CreateCourseInputVisibility,
-	MutationCreateCourseClassListArgs,
-	Resolvers,
-} from "../../generated/graphql.types";
+import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
+import { MutationCreateCourseClassListArgs, Resolvers } from "../../generated/graphql.types";
 import { getCreateCourseClassListPayloadParent } from "../CreateCourseClassListPayload/CreateCourseClassListPayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args, context) => {
@@ -66,19 +59,14 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 	if (!courseEdition) {
 		courseEdition = await repositories.courseEdition.save(
 			repositories.courseEdition.create({
-				courseId: course.id,
-				createdById: user.id,
+				course_id: course.id,
+				created_by_id: user.id,
 				name: `Edición ${validatedData.year}, ${
 					validatedData.semester === 1 ? "primer semestre" : "segundo semestre"
 				}`,
 				year: validatedData.year,
 				semester: validatedData.semester,
-				// TODO: type visibility!
-				visibility: identity<Record<Extract<CreateCourseClassListInputVisibility, string>, string>>({
-					DISABLED: CourseEditionVisibility.disabled,
-					HIDDEN: CourseEditionVisibility.hidden,
-					PUBLIC: CourseEditionVisibility.public,
-				})[validatedData.visibility || "PUBLIC"],
+				visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
 			})
 		);
 		// TODO: necessary?
@@ -92,17 +80,13 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 	});
 
 	if (!courseClassListWithSameCode) {
-		courseClassListWithSameCode = await repositories.courseClassList.save(
+		courseClassListWithSameCode = await repositories.courseClassList.createAndInsert(
 			repositories.courseClassList.create({
 				code: validatedData.code,
-				createdById: user.id,
-				courseEditionId: courseEdition.id,
+				created_by_id: user.id,
+				course_edition_id: courseEdition.id,
 				name: validatedData.name,
-				visibility: identity<Record<Extract<CreateCourseInputVisibility, string>, string>>({
-					DISABLED: CourseVisibility.disabled,
-					HIDDEN: CourseVisibility.hidden,
-					PUBLIC: CourseVisibility.public,
-				})[validatedData.visibility || "PUBLIC"],
+				visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
 			})
 		);
 		// TODO: necessary?

@@ -50,15 +50,15 @@ const command: CommandModule<{}, {}> = {
 				uid: "openfing",
 				password: await hashPassword("password"),
 				name: "OpenFING",
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				deletedAt: null,
+				created_at: new Date(),
+				updated_at: new Date(),
+				deleted_at: null,
 			})
 		);
 
 		await getUserToUserRoleRepository(connection).save({
-			userId: user.id,
-			userRoleId: adminUserRole.id,
+			user_id: user.id,
+			user_role_id: adminUserRole.id,
 		});
 
 		await Promise.all(
