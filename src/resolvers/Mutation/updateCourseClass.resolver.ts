@@ -185,7 +185,13 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 										"..",
 										path.posix.basename(path.posix.resolve(videoFilePath, "..")) +
 											"_" +
-											updatedCourseClass.number.toString().padStart(2, "0") + // TODO: add quality and video info if indexes are > 0 info
+											updatedCourseClass.number.toString().padStart(2, "0") +
+											(videoIndex > 0 || videoQualityIndex > 0
+												? "_" +
+												  videoIndex.toString().padStart(2, "0") +
+												  "_" +
+												  videoQualityIndex.toString().padStart(2, "0")
+												: "") +
 											fileExtension
 									);
 
