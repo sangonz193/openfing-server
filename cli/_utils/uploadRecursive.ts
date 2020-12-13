@@ -28,16 +28,22 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 			else shouldCreateFolder = false;
 		} catch (e) {}
 
-		if (shouldCreateFolder) await sftp.mkdir(toPath);
+		const [folderContent] = await Promise.all([
+			fs.readdir(fromPath),
+			(async () => {
+				if (shouldCreateFolder) await sftp.mkdir(toPath);
+			})(),
+		]);
 
-		const folderContent = await fs.readdir(fromPath);
-
-		for (const item of folderContent)
-			await uploadRecursive({
-				fromPath: path.join(fromPath, item),
-				toPath: path.join(toPath, item),
-				sftp,
-			});
+		await Promise.all(
+			folderContent.map((item) =>
+				uploadRecursive({
+					fromPath: path.join(fromPath, item),
+					toPath: path.join(toPath, item),
+					sftp,
+				})
+			)
+		);
 	}
 
 	console.log(`- uploaded: ${fromPath} to ${toPath}`);
