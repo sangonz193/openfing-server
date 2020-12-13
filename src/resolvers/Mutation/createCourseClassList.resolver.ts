@@ -1,11 +1,11 @@
 import * as yup from "yup";
 
-import { getAuthenticationError } from "../_utils/getAuthenticationError";
-import { getGenericError } from "../_utils/getGenericError";
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { MutationCreateCourseClassListArgs, Resolvers } from "../../generated/graphql.types";
+import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getGenericError } from "../_utils/getGenericError";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getCreateCourseClassListPayloadParent } from "../CreateCourseClassListPayload/CreateCourseClassListPayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args, context) => {
@@ -16,12 +16,13 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 	const { dataLoaders, repositories } = context;
 
 	const validatedDataPromise = yup
-		.object<MutationCreateCourseClassListArgs["input"]>({
+		.object<yup.SchemaOf<MutationCreateCourseClassListArgs["input"]>["fields"]>({
 			courseCode: yup.string().trim().required(),
 			code: yup.string().trim().max(20).required(),
 			semester: yup.number().moreThan(0).lessThan(3).required(),
 			year: yup.number().moreThan(2005).lessThan(2030).required(),
 			name: yup.string().trim().max(200).required(),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args.input);

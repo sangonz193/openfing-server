@@ -1,17 +1,11 @@
-import { identity } from "lodash";
 import * as yup from "yup";
 
+import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
+import { MutationUpdateCourseClassListArgs, Resolvers } from "../../generated/graphql.types";
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
 import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
-import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
-import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
-import {
-	MutationUpdateCourseClassListArgs,
-	Resolvers,
-	UpdateCourseClassListInputVisibility,
-} from "../../generated/graphql.types";
 import { getUpdateCourseClassListPayload } from "../UpdateCourseClassListPayload/UpdateCourseClassListPayload.parent";
 
 const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args, context) => {
@@ -32,23 +26,17 @@ const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args,
 
 	const validatedData = await yup
 		.object<
-			{
-				[K in keyof MutationUpdateCourseClassListArgs["input"]]: Exclude<
-					MutationUpdateCourseClassListArgs["input"][K],
-					null
-				>;
-			}
+			yup.SchemaOf<
+				{
+					[K in keyof MutationUpdateCourseClassListArgs["input"]]: Exclude<
+						MutationUpdateCourseClassListArgs["input"][K],
+						null
+					>;
+				}
+			>["fields"]
 		>({
 			name: yup.string().trim().max(200).notRequired(),
-			visibility: yup.string().oneOf(
-				dangerousKeysOf(
-					identity<{ [T in UpdateCourseClassListInputVisibility]: "" }>({
-						DISABLED: "",
-						HIDDEN: "",
-						PUBLIC: "",
-					})
-				)
-			),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args);

@@ -2,11 +2,11 @@ import path from "path";
 import { Pool } from "pg";
 import { from as copyFrom } from "pg-copy-streams";
 
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { _fs } from "../../_utils/fs";
 import { appConfig } from "../../appConfig";
 import { entities } from "../../entities";
 import { Resolvers } from "../../generated/graphql.types";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 
 const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, args, context) => {
 	const { ormConnection } = context;
@@ -35,7 +35,7 @@ const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, arg
 	await ormConnection.runMigrations();
 
 	let result = "success";
-	await new Promise((resolve, reject) => {
+	await new Promise<void>((resolve, reject) => {
 		pool.connect(async (err, client, done) => {
 			if (err) {
 				reject(err);
@@ -53,13 +53,11 @@ const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, arg
 					const fileStream = _fs.createReadStream(backupFilePath);
 
 					setTimeout(() => fileStream.pipe(stream), 0);
-					await Promise.all([
-						new Promise((resolve) => {
-							fileStream.on("close", () => {
-								resolve();
-							});
-						}),
-					]);
+					await new Promise<void>((resolve) => {
+						fileStream.on("close", () => {
+							resolve();
+						});
+					});
 				})
 			).catch((e) => (result = e?.message));
 			done();

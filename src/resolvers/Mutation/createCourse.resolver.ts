@@ -1,12 +1,12 @@
 import Axios from "axios";
 import * as yup from "yup";
 
-import { getAuthenticationError } from "../_utils/getAuthenticationError";
-import { getGenericError } from "../_utils/getGenericError";
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { isAxiosError } from "../../_utils/isAxiosError";
 import { MutationCreateCourseArgs, Resolvers } from "../../generated/graphql.types";
+import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getGenericError } from "../_utils/getGenericError";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getCreateCoursePayloadParent } from "../CreateCoursePayload/CreateCoursePayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context) => {
@@ -17,10 +17,11 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 	const { dataLoaders, repositories } = context;
 
 	const validatedData = await yup
-		.object<MutationCreateCourseArgs["input"]>({
+		.object<yup.SchemaOf<MutationCreateCourseArgs["input"]>["fields"]>({
 			code: yup.string().trim().max(20).required(),
 			eva: yup.string().trim().max(300),
 			name: yup.string().trim().max(200).required(),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args.input);

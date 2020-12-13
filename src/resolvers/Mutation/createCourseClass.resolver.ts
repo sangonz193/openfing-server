@@ -1,16 +1,14 @@
 import * as yup from "yup";
 
+import { backupDb } from "../../_helpers/backupDb";
+import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
+import { getResolutionFromVideoUrl } from "../../_helpers/getResolutionFromVideoUrl";
+import { SafeOmit } from "../../_utils/utilTypes";
+import { MutationCreateCourseClassArgs, Resolvers } from "../../generated/graphql.types";
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
 import { getGenericError } from "../_utils/getGenericError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
-import { backupDb } from "../../_helpers/backupDb";
-import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
-import { getResolutionFromVideoUrl } from "../../_helpers/getResolutionFromVideoUrl";
-import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
-import { identityMap } from "../../_utils/identityMap";
-import { SafeOmit } from "../../_utils/utilTypes";
-import { MutationCreateCourseClassArgs, Resolvers } from "../../generated/graphql.types";
 import { getCreateCourseClassPayloadParent } from "../CreateCourseClassPayload/CreateCourseClassPayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, context) => {
@@ -21,18 +19,10 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 	const { dataLoaders, repositories } = context;
 
 	const validatedDataPromise = yup
-		.object<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>({
+		.object<yup.SchemaOf<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>["fields"]>({
 			name: yup.string().trim().max(200).required(),
 			number: yup.number().moreThan(0).lessThan(1000).required(),
-			visibility: yup.string().oneOf<Exclude<MutationCreateCourseClassArgs["input"]["visibility"], null>>(
-				dangerousKeysOf(
-					identityMap<Exclude<MutationCreateCourseClassArgs["input"]["visibility"], null | undefined>>({
-						DISABLED: "",
-						HIDDEN: "",
-						PUBLIC: "",
-					})
-				)
-			),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args.input);

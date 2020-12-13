@@ -5,8 +5,6 @@ import { from as copyFrom } from "pg-copy-streams";
 import { createConnection, getRepository } from "typeorm";
 import { CommandModule } from "yargs";
 
-import { fs } from "../../_utils/fs";
-import { fsExists } from "../../_utils/fsExists";
 import { hashPassword } from "../../../src/_helpers/hashPassword";
 import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
 import { _fs } from "../../../src/_utils/fs";
@@ -16,6 +14,8 @@ import { UserRoleCode } from "../../../src/entities/UserRole";
 import { getUserRepository } from "../../../src/repositories/User";
 import { getUserRoleRepository } from "../../../src/repositories/UserRole";
 import { getUserToUserRoleRepository } from "../../../src/repositories/UserToUserRole";
+import { fs } from "../../_utils/fs";
+import { fsExists } from "../../_utils/fsExists";
 import { valueToCSV } from "./valueToCSV";
 
 const command: CommandModule<{}, {}> = {
@@ -110,7 +110,7 @@ const command: CommandModule<{}, {}> = {
 				await connection.query(`alter table ${schema}.${tableName} disable trigger all`);
 
 				try {
-					await new Promise((resolve, reject) => {
+					await new Promise<void>((resolve, reject) => {
 						pool.connect((err, client, done) => {
 							if (err) reject(err);
 
@@ -122,7 +122,7 @@ const command: CommandModule<{}, {}> = {
 								)
 							);
 
-							new Promise((resolve, reject) => {
+							new Promise<void>((resolve, reject) => {
 								fileStream.on("error", () => {
 									done();
 								});

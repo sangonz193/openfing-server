@@ -1,7 +1,7 @@
+import { identityMap } from "../../_utils/identityMap";
 import { ColumnsOptions } from "../_utils/ColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import { RelationsOptions } from "../_utils/RelationsOptions";
-import { identityMap } from "../../_utils/identityMap";
 import { UserRoleColumns, UserRoleEntitySchema, UserRoleRelations } from "./UserRole.entity.types";
 
 export const UserRoleCode = identityMap<"admin" | "user">({

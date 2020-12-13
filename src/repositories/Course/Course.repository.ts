@@ -1,12 +1,12 @@
 import omitBy from "lodash/omitBy";
 import { Brackets, Connection } from "typeorm";
 
-import { createUpdate } from "../_utils/createUpdate";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import { courseColumns, courseEntitySchema } from "../../entities/Course";
 import { CourseRow } from "../../entities/Course/Course.entity.types";
+import { createUpdate } from "../_utils/createUpdate";
 import { CourseRepository } from "./Course.repository.types";
 
 export const getCourseRepository = (connection: Connection): CourseRepository => {

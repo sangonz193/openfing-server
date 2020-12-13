@@ -1,7 +1,6 @@
 import omitBy from "lodash/omitBy";
 import { Connection } from "typeorm";
 
-import { createUpdate } from "../_utils/createUpdate";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import {
@@ -9,6 +8,7 @@ import {
 	courseClassVideoFormatEntitySchema,
 } from "../../entities/CourseClassVideoFormat";
 import { CourseClassVideoFormatRow } from "../../entities/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
+import { createUpdate } from "../_utils/createUpdate";
 import { CourseClassVideoFormatRepository } from "./CourseClassVideoFormat.repository.types";
 
 export const getCourseClassVideoFormatRepository = (connection: Connection): CourseClassVideoFormatRepository => {

@@ -1,8 +1,8 @@
 import { glob } from "glob";
 import path from "path";
 
-import { fs } from "../../_utils/fs";
 import { projectPath } from "../../../src/_utils/projectPath";
+import { fs } from "../../_utils/fs";
 
 export const generateTypeDefs = async (): Promise<string[]> => {
 	const typeDefsFilePath = path.resolve(projectPath, "src", "generated", "typeDefs.ts");

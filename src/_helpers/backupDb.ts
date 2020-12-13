@@ -26,7 +26,7 @@ export const backupDb = async (connection: Connection) => {
 		host: dbConnectionOptions.host,
 	});
 
-	await new Promise((resolve, reject) => {
+	await new Promise<void>((resolve, reject) => {
 		pool.connect(async (err, client, done) => {
 			if (err) {
 				reject(err);
