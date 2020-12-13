@@ -80,15 +80,13 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 	});
 
 	if (!courseClassListWithSameCode) {
-		courseClassListWithSameCode = await repositories.courseClassList.createAndInsert(
-			repositories.courseClassList.create({
-				code: validatedData.code,
-				created_by_id: user.id,
-				course_edition_id: courseEdition.id,
-				name: validatedData.name,
-				visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
-			})
-		);
+		courseClassListWithSameCode = await repositories.courseClassList.createAndInsert({
+			code: validatedData.code,
+			created_by_id: user.id,
+			course_edition_id: courseEdition.id,
+			name: validatedData.name,
+			visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
+		});
 		// TODO: necessary?
 		dataLoaders.courseClassList.clearAll();
 
