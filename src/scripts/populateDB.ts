@@ -1,7 +1,7 @@
-import "../_utils/configEnv";
 import "core-js/stable";
 import "reflect-metadata";
 import "regenerator-runtime/runtime";
+import "../_utils/configEnv";
 
 import axios, { AxiosError } from "axios";
 import csvStringify from "csv-stringify";
@@ -18,22 +18,16 @@ import { getResolutionFromVideoUrl } from "../_helpers/getResolutionFromVideoUrl
 import { hashPassword } from "../_helpers/hashPassword";
 import { dangerousKeysOf } from "../_utils/dangerousKeysOf";
 import { hasProperty } from "../_utils/hasProperty";
-import { SafeOmit } from "../_utils/utilTypes";
 import { appConfig } from "../appConfig";
-import {
-	DefaultTypedEntitySchemaTypeArg,
-	EntityRow,
-	PrimaryColumn,
-	TypedEntitySchema,
-} from "../entities/_utils/createTypedEntitySchema";
+import { EntityRow, TypedEntitySchema } from "../entities/_utils/createTypedEntitySchema";
 import { TypedRepository } from "../entities/_utils/TypedRepository";
-import { courseColumns, CourseVisibility } from "../entities/Course";
+import { courseColumns } from "../entities/Course";
 import { CourseRow } from "../entities/Course/Course.entity.types";
-import { courseClassColumns, CourseClassVisibility } from "../entities/CourseClass";
+import { courseClassColumns } from "../entities/CourseClass";
 import { CourseClassRow } from "../entities/CourseClass/CourseClass.entity.types";
 import { courseClassListColumns } from "../entities/CourseClassList";
 import { CourseClassListRow } from "../entities/CourseClassList/CourseClassList.entity.types";
-import { courseClassVideoColumns, CourseClassVideoVisibility } from "../entities/CourseClassVideo";
+import { courseClassVideoColumns } from "../entities/CourseClassVideo";
 import { CourseClassVideoRow } from "../entities/CourseClassVideo/CourseClassVideo.entity.types";
 import { courseClassVideoFormatColumns } from "../entities/CourseClassVideoFormat";
 import { CourseClassVideoFormatRow } from "../entities/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
@@ -166,19 +160,19 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 };
 
 (async () => {
-	const videoResolutionsFilePath = path.resolve(appConfig.FILES_PATH, "_videosResolutions.json");
-	const videoResolutionsFileContent = fs.existsSync(videoResolutionsFilePath)
-		? fs.readFileSync(videoResolutionsFilePath, "utf8")
-		: JSON.stringify((await axios.get("https://open.fing.edu.uy/_files/_videosResolutions.json")).data);
-	const videoResolutions: Array<{
-		courseCode: string;
-		classNo: number;
-		qualities: Array<{
-			width: number;
-			height: number;
-			formats: Array<{ name: string; url: string }>;
-		}>;
-	}> = JSON.parse(videoResolutionsFileContent).videoResolutions;
+	// const videoResolutionsFilePath = path.resolve(appConfig.FILES_PATH, "_videosResolutions.json");
+	// const videoResolutionsFileContent = fs.existsSync(videoResolutionsFilePath)
+	// 	? fs.readFileSync(videoResolutionsFilePath, "utf8")
+	// 	: JSON.stringify((await axios.get("https://open.fing.edu.uy/_files/_videosResolutions.json")).data);
+	// const videoResolutions: Array<{
+	// 	courseCode: string;
+	// 	classNo: number;
+	// 	qualities: Array<{
+	// 		width: number;
+	// 		height: number;
+	// 		formats: Array<{ name: string; url: string }>;
+	// 	}>;
+	// }> = JSON.parse(videoResolutionsFileContent).videoResolutions;
 
 	const readDb = await createConnection({
 		name: "read",
@@ -193,14 +187,36 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 	const masterCourses: MasterCourse[] = await readDb.query(`select * from courses;`);
 	const masterTitles: MasterTitle[] = await readDb.query(`select * from titles;`);
 	const masterVideos: MasterVideo[] = await readDb.query(`select * from videos;`);
-	const hiddenCourseCodes = ["vyo19", "vyo15", "ftip", "introiq", "tcm1", "cc", "aimds", "introiqt", "hsi"];
+	const hiddenCourseCodes = [
+		"vyo19",
+		"vyo15",
+		"ftip",
+		"introiq",
+		"tcm1",
+		"cc",
+		"aimds",
+		"introiqt",
+		"hsi",
+		"irq2",
+		"prueba",
+	];
+
+	const videoResolutions: Array<{
+		courseCode: string;
+		classNo: number;
+		qualities: Array<{
+			width: number;
+			height: number;
+			formats: Array<{ name: string; url: string }>;
+		}>;
+	}> = [];
 
 	const schema = "openfing";
 	const writeDb = await createConnection(appConfig.dbConnectionOptions);
 
 	await writeDb.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
 	await writeDb.query(`CREATE SCHEMA "${schema}"`);
-	await writeDb.synchronize();
+	await writeDb.runMigrations();
 
 	const faqsJSON: Array<{ title: string; content: string }> = (
 		await axios.get("https://open.fing.edu.uy/data/faq.json")
@@ -220,15 +236,15 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			uid: "openfing",
 			password: await hashPassword(appConfig.dbConnectionOptions.password as string),
 			name: "OpenFING",
-			createdAt: moment().toDate(),
-			updatedAt: moment().toDate(),
-			deletedAt: null,
+			created_at: moment().toDate(),
+			updated_at: moment().toDate(),
+			deleted_at: null,
 		})
 	);
 
 	await getUserToUserRoleRepository(writeDb).save({
-		userId: user.id,
-		userRoleId: adminUserRole.id,
+		user_id: user.id,
+		user_role_id: adminUserRole.id,
 	});
 
 	class EntityToCreate<T extends { id: number }> {
@@ -261,10 +277,10 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			...getFaqRepository(writeDb).create({
 				title: faq.title,
 				content: faq.content,
-				isHtml: faq.content.includes("<"),
+				is_html: faq.content.includes("<"),
 				position: index,
-				createdById: user.id,
-				updatedById: user.id,
+				created_by_id: user.id,
+				updated_by_id: user.id,
 			}),
 		});
 	});
@@ -289,7 +305,10 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 		else if (code === "dlp") return "dl";
 		else if (["fbd-2020ct", "fbd-2020p"].includes(code)) return "fbd";
 		else if (code === "introiqt") return "introiq";
-		else if (code === "ac-2020p") return "ac";
+		else if (["ac-2020p", "ac-2020l"].includes(code)) return "ac";
+		else if (code === "iieee") return "iiee";
+		else if (code === "maqelp") return "maqel";
+		else if (["cmm2p", "cmm2l"].includes(code)) return "cmm2";
 
 		const yearString = year.toString();
 
@@ -316,16 +335,14 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 				id: 1,
 				...getCourseRepository(writeDb).create({
 					name: getCleanReadCourseName(readCourse),
-					visibility: hiddenCourseCodes.find((c) => c === readCourse.code)
-						? CourseVisibility.hidden
-						: CourseVisibility.public,
+					visibility: hiddenCourseCodes.find((c) => c === readCourse.code) ? "hidden" : "public",
 					code: cleanCourseCode,
-					iconUrl: await getNewCourseIconUrl(readCourse),
+					icon_url: await getNewCourseIconUrl(readCourse),
 					eva: readCourse.url || null,
-					createdAt: moment(readCourse.created_at).toDate(),
-					createdById: user.id,
-					updatedAt: moment(readCourse.updated_at).toDate(),
-					updatedById: user.id,
+					created_at: moment(readCourse.created_at).toDate(),
+					created_by_id: user.id,
+					updated_at: moment(readCourse.updated_at).toDate(),
+					updated_by_id: user.id,
 				}),
 			};
 			coursesByCode.set(cleanCourseCode, course);
@@ -346,14 +363,14 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 					}`,
 					year: readCourse.year,
 					semester: readCourse.semester,
-					courseId: course.id,
+					course_id: course.id,
 					visibility: course.visibility,
-					createdAt: moment(readCourse.created_at).toDate(),
-					createdById: user.id,
-					updatedAt: moment(readCourse.updated_at).toDate(),
-					updatedById: user.id,
-					deletedAt: null,
-					deletedById: null,
+					created_at: moment(readCourse.created_at).toDate(),
+					created_by_id: user.id,
+					updated_at: moment(readCourse.updated_at).toDate(),
+					updated_by_id: user.id,
+					deleted_at: null,
+					deleted_by_id: null,
 				}),
 			};
 
@@ -367,24 +384,30 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			// TODO: id
 			id: 1,
 			...getCourseClassListRepository(writeDb).create({
-				courseEditionId: edition.id,
+				course_edition_id: edition.id,
 				name: ["cmm1e", "p4p"].includes(readCourse.code)
 					? readCourse.name
 					: readCourse.code === "fbd-2020ct"
 					? "Consulta Teórico"
-					: readCourse.name.includes("Práctico") || ["dlp", "fbd-2020p", "introiq"].includes(readCourse.code)
+					: readCourse.code === "iieee"
+					? "Ejercicios Resueltos"
+					: ["cmm2l", "ac-2020l"].includes(readCourse.code)
+					? "Laboratorio"
+					: readCourse.name.includes("Práctico") ||
+					  ["dlp", "fbd-2020p", "introiq", "cmm2p"].includes(readCourse.code)
 					? "Práctico"
-					: readCourse.name.includes("Teórico") || ["iis19", "p4", "dl", "introiqt"].includes(readCourse.code)
+					: readCourse.name.includes("Teórico") ||
+					  ["iis19", "p4", "dl", "introiqt", "cmm2", "iiee", "maqel"].includes(readCourse.code)
 					? "Teórico"
 					: readCourse.code === "cis"
 					? "Ciclos de charlas Ingeniería de Software"
 					: "Default",
 				code: readCourse.code,
 				visibility: edition.visibility,
-				createdAt: moment(readCourse.created_at).toDate(),
-				createdById: user.id,
-				updatedAt: moment(readCourse.updated_at).toDate(),
-				updatedById: user.id,
+				created_at: moment(readCourse.created_at).toDate(),
+				created_by_id: user.id,
+				updated_at: moment(readCourse.updated_at).toDate(),
+				updated_by_id: user.id,
 			}),
 		};
 		courseClassListsToCreate.add(courseClassList);
@@ -454,17 +477,17 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			const courseClass = {
 				id: 1,
 				...getCourseClassRepository(writeDb).create({
-					courseClassListId: courseClassList.id,
+					course_class_list_id: courseClassList.id,
 					number: readVideo.number,
-					visibility: readVideo.disabled ? CourseClassVisibility.disabled : courseClassList.visibility,
+					visibility: readVideo.disabled ? "disabled" : courseClassList.visibility,
 					name: courseClassTitle,
-					publishedAt: createdAt,
-					createdAt,
-					createdById,
-					updatedAt,
-					updatedById,
-					deletedAt: null,
-					deletedById: null,
+					published_at: createdAt,
+					created_at: createdAt,
+					created_by_id: createdById,
+					updated_at: updatedAt,
+					updated_by_id: updatedById,
+					deleted_at: null,
+					deleted_by_id: null,
 				}),
 			};
 
@@ -473,16 +496,16 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 			const video = {
 				id: 1,
 				...getCourseClassVideoRepository(writeDb).create({
-					courseClassId: courseClass.id,
+					course_class_id: courseClass.id,
 					position: 1,
 					name: "Clase",
-					visibility: CourseClassVideoVisibility.public,
-					createdAt,
-					createdById,
-					updatedAt,
-					updatedById,
-					deletedAt: null,
-					deletedById: null,
+					visibility: "public",
+					created_at: createdAt,
+					created_by_id: createdById,
+					updated_at: updatedAt,
+					updated_by_id: updatedById,
+					deleted_at: null,
+					deleted_by_id: null,
 				}),
 			};
 
@@ -493,15 +516,15 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 					const videoQuality = {
 						id: 1,
 						...getCourseClassVideoQualityRepository(writeDb).create({
-							courseClassVideoId: video.id,
+							course_class_video_id: video.id,
 							width: readVideoQuality.width,
 							height: readVideoQuality.height,
-							createdAt,
-							createdById,
-							updatedAt,
-							updatedById,
-							deletedAt: null,
-							deletedById: null,
+							created_at: createdAt,
+							created_by_id: createdById,
+							updated_at: updatedAt,
+							updated_by_id: updatedById,
+							deleted_at: null,
+							deleted_by_id: null,
 						}),
 					};
 
@@ -511,15 +534,15 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 						const videoFormat = {
 							id: 1,
 							...getCourseClassVideoFormatRepository(writeDb).create({
-								courseClassVideoQualityId: videoQuality.id,
+								course_class_video_quality_id: videoQuality.id,
 								name: readVideoFormat.name,
 								url: readVideoFormat.url,
-								createdAt,
-								createdById,
-								updatedAt,
-								updatedById,
-								deletedAt: null,
-								deletedById: null,
+								created_at: createdAt,
+								created_by_id: createdById,
+								updated_at: updatedAt,
+								updated_by_id: updatedById,
+								deleted_at: null,
+								deleted_by_id: null,
 							}),
 						};
 
@@ -553,11 +576,7 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 	const valuesFrom = <T extends Record<string, unknown>>(value: T, keys: Array<[string, string]>): unknown[] =>
 		keys.map((k) => value[k[0]]);
 
-	const getToCreateItem = <
-		T extends TypedEntitySchema<
-			SafeOmit<DefaultTypedEntitySchemaTypeArg, "columns"> & { columns: { id: PrimaryColumn } }
-		>
-	>(
+	const getToCreateItem = <T extends TypedEntitySchema>(
 		entityToCreate: EntityRow<T>["id"] extends number ? EntityToCreate<EntityRow<T> & { id: number }> : never,
 		repository: TypedRepository<T>,
 		keys: Array<[string, string]>
@@ -654,9 +673,9 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 
 					const stream = client.query(
 						copyFrom(
-							`COPY ${toCreate.repository.metadata.schema}.${
+							`COPY ${toCreate.repository.metadata.schema ?? ""}.${
 								toCreate.repository.metadata.tableName
-							} (${toCreate.keys.map((e) => `"${e[1]}"`)}) FROM STDIN WITH CSV;`
+							} (${toCreate.keys.map((e) => `"${e[1]}"`).join(", ")}) FROM STDIN WITH CSV;`
 						)
 					);
 
@@ -693,7 +712,7 @@ export const getAvailableVideoQualitiesForCourseClass = async ({
 		fs.unlinkSync(filePath);
 	}
 
-	fs.writeFileSync(videoResolutionsFilePath, JSON.stringify({ videoResolutions }, undefined, 2));
+	// fs.writeFileSync(videoResolutionsFilePath, JSON.stringify({ videoResolutions }, undefined, 2));
 	trueLog("- listo!");
 	process.exit(0);
 })();
