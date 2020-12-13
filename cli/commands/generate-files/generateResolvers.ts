@@ -163,44 +163,35 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 	];
 
 	resolverMetadatas.forEach((metadata) => {
-		const handlers: {
-			[K in typeof metadata["type"]]: ((m: Extract<typeof metadata, { type: K }>) => void) | undefined;
-		} = {
-			"scalar-resolver": (m) =>
+		switch (metadata.type) {
+			case "scalar-resolver":
 				imports.push(
-					`import ${m.symbolName} from "${path.relative(
+					`import ${metadata.symbolName} from "${path.relative(
 						path.resolve(resolversFilePath, ".."),
-						m.filePath.replace(/\.[^.]+$/, "")
+						metadata.filePath.replace(/\.[^.]+$/, "")
 					)}";`
-				),
-
-			"object-resolver": (m) => {
-				const handlers: {
-					[K in typeof m.fields[number]["type"]]:
-						| ((_: Extract<typeof m["fields"][number], { type: K }>) => void)
-						| undefined;
-				} = {
-					"field-resolver": (m) => {
-						imports.push(
-							`import ${m.symbolName} from "${path.relative(
-								path.resolve(resolversFilePath, ".."),
-								m.filePath.replace(/\.[^.]+$/, "")
-							)}";`
-						);
-					},
-
-					"default-field-resolver": undefined,
-				};
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				m.fields.forEach((field) => handlers[field.type]?.(field as any));
-			},
-
-			"union-resolver": undefined,
-		};
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		handlers[metadata.type]?.(metadata as any);
+				);
+				break;
+			case "object-resolver":
+				metadata.fields.forEach((field) => {
+					switch (field.type) {
+						case "field-resolver": {
+							imports.push(
+								`import ${field.symbolName} from "${path.relative(
+									path.resolve(resolversFilePath, ".."),
+									field.filePath.replace(/\.[^.]+$/, "")
+								)}";`
+							);
+							break;
+						}
+						case "default-field-resolver": {
+							break;
+						}
+					}
+				});
+				break;
+			case "union-resolver":
+		}
 	});
 
 	await fs.writeFile(
@@ -221,17 +212,14 @@ export const generateResolvers = async (schema: GraphQLSchema): Promise<string[]
 						`${resolverMetadata.name}: {\n` +
 						resolverMetadata.fields
 							.map((field) => {
-								const handlers: {
-									[K in typeof field["type"]]: (f: Extract<typeof field, { type: K }>) => string;
-								} = {
-									"default-field-resolver": (f) =>
-										f.name === f.value ? f.name : `${f.name}: ${f.value}\n`,
-
-									"field-resolver": (f) => `${f.name}: ${f.symbolName}`,
-								};
-
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any
-								return handlers[field.type](field as any);
+								switch (field.type) {
+									case "default-field-resolver":
+										return field.name === field.value
+											? field.name
+											: `${field.name}: ${field.value}\n`;
+									case "field-resolver":
+										return `${field.name}: ${field.symbolName}`;
+								}
 							})
 							.join(",") +
 						`}`
