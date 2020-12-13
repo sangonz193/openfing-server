@@ -3,11 +3,6 @@ import path from "path";
 import SFTP from "ssh2-promise/dist/sftp";
 import * as yup from "yup";
 
-import { getAuthenticationError } from "../_utils/getAuthenticationError";
-import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
-import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
-import { getNotFoundError } from "../_utils/getNotFoundError";
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { getOpenFingVideoSftpConnection } from "../../_helpers/getOpenFingVideoSftpConnection";
 import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
@@ -18,6 +13,11 @@ import {
 	Resolvers,
 	UpdateCourseClassInputVisibility,
 } from "../../generated/graphql.types";
+import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
+import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
+import { getNotFoundError } from "../_utils/getNotFoundError";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getUpdateCourseClassPayload } from "../UpdateCourseClassPayload/UpdateCourseClassPayload.parent";
 
 const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, context) => {

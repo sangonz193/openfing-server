@@ -1,5 +1,5 @@
-import { getNotFoundError } from "../_utils/getNotFoundError";
 import { Resolvers } from "../../generated/graphql.types";
+import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getCourseEditionParent } from "../CourseEdition/CourseEdition.parent";
 
 const resolver: Resolvers["Query"]["courseEditionById"] = async (_, args, { dataLoaders }) => {

@@ -28,7 +28,7 @@ module.exports = {
 		"no-fallthrough": "error",
 		"no-unused-vars": "off",
 		"prettier/prettier": "warn",
-		"simple-import-sort/sort": "warn",
+		"simple-import-sort/imports": "warn",
 		curly: ["warn", "multi"],
 	},
 };

@@ -9,7 +9,7 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 	const isDirectory = (await fs.lstat(fromPath)).isDirectory();
 
 	if (!isDirectory)
-		await new Promise(async (resolve, reject) => {
+		await new Promise<void>(async (resolve, reject) => {
 			const readStream = _fs.createReadStream(fromPath);
 			const writeStream = await sftp.createWriteStream(toPath);
 

@@ -1,11 +1,11 @@
 import * as yup from "yup";
 
-import { getAuthenticationError } from "../_utils/getAuthenticationError";
-import { getGenericError } from "../_utils/getGenericError";
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { MutationCreateCourseClassListArgs, Resolvers } from "../../generated/graphql.types";
+import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getGenericError } from "../_utils/getGenericError";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getCreateCourseClassListPayloadParent } from "../CreateCourseClassListPayload/CreateCourseClassListPayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args, context) => {

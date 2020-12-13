@@ -1,10 +1,6 @@
 import { identity } from "lodash";
 import * as yup from "yup";
 
-import { getAuthenticationError } from "../_utils/getAuthenticationError";
-import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
-import { getNotFoundError } from "../_utils/getNotFoundError";
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
 import {
@@ -12,6 +8,10 @@ import {
 	Resolvers,
 	UpdateCourseClassListInputVisibility,
 } from "../../generated/graphql.types";
+import { getAuthenticationError } from "../_utils/getAuthenticationError";
+import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
+import { getNotFoundError } from "../_utils/getNotFoundError";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getUpdateCourseClassListPayload } from "../UpdateCourseClassListPayload/UpdateCourseClassListPayload.parent";
 
 const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args, context) => {

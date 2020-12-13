@@ -1,6 +1,6 @@
-import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
 import { Resolvers } from "../../generated/graphql.types";
+import { getUserFromSecret } from "../_utils/getUserFromSecret";
 
 const resolver: Resolvers["Mutation"]["backupDb"] = async (_, args, context) => {
 	const user = await getUserFromSecret(args.secret, context);

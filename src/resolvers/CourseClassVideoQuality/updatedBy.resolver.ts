@@ -1,5 +1,5 @@
-import { updatedByResolver } from "../_utils/updatedByResolver";
 import { Resolvers } from "../../generated/graphql.types";
+import { updatedByResolver } from "../_utils/updatedByResolver";
 
 const resolver: Resolvers["CourseClassVideoQuality"]["updatedBy"] = updatedByResolver;
 
