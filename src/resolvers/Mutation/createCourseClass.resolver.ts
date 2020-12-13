@@ -87,9 +87,11 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	await backupDb(context.ormConnection);
 
-	const baseVideoUrl = `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
-		courseClassList.code
-	}_${validatedData.number.toString().padStart(2, "0")}`;
+	const baseVideoUrl = courseClassList.code
+		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
+				courseClassList.code
+		  }_${validatedData.number.toString().padStart(2, "0")}`
+		: undefined;
 	const possibleFormatNames = ["webm", "mp4"];
 
 	const videoResolutions: Array<{
@@ -100,6 +102,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	await Promise.all(
 		possibleFormatNames.map(async (formatName) => {
+			if (!baseVideoUrl) return;
+
 			const url = `${baseVideoUrl}.${formatName}`;
 			const resolution = await getResolutionFromVideoUrl(url);
 

@@ -106,7 +106,9 @@ const command: CommandModule<{}, {}> = {
 
 				const repository = getRepository(entityToCopy);
 				await connection.query(
-					`alter table ${repository.metadata.schema}.${repository.metadata.tableName} disable trigger all`
+					`alter table ${repository.metadata.schema ?? ""}.${
+						repository.metadata.tableName
+					} disable trigger all`
 				);
 
 				try {
@@ -116,9 +118,9 @@ const command: CommandModule<{}, {}> = {
 
 							const stream = client.query(
 								copyFrom(
-									`COPY ${repository.metadata.schema}.${repository.metadata.tableName} (${keys.map(
-										(e) => `"${e[1]}"`
-									)}) FROM STDIN WITH CSV;`
+									`COPY ${repository.metadata.schema ?? ""}.${
+										repository.metadata.tableName
+									} (${keys.map((e) => `"${e[1]}"`).join(",")}) FROM STDIN WITH CSV;`
 								)
 							);
 
@@ -145,7 +147,11 @@ const command: CommandModule<{}, {}> = {
 
 					if (entityToCopy.options.columns.id?.type !== "uuid")
 						await connection.query(
-							`SELECT setval(pg_get_serial_sequence('${repository.metadata.schema}.${repository.metadata.tableName}', 'id'), max(id)) FROM ${repository.metadata.schema}.${repository.metadata.tableName}; `
+							`SELECT setval(pg_get_serial_sequence('${repository.metadata.schema ?? ""}.${
+								repository.metadata.tableName
+							}', 'id'), max(id)) FROM ${repository.metadata.schema ?? ""}.${
+								repository.metadata.tableName
+							}; `
 						);
 				} catch (e) {
 					console.log(e);
@@ -154,7 +160,9 @@ const command: CommandModule<{}, {}> = {
 
 				await fs.unlink(filePath);
 				await connection.query(
-					`alter table ${repository.metadata.schema}.${repository.metadata.tableName} enable trigger all;`
+					`alter table ${repository.metadata.schema ?? ""}.${
+						repository.metadata.tableName
+					} enable trigger all;`
 				);
 			})
 		);
