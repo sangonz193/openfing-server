@@ -18,6 +18,7 @@ const validatedEnv = yup
 		HOST: yup.string().default("localhost").required(),
 		PORT: yup.number().required().integer(),
 		WRITE_DB_PORT: yup.number().required().integer(),
+		DISABLED_COURSE_CLASS_VIDEO_ENCRYPTION_KEY: yup.string().notRequired(),
 	})
 	.required()
 	.validateSync(process.env, {

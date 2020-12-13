@@ -5,16 +5,19 @@
       "baseUrl": ".",
       "esModuleInterop": true,
       "experimentalDecorators": true,
-      "lib": ["es5", "es6"],
+      "lib": [
+         "es5",
+         "es6"
+      ],
       "module": "commonjs",
       "moduleResolution": "node",
       "noImplicitAny": true,
-		"noImplicitReturns": true,
+      "noImplicitReturns": true,
       "noImplicitThis": true,
       "noUnusedLocals": true,
       "noEmit": true,
       "rootDir": ".",
-		"strictPropertyInitialization": false,
+      "strictPropertyInitialization": false,
       "skipLibCheck": true,
       "sourceMap": true,
       "strictNullChecks": true,
@@ -22,6 +25,16 @@
       "target": "es6",
       "suppressImplicitAnyIndexErrors": false
    },
-   "exclude": ["dist", "node_modules"],
-	"include": ["./**/*.ts*", "./.**/*.ts*", "scripts"]
+   "exclude": [
+      "dist",
+      "node_modules"
+   ],
+   "include": [
+      "./**/*.ts",
+      "./.**/*.ts",
+      "./**/*.js",
+      "./**/.*.js",
+      "./.**/*.js",
+      "scripts"
+   ]
 }

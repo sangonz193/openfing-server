@@ -2,11 +2,9 @@ module.exports = {
 	extends: ["plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint", "plugin:prettier/recommended"],
 	parser: "@typescript-eslint/parser",
 	parserOptions: {
+		project: "tsconfig.json",
 		ecmaVersion: 10,
 		sourceType: "module",
-		ecmaFeatures: {
-			jsx: true,
-		},
 	},
 	plugins: ["simple-import-sort"],
 	rules: {
@@ -22,6 +20,8 @@ module.exports = {
 		"@typescript-eslint/no-unused-vars": ["warn", { vars: "all", args: "after-used", ignoreRestSiblings: false }],
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/prefer-interface": "off",
+		"@typescript-eslint/restrict-template-expressions": "warn",
+		"@typescript-eslint/restrict-plus-operands": "warn",
 		"no-console": "off",
 		"no-unused-vars": "off",
 		"prettier/prettier": "warn",

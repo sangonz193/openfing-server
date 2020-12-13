@@ -5,12 +5,13 @@ import * as yup from "yup";
 
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
+import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
 import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { getOpenFingVideoSftpConnection } from "../../_helpers/getOpenFingVideoSftpConnection";
 import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
-import { getUuid } from "../../_utils/getUuid";
+import { CourseClassVideoRow } from "../../entities/CourseClassVideo/CourseClassVideo.entity.types";
 import { CourseClassVideoFormatRow } from "../../entities/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
 import {
 	MutationUpdateCourseClassArgs,
@@ -20,7 +21,7 @@ import {
 import { getUpdateCourseClassPayload } from "../UpdateCourseClassPayload/UpdateCourseClassPayload.parent";
 
 const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, context) => {
-	const { repositories } = context;
+	const { repositories, dataLoaders } = context;
 
 	const user = await getUserFromSecret(args.secret, context);
 	if (!user) return getAuthenticationError();
@@ -86,129 +87,105 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 		]);
 	};
 
-	const getVideoFormats = async () => {
-		const classVideos = await repositories.courseClassVideo.findAll({
-			courseClassId: courseClass.id,
-			includeDisabled: true,
-			includeHidden: true,
-		});
-		const classVideoQualities = await Promise.all(
-			classVideos.map((video) =>
-				repositories.courseClassVideoQuality.findAll({
-					courseClassVideoId: video.id,
+	const getVideosData = async () => {
+		const getQualities = async (id: CourseClassVideoRow["id"]) => {
+			return Promise.all(
+				(
+					await repositories.courseClassVideoQuality.findAll({
+						courseClassVideoId: id,
+					})
+				).map(async (quality) => {
+					return {
+						...quality,
+						formats: await repositories.courseClassVideoFormat.findAll({
+							courseClassVideoQualityId: quality.id,
+						}),
+					};
 				})
-			)
-		);
-		const classVideoFormats = await Promise.all(
-			classVideoQualities.map((videoQualityGroup) =>
-				Promise.all(
-					videoQualityGroup.map((videoQuality) =>
-						repositories.courseClassVideoFormat.findAll({
-							courseClassVideoQualityId: videoQuality.id,
-						})
-					)
-				)
-			)
-		);
+			);
+		};
 
-		return classVideoFormats;
+		return await Promise.all(
+			(
+				await repositories.courseClassVideo.findAll({
+					courseClassId: courseClass.id,
+					includeDisabled: true,
+					includeHidden: true,
+				})
+			).map(async (video) => {
+				return {
+					...video,
+					qualities: await getQualities(video.id),
+				};
+			})
+		);
 	};
 
-	if (validatedData.visibility === "DISABLED") {
-		if (courseClass.visibility !== "disabled") {
-			const [classVideoFormats, openFingVideoSftp] = await Promise.all([
-				getVideoFormats(),
-				getOpenFingVideoSftpConnection(),
-			]);
-			const renamingPromises: Array<Promise<void>> = [];
+	const getCourseClassListCode = async () => {
+		const { course_class_list_id } = updatedCourseClass;
+		if (!course_class_list_id) return null;
 
-			if (openFingVideoSftp)
-				classVideoFormats.forEach((classVideos) => {
-					classVideos.forEach((classVideoQualities) => {
-						classVideoQualities.forEach((classVideoFormat) => {
-							const videoFilePath = classVideoFormat.url?.split(openFingVideoServerUrl.substr(-10))[1];
-							if (!videoFilePath) return;
+		return (
+			await dataLoaders.courseClassList.load({
+				id: course_class_list_id,
+				includeDisabled: true,
+				includeHidden: true,
+			})
+		)?.code;
+	};
 
-							renamingPromises.push(
-								(async () => {
-									const fileExists = !!(await openFingVideoSftp
-										?.lstat(videoFilePath)
-										.catch(() => false));
-									if (!fileExists) return;
+	const [videos, openFingVideoSftp, courseClassListCode] = await Promise.all([
+		getVideosData(),
+		getOpenFingVideoSftpConnection(),
+		getCourseClassListCode(),
+	]);
 
-									const fileExtension = path.posix.extname(videoFilePath);
-									const newFilePath = path.posix.resolve(
-										videoFilePath,
-										"..",
-										getUuid() + fileExtension
-									);
+	if (openFingVideoSftp && courseClassListCode)
+		await Promise.all(
+			videos.map(async (video, videoIndex) => {
+				await Promise.all(
+					video.qualities.map(async (quality, qualityIndex) => {
+						await Promise.all(
+							quality.formats.map(async (format) => {
+								const videoFilePath = format.url?.split(openFingVideoServerUrl.substr(-10))[1];
+								if (!videoFilePath) return;
 
+								const fileExists = !!(await openFingVideoSftp?.lstat(videoFilePath).catch(() => false));
+								if (!fileExists) {
+									console.log(`Won't rename: File does not exist: ${videoFilePath}`);
+									return;
+								}
+
+								const newVideoFileName = await getCourseClassVideoFileName({
+									courseClass: updatedCourseClass,
+									courseClassListCode,
+									format,
+									quality,
+									video,
+									qualityIndex,
+									videoIndex,
+								});
+
+								if (!newVideoFileName) {
+									console.log(`Could not get new name for courseClass ${courseClass.id}`);
+									return;
+								}
+
+								const newVideoFilePath = path.posix.resolve(videoFilePath, "..", newVideoFileName);
+
+								if (newVideoFilePath !== videoFilePath)
 									await renameVideoFile({
 										from: videoFilePath,
-										to: newFilePath,
-										courseClassVideoFormatId: classVideoFormat.id,
+										to: newVideoFilePath,
+										courseClassVideoFormatId: format.id,
 										sftp: openFingVideoSftp,
 									});
-								})()
-							);
-						});
-					});
-				});
-
-			await Promise.all(renamingPromises);
-		}
-	} else if (validatedData.visibility !== undefined)
-		if (courseClass.visibility === "disabled") {
-			const [classVideoFormats, openFingVideoSftp] = await Promise.all([
-				getVideoFormats(),
-				getOpenFingVideoSftpConnection(),
-			]);
-			const renamingPromises: Array<Promise<void>> = [];
-
-			if (openFingVideoSftp)
-				classVideoFormats.forEach((classVideos, videoIndex) => {
-					classVideos.forEach((classVideoQualities, videoQualityIndex) => {
-						classVideoQualities.forEach((classVideoFormat) => {
-							const videoFilePath = classVideoFormat.url?.split(openFingVideoServerUrl.substr(-10))[1];
-							if (!videoFilePath) return;
-
-							renamingPromises.push(
-								(async () => {
-									const fileExists = !!(await openFingVideoSftp
-										?.lstat(videoFilePath)
-										.catch(() => false));
-									if (!fileExists || typeof updatedCourseClass.number !== "number") return;
-
-									const fileExtension = path.posix.extname(videoFilePath);
-									const newFilePath = path.posix.resolve(
-										videoFilePath,
-										"..",
-										path.posix.basename(path.posix.resolve(videoFilePath, "..")) +
-											"_" +
-											updatedCourseClass.number.toString().padStart(2, "0") +
-											(videoIndex > 0 || videoQualityIndex > 0
-												? "_" +
-												  videoIndex.toString().padStart(2, "0") +
-												  "_" +
-												  videoQualityIndex.toString().padStart(2, "0")
-												: "") +
-											fileExtension
-									);
-
-									await renameVideoFile({
-										from: videoFilePath,
-										to: newFilePath,
-										courseClassVideoFormatId: classVideoFormat.id,
-										sftp: openFingVideoSftp,
-									});
-								})()
-							);
-						});
-					});
-				});
-
-			await Promise.all(renamingPromises);
-		}
+							})
+						);
+					})
+				);
+			})
+		);
 
 	return getUpdateCourseClassPayload({
 		courseClass: updatedCourseClass,
