@@ -1,18 +1,12 @@
-import { identity } from "lodash";
 import path from "path";
 import SFTP from "ssh2-promise/dist/sftp";
 import * as yup from "yup";
 
 import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { getOpenFingVideoSftpConnection } from "../../_helpers/getOpenFingVideoSftpConnection";
-import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
 import { CourseClassVideoRow } from "../../entities/CourseClassVideo/CourseClassVideo.entity.types";
 import { CourseClassVideoFormatRow } from "../../entities/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
-import {
-	MutationUpdateCourseClassArgs,
-	Resolvers,
-	UpdateCourseClassInputVisibility,
-} from "../../generated/graphql.types";
+import { MutationUpdateCourseClassArgs, Resolvers } from "../../generated/graphql.types";
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
 import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
@@ -38,27 +32,18 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 
 	const validatedData = await yup
 		.object<
-			{
-				[K in keyof MutationUpdateCourseClassArgs["input"]]: Exclude<
-					MutationUpdateCourseClassArgs["input"][K],
-					null
-				>;
-			}
+			yup.SchemaOf<
+				{
+					[K in keyof MutationUpdateCourseClassArgs["input"]]: Exclude<
+						MutationUpdateCourseClassArgs["input"][K],
+						null
+					>;
+				}
+			>["fields"]
 		>({
 			name: yup.string().trim().max(200).notRequired(),
 			number: yup.number().moreThan(0).lessThan(1000).notRequired(),
-			visibility: yup
-				.string()
-				.oneOf(
-					dangerousKeysOf(
-						identity<{ [T in UpdateCourseClassInputVisibility]: "" }>({
-							DISABLED: "",
-							HIDDEN: "",
-							PUBLIC: "",
-						})
-					)
-				)
-				.notRequired(),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args.input);

@@ -17,10 +17,11 @@ const resolver: Resolvers["Mutation"]["createCourse"] = async (_, args, context)
 	const { dataLoaders, repositories } = context;
 
 	const validatedData = await yup
-		.object<MutationCreateCourseArgs["input"]>({
+		.object<yup.SchemaOf<MutationCreateCourseArgs["input"]>["fields"]>({
 			code: yup.string().trim().max(20).required(),
 			eva: yup.string().trim().max(300),
 			name: yup.string().trim().max(200).required(),
+			visibility: yup.mixed().nullable(),
 		})
 		.required()
 		.validate(args.input);
