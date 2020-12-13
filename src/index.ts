@@ -33,7 +33,9 @@ import { getRepositories } from "./repositories";
 	await connection.runMigrations();
 
 	const expressApp = express();
-	expressApp.use(cors);
+
+	const corsMiddleware = cors();
+	expressApp.use((...args) => corsMiddleware(...args));
 
 	const repositories = getRepositories(connection);
 
