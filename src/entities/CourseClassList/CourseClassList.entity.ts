@@ -100,9 +100,7 @@ export const courseClassListRelations: RelationsOptions<CourseClassListRelations
 	},
 };
 
-export const courseClassListEntitySchema: CourseClassListEntitySchema = createTypedEntitySchema<
-	CourseClassListEntitySchema
->({
+export const courseClassListEntitySchema = createTypedEntitySchema<CourseClassListEntitySchema>({
 	name: "course_class_list",
 	columns: courseClassListColumns,
 	relations: courseClassListRelations,

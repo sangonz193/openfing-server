@@ -86,9 +86,7 @@ export const courseClassChapterCueRelations: RelationsOptions<CourseClassChapter
 	},
 };
 
-export const courseClassChapterCueEntitySchema: CourseClassChapterCueEntitySchema = createTypedEntitySchema<
-	CourseClassChapterCueEntitySchema
->({
+export const courseClassChapterCueEntitySchema = createTypedEntitySchema<CourseClassChapterCueEntitySchema>({
 	name: "course_class_chapter_cue",
 	columns: courseClassChapterCueColumns,
 	relations: courseClassChapterCueRelations,

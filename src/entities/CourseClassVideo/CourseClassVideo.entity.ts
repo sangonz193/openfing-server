@@ -100,9 +100,7 @@ export const courseClassVideoRelations: RelationsOptions<CourseClassVideoRelatio
 	},
 };
 
-export const courseClassVideoEntitySchema: CourseClassVideoEntitySchema = createTypedEntitySchema<
-	CourseClassVideoEntitySchema
->({
+export const courseClassVideoEntitySchema = createTypedEntitySchema<CourseClassVideoEntitySchema>({
 	name: "course_class_video",
 	columns: courseClassVideoColumns,
 	relations: courseClassVideoRelations,
