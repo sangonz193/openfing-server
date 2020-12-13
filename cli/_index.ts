@@ -3,7 +3,6 @@ import { spawn } from "promisify-child-process";
 
 import { parseEnv } from "./_utils/parseEnv";
 import { projectPath } from "./_utils/projectPath";
-import { spawnStdio } from "./_utils/spawnStdio";
 
 (async () => {
 	spawn(
@@ -14,7 +13,7 @@ import { spawnStdio } from "./_utils/spawnStdio";
 			...process.argv.slice(2),
 		],
 		{
-			stdio: spawnStdio,
+			stdio: "inherit",
 			env: { ...process.env, ...(await parseEnv().catch(() => ({}))) },
 		}
 	).catch(() => null);

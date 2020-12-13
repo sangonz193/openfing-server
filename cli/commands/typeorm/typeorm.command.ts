@@ -3,7 +3,6 @@ import { spawn } from "promisify-child-process";
 import { CommandModule } from "yargs";
 
 import { projectPath } from "../../_utils/projectPath";
-import { spawnStdio } from "../../_utils/spawnStdio";
 
 const command: CommandModule<{}, {}> = {
 	command: "typeorm",
@@ -25,8 +24,8 @@ const command: CommandModule<{}, {}> = {
 				...process.argv.slice(argsIndex + 1),
 			],
 			{
+				stdio: "inherit",
 				cwd: projectPath,
-				stdio: spawnStdio,
 			}
 		);
 	},
