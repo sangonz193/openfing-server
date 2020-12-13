@@ -50,15 +50,15 @@ const command: CommandModule<{}, {}> = {
 				uid: "openfing",
 				password: await hashPassword("password"),
 				name: "OpenFING",
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				deletedAt: null,
+				created_at: new Date(),
+				updated_at: new Date(),
+				deleted_at: null,
 			})
 		);
 
 		await getUserToUserRoleRepository(connection).save({
-			userId: user.id,
-			userRoleId: adminUserRole.id,
+			user_id: user.id,
+			user_role_id: adminUserRole.id,
 		});
 
 		await Promise.all(
@@ -105,9 +105,9 @@ const command: CommandModule<{}, {}> = {
 				});
 
 				const repository = getRepository(entityToCopy);
-				await connection.query(
-					`alter table ${repository.metadata.schema}.${repository.metadata.tableName} disable trigger all`
-				);
+				const schema = repository.metadata.schema ?? "";
+				const tableName = repository.metadata.tableName;
+				await connection.query(`alter table ${schema}.${tableName} disable trigger all`);
 
 				try {
 					await new Promise((resolve, reject) => {
@@ -116,9 +116,9 @@ const command: CommandModule<{}, {}> = {
 
 							const stream = client.query(
 								copyFrom(
-									`COPY ${repository.metadata.schema}.${repository.metadata.tableName} (${keys.map(
-										(e) => `"${e[1]}"`
-									)}) FROM STDIN WITH CSV;`
+									`COPY ${schema}.${tableName} (${keys
+										.map((e) => `"${e[1]}"`)
+										.join(",")}) FROM STDIN WITH CSV;`
 								)
 							);
 
@@ -145,7 +145,7 @@ const command: CommandModule<{}, {}> = {
 
 					if (entityToCopy.options.columns.id?.type !== "uuid")
 						await connection.query(
-							`SELECT setval(pg_get_serial_sequence('${repository.metadata.schema}.${repository.metadata.tableName}', 'id'), max(id)) FROM ${repository.metadata.schema}.${repository.metadata.tableName}; `
+							`SELECT setval(pg_get_serial_sequence('${schema}.${tableName}', 'id'), max(id)) FROM ${schema}.${tableName}; `
 						);
 				} catch (e) {
 					console.log(e);
@@ -153,9 +153,7 @@ const command: CommandModule<{}, {}> = {
 				}
 
 				await fs.unlink(filePath);
-				await connection.query(
-					`alter table ${repository.metadata.schema}.${repository.metadata.tableName} enable trigger all;`
-				);
+				await connection.query(`alter table ${schema}.${tableName} enable trigger all;`);
 			})
 		);
 

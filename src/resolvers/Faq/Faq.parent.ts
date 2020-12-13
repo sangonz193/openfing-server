@@ -3,9 +3,9 @@ import { FaqRow } from "../../entities/Faq/Faq.entity.types";
 import { Faq } from "../../generated/graphql.types";
 
 export type FaqParent = Required<
-	SafeOmit<FaqRow, "id" | "title" | "content" | "createdAt" | "updatedAt" | "deletedAt">
+	SafeOmit<FaqRow, "id" | "title" | "content" | "is_html" | "created_at" | "updated_at" | "deleted_at">
 > &
-	Pick<Required<Faq>, "__typename" | "id" | "title" | "content" | "createdAt" | "updatedAt" | "deletedAt">;
+	Pick<Required<Faq>, "__typename" | "id" | "title" | "content" | "isHtml" | "createdAt" | "updatedAt" | "deletedAt">;
 
 export const getFaqParent = (faqRow: FaqRow): FaqParent => ({
 	__typename: "Faq",
@@ -13,7 +13,8 @@ export const getFaqParent = (faqRow: FaqRow): FaqParent => ({
 	id: faqRow.id.toString(),
 	title: faqRow.title || "", // TODO: fix
 	content: faqRow.content || "", // TODO: fix
-	createdAt: faqRow.createdAt?.toISOString() || null,
-	updatedAt: faqRow.updatedAt?.toISOString() || null,
-	deletedAt: faqRow.deletedAt?.toISOString() || null,
+	isHtml: faqRow.is_html,
+	createdAt: faqRow.created_at?.toISOString() || null,
+	updatedAt: faqRow.updated_at?.toISOString() || null,
+	deletedAt: faqRow.deleted_at?.toISOString() || null,
 });

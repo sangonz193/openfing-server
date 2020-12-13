@@ -3,16 +3,21 @@ import { CourseClassChapterCueRow } from "../../entities/CourseClassChapterCue/C
 import { CourseClassChapterCue } from "../../generated/graphql.types";
 
 export type CourseClassChapterCueParent = Required<
-	SafeOmit<CourseClassChapterCueRow, "createdAt" | "updatedAt" | "deletedAt">
+	SafeOmit<CourseClassChapterCueRow, "created_at" | "updated_at" | "deleted_at" | "start_seconds" | "end_seconds">
 > &
-	Pick<Required<CourseClassChapterCue>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">;
+	Pick<
+		Required<CourseClassChapterCue>,
+		"__typename" | "createdAt" | "updatedAt" | "deletedAt" | "startSeconds" | "endSeconds"
+	>;
 
 export const getCourseClassChapterCueParent = (
 	courseClassChapterCueRow: CourseClassChapterCueRow
 ): CourseClassChapterCueParent => ({
 	__typename: "CourseClassChapterCue",
 	...courseClassChapterCueRow,
-	createdAt: courseClassChapterCueRow.createdAt?.toISOString() || null,
-	updatedAt: courseClassChapterCueRow.updatedAt?.toISOString() || null,
-	deletedAt: courseClassChapterCueRow.deletedAt?.toISOString() || null,
+	startSeconds: courseClassChapterCueRow.start_seconds,
+	endSeconds: courseClassChapterCueRow.end_seconds,
+	createdAt: courseClassChapterCueRow.created_at?.toISOString() || null,
+	updatedAt: courseClassChapterCueRow.updated_at?.toISOString() || null,
+	deletedAt: courseClassChapterCueRow.deleted_at?.toISOString() || null,
 });

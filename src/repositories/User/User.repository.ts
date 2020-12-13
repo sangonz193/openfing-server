@@ -3,17 +3,17 @@ import { Connection } from "typeorm";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { User, userColumns } from "../../entities/User";
+import { userColumns, userEntitySchema } from "../../entities/User";
 import { UserRow } from "../../entities/User/User.entity.types";
 import { UserRepository } from "./User.repository.types";
 
 export const getUserRepository = (connection: Connection): UserRepository => {
-	const repo = getTypedRepository(User, connection);
+	const repo = getTypedRepository(userEntitySchema, connection);
 
 	const is: UserRepository["is"] = (user, options) => {
 		if (hasProperty(options, "id") ? user.id !== options.id : user.email !== options.email) return false;
 
-		return user.deletedAt === null;
+		return user.deleted_at === null;
 	};
 
 	return {
@@ -28,7 +28,7 @@ export const getUserRepository = (connection: Connection): UserRepository => {
 				else emails.push(i.email);
 			});
 
-			queryBuilder.andWhere(`u.${userColumns.deletedAt.name} is null`);
+			queryBuilder.andWhere(`u.${userColumns.deleted_at.name} is null`);
 
 			if (ids.length)
 				queryBuilder.orWhere(
@@ -51,9 +51,9 @@ export const getUserRepository = (connection: Connection): UserRepository => {
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
 		}),
 
 		save: (data) => repo.save(data),

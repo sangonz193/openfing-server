@@ -11,8 +11,8 @@ export type UserFindOneOptions =
 
 export type SaveUserData = SafeOmit<UserRow, "id">;
 
-export type CreateUserData = SafeOmit<UserRow, "id" | "createdAt" | "updatedAt" | "deletedAt"> &
-	Partial<Pick<UserRow, "id" | "createdAt" | "updatedAt" | "deletedAt">>;
+export type CreateUserData = SafeOmit<UserRow, "id" | "created_at" | "updated_at" | "deleted_at"> &
+	Partial<Pick<UserRow, "id" | "created_at" | "updated_at" | "deleted_at">>;
 
 export type UserRepository = {
 	findBatch: (options: readonly UserFindOneOptions[]) => Promise<Array<UserRow | null>>;

@@ -1,8 +1,10 @@
-import { commonManagedAtColumns } from "../_utils/common";
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { User as UserType, UserColumns, UserRelations } from "./User.entity.types";
+import { RelationsOptions } from "../_utils/RelationsOptions";
+import { UserColumns, UserEntitySchema, UserRelations } from "./User.entity.types";
 
-export const userColumns: UserColumns = {
+export const userColumns: ColumnsOptions<UserColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
@@ -13,7 +15,6 @@ export const userColumns: UserColumns = {
 	email: {
 		name: "email",
 		type: "varchar",
-		nullable: false,
 	},
 	uid: {
 		name: "uid",
@@ -23,7 +24,6 @@ export const userColumns: UserColumns = {
 	password: {
 		name: "password",
 		type: "text",
-		nullable: false,
 	},
 	name: {
 		name: "name",
@@ -31,12 +31,12 @@ export const userColumns: UserColumns = {
 		nullable: true,
 	},
 
-	createdAt: commonManagedAtColumns.createdAt,
-	updatedAt: commonManagedAtColumns.updatedAt,
-	deletedAt: commonManagedAtColumns.deletedAt,
+	created_at: commonManagedColumnsOptions.created_at,
+	updated_at: commonManagedColumnsOptions.updated_at,
+	deleted_at: commonManagedColumnsOptions.deleted_at,
 };
 
-export const userRelations: UserRelations = {
+export const userRelations: RelationsOptions<UserRelations> = {
 	createdCourses: {
 		name: "createdCourses",
 		type: "one-to-many",
@@ -44,160 +44,160 @@ export const userRelations: UserRelations = {
 		target: "course",
 	},
 	updatedCourses: {
+		name: "updatedCourses",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course",
-		name: "updatedCourses",
 	},
 	deletedCourses: {
+		name: "deletedCourses",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course",
-		name: "deletedCourses",
 	},
 
 	createdCourseEditions: {
+		name: "createdCourseEditions",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_edition",
-		name: "createdCourseEditions",
 	},
 	updatedCourseEditions: {
+		name: "updatedCourseEditions",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_edition",
-		name: "updatedCourseEditions",
 	},
 	deletedCourseEditions: {
+		name: "deletedCourseEditions",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_edition",
-		name: "deletedCourseEditions",
 	},
 
 	createdCourseClassLists: {
+		name: "createdCourseClassLists",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_class_list",
-		name: "createdCourseClassLists",
 	},
 	updatedCourseClassLists: {
+		name: "updatedCourseClassLists",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_class_list",
-		name: "updatedCourseClassLists",
 	},
 	deletedCourseClassLists: {
+		name: "deletedCourseClassLists",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_class_list",
-		name: "deletedCourseClassLists",
 	},
 
 	createdCourseClasses: {
+		name: "createdCourseClasses",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_class",
-		name: "createdCourseClasses",
 	},
 	updatedCourseClasses: {
+		name: "updatedCourseClasses",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_class",
-		name: "updatedCourseClasses",
 	},
 	deletedCourseClasses: {
+		name: "deletedCourseClasses",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_class",
-		name: "deletedCourseClasses",
 	},
 
 	createdCourseClassVideos: {
+		name: "createdCourseClassVideos",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_class_video",
-		name: "createdCourseClassVideos",
 	},
 	updatedCourseClassVideos: {
+		name: "updatedCourseClassVideos",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_class_video",
-		name: "updatedCourseClassVideos",
 	},
 	deletedCourseClassVideos: {
+		name: "deletedCourseClassVideos",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_class_video",
-		name: "deletedCourseClassVideos",
 	},
 
 	createdCourseClassVideoQualities: {
+		name: "createdCourseClassVideoQualities",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_class_video_quality",
-		name: "createdCourseClassVideoQualities",
 	},
 	updatedCourseClassVideoQualities: {
+		name: "updatedCourseClassVideoQualities",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_class_video_quality",
-		name: "updatedCourseClassVideoQualities",
 	},
 	deletedCourseClassVideoQualities: {
+		name: "deletedCourseClassVideoQualities",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_class_video_quality",
-		name: "deletedCourseClassVideoQualities",
 	},
 
 	createdCourseClassVideoFormats: {
+		name: "createdCourseClassVideoFormats",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "course_class_video_format",
-		name: "createdCourseClassVideoFormats",
 	},
 	updatedCourseClassVideoFormats: {
+		name: "updatedCourseClassVideoFormats",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "course_class_video_format",
-		name: "updatedCourseClassVideoFormats",
 	},
 	deletedCourseClassVideoFormats: {
+		name: "deletedCourseClassVideoFormats",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "course_class_video_format",
-		name: "deletedCourseClassVideoFormats",
 	},
 
 	createdFaqs: {
+		name: "createdFaqs",
 		type: "one-to-many",
 		inverseSide: "createdBy",
 		target: "faq",
-		name: "createdFaqs",
 	},
 	updatedFaqs: {
+		name: "updatedFaqs",
 		type: "one-to-many",
 		inverseSide: "updatedBy",
 		target: "faq",
-		name: "updatedFaqs",
 	},
 	deletedFaqs: {
+		name: "deletedFaqs",
 		type: "one-to-many",
 		inverseSide: "deletedBy",
 		target: "faq",
-		name: "deletedFaqs",
 	},
 
 	userToUserRoles: {
+		name: "userToUserRoles",
 		type: "one-to-many",
 		inverseSide: "user",
 		target: "user_to_user_role",
-		name: "userToUserRoles",
 	},
 };
 
-export const User: UserType = createTypedEntitySchema<UserType>({
+export const userEntitySchema = createTypedEntitySchema<UserEntitySchema>({
 	name: "user",
 	columns: userColumns,
 	relations: userRelations,

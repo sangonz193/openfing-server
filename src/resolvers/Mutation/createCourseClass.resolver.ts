@@ -5,18 +5,12 @@ import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
 import { getGenericError } from "../_utils/getGenericError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { backupDb } from "../../_helpers/backupDb";
+import { getDbCommonVisibilityValue } from "../../_helpers/getDbCommonVisibilityValue";
 import { getResolutionFromVideoUrl } from "../../_helpers/getResolutionFromVideoUrl";
 import { dangerousKeysOf } from "../../_utils/dangerousKeysOf";
-import { identity } from "../../_utils/identity";
 import { identityMap } from "../../_utils/identityMap";
 import { SafeOmit } from "../../_utils/utilTypes";
-import { CourseClassVisibility } from "../../entities/CourseClass";
-import { CourseClassVideoVisibility } from "../../entities/CourseClassVideo";
-import {
-	CreateCourseClassInputVisibility,
-	MutationCreateCourseClassArgs,
-	Resolvers,
-} from "../../generated/graphql.types";
+import { MutationCreateCourseClassArgs, Resolvers } from "../../generated/graphql.types";
 import { getCreateCourseClassPayloadParent } from "../CreateCourseClassPayload/CreateCourseClassPayload.parent";
 
 const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, context) => {
@@ -80,15 +74,11 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	const courseClass = await repositories.courseClass.insert(
 		repositories.courseClass.create({
-			createdById: user.id,
-			courseClassListId: courseClassList.id,
+			created_by_id: user.id,
+			course_class_list_id: courseClassList.id,
 			name: validatedData.name,
-			publishedAt: new Date(),
-			visibility: identity<Record<Extract<CreateCourseClassInputVisibility, string>, string>>({
-				DISABLED: CourseClassVisibility.disabled,
-				HIDDEN: CourseClassVisibility.hidden,
-				PUBLIC: CourseClassVisibility.public,
-			})[validatedData.visibility || "PUBLIC"],
+			published_at: new Date(),
+			visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
 			number: validatedData.number,
 		})
 	);
@@ -97,9 +87,11 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	await backupDb(context.ormConnection);
 
-	const baseVideoUrl = `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
-		courseClassList.code
-	}_${validatedData.number.toString().padStart(2, "0")}`;
+	const baseVideoUrl = courseClassList.code
+		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
+				courseClassList.code
+		  }_${validatedData.number.toString().padStart(2, "0")}`
+		: undefined;
 	const possibleFormatNames = ["webm", "mp4"];
 
 	const videoResolutions: Array<{
@@ -110,6 +102,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 	await Promise.all(
 		possibleFormatNames.map(async (formatName) => {
+			if (!baseVideoUrl) return;
+
 			const url = `${baseVideoUrl}.${formatName}`;
 			const resolution = await getResolutionFromVideoUrl(url);
 
@@ -134,11 +128,11 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 	if (videoResolutions.length > 0) {
 		const courseClassVideo = await repositories.courseClassVideo.save(
 			repositories.courseClassVideo.create({
-				courseClassId: courseClass.id,
-				createdById: user.id,
+				course_class_id: courseClass.id,
+				created_by_id: user.id,
 				name: "Clase",
 				position: 1,
-				visibility: CourseClassVideoVisibility.public,
+				visibility: "public",
 			})
 		);
 		// TODO: necessary?
@@ -146,8 +140,8 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 
 		const courseClassVideoQuality = await repositories.courseClassVideoQuality.save(
 			repositories.courseClassVideoQuality.create({
-				courseClassVideoId: courseClassVideo.id,
-				createdById: user.id,
+				course_class_video_id: courseClassVideo.id,
+				created_by_id: user.id,
 				height: null,
 				width: null,
 			})
@@ -159,14 +153,12 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 			videoResolutions.map(async (videoResolution) => {
 				await Promise.all(
 					videoResolution.formats.map(async (videoFormat) => {
-						await repositories.courseClassVideoFormat.save(
-							repositories.courseClassVideoFormat.create({
-								courseClassVideoQualityId: courseClassVideoQuality.id,
-								createdById: user.id,
-								name: videoFormat.name,
-								url: videoFormat.url,
-							})
-						);
+						await repositories.courseClassVideoFormat.createAndInsert({
+							course_class_video_quality_id: courseClassVideoQuality.id,
+							created_by_id: user.id,
+							name: videoFormat.name,
+							url: videoFormat.url,
+						});
 						// TODO: necessary?
 						dataLoaders.courseClassVideoFormat.clearAll();
 					})

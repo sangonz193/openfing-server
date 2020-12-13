@@ -1,8 +1,8 @@
 import ffprobe from "ffprobe";
 import { path as ffprobePath } from "ffprobe-static";
 
-export const getResolutionFromVideoUrl = (url: string): Promise<{ width: number; height: number } | null> =>
-	ffprobe(url, {
+export const getResolutionFromVideoUrl = async (url: string): Promise<{ width: number; height: number } | null> => {
+	return ffprobe(url, {
 		path: ffprobePath,
 	})
 		.then((streams) => {
@@ -15,3 +15,4 @@ export const getResolutionFromVideoUrl = (url: string): Promise<{ width: number;
 			return { height: height || 0, width: width || 0 };
 		})
 		.catch(() => null);
+};

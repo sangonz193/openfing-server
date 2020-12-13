@@ -1,11 +1,12 @@
 {
 	"name": "openfing-server",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"description": "OpenFING Server",
 	"scripts": {
 		"start-dev": "node cli start-dev",
 		"start-dev:watch": "node cli start-dev -w",
 		"generate-files": "node cli generate-files",
+		"lint:fix": "eslint . --fix",
 		"build": "node cli build",
 		"deploy": "node cli deploy",
 		"postinstall": "patch-package"

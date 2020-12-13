@@ -1,7 +1,7 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
 import {
-	CourseClassChapterCue,
+	CourseClassChapterCueEntitySchema,
 	CourseClassChapterCueRow,
 } from "../../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
 
@@ -10,21 +10,24 @@ export type CourseClassChapterCueFindOneOptions = {
 };
 
 export type CourseClassChapterCueFindAllOptions = {
-	courseClassId: CourseClassChapterCueRow["courseClassId"];
+	courseClassId: CourseClassChapterCueRow["course_class_id"];
 };
 
 export type SaveCourseClassChapterCueData = CourseClassChapterCueRow;
 
 export type CreateCourseClassChapterCueData = SafeOmit<
 	CourseClassChapterCueRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
 	Partial<
-		Pick<CourseClassChapterCueRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">
+		Pick<
+			CourseClassChapterCueRow,
+			"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
+		>
 	>;
 
 export type CourseClassChapterCueRepository = {
-	_typedRepository: TypedRepository<CourseClassChapterCue>;
+	_typedRepository: TypedRepository<CourseClassChapterCueEntitySchema>;
 
 	findAll: (options: CourseClassChapterCueFindAllOptions) => Promise<CourseClassChapterCueRow[]>;
 	findBatch: (

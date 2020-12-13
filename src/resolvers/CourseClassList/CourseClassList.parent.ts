@@ -3,7 +3,7 @@ import { CourseClassListRow } from "../../entities/CourseClassList/CourseClassLi
 import { CourseClassList } from "../../generated/graphql.types";
 
 export type CourseClassListParent = Required<
-	SafeOmit<CourseClassListRow, "code" | "createdAt" | "updatedAt" | "deletedAt">
+	SafeOmit<CourseClassListRow, "code" | "created_at" | "updated_at" | "deleted_at">
 > &
 	Pick<Required<CourseClassList>, "__typename" | "code" | "createdAt" | "updatedAt" | "deletedAt">;
 
@@ -11,7 +11,7 @@ export const getCourseClassListParent = (courseClassListRow: CourseClassListRow)
 	__typename: "CourseClassList",
 	...courseClassListRow,
 	code: courseClassListRow.code || "", // TODO: Fix
-	createdAt: courseClassListRow.createdAt?.toISOString() || null,
-	updatedAt: courseClassListRow.updatedAt?.toISOString() || null,
-	deletedAt: courseClassListRow.deletedAt?.toISOString() || null,
+	createdAt: courseClassListRow.created_at?.toISOString() || null,
+	updatedAt: courseClassListRow.updated_at?.toISOString() || null,
+	deletedAt: courseClassListRow.deleted_at?.toISOString() || null,
 });

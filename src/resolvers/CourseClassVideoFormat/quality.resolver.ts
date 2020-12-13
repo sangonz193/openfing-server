@@ -3,8 +3,8 @@ import { getCourseClassVideoQualityParent } from "../CourseClassVideoQuality/Cou
 
 const resolver: Resolvers["CourseClassVideoFormat"]["quality"] = async (parent, {}, { dataLoaders }) => {
 	const quality =
-		parent.courseClassVideoQualityId !== null &&
-		(await dataLoaders.courseClassVideoQuality.load({ id: parent.courseClassVideoQualityId }));
+		parent.course_class_video_quality_id !== null &&
+		(await dataLoaders.courseClassVideoQuality.load({ id: parent.course_class_video_quality_id }));
 
 	return quality ? getCourseClassVideoQualityParent(quality) : null;
 };

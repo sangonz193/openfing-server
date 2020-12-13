@@ -1,27 +1,27 @@
-import { Course } from "./Course";
-import { CourseClass } from "./CourseClass";
-import { CourseClassChapterCue } from "./CourseClassChapterCue";
-import { CourseClassList } from "./CourseClassList";
-import { CourseClassVideo } from "./CourseClassVideo";
-import { CourseClassVideoFormat } from "./CourseClassVideoFormat";
-import { CourseClassVideoQuality } from "./CourseClassVideoQuality";
-import { CourseEdition } from "./CourseEdition";
-import { Faq } from "./Faq";
-import { User } from "./User";
-import { UserRole } from "./UserRole";
-import { UserToUserRole } from "./UserToUserRole";
+import { courseEntitySchema } from "./Course";
+import { courseClassEntitySchema } from "./CourseClass";
+import { courseClassChapterCueEntitySchema } from "./CourseClassChapterCue";
+import { courseClassListEntitySchema } from "./CourseClassList";
+import { courseClassVideoEntitySchema } from "./CourseClassVideo";
+import { courseClassVideoFormatEntitySchema } from "./CourseClassVideoFormat";
+import { courseClassVideoQualityEntitySchema } from "./CourseClassVideoQuality";
+import { courseEditionEntitySchema } from "./CourseEdition";
+import { faqEntitySchema } from "./Faq";
+import { userEntitySchema } from "./User";
+import { userRoleEntitySchema } from "./UserRole";
+import { userToUserRoleEntitySchema } from "./UserToUserRole";
 
 export const entities = [
-	Course,
-	CourseClass,
-	CourseClassChapterCue,
-	CourseClassList,
-	CourseClassVideo,
-	CourseClassVideoFormat,
-	CourseClassVideoQuality,
-	CourseEdition,
-	Faq,
-	User,
-	UserRole,
-	UserToUserRole,
+	courseEntitySchema,
+	courseClassEntitySchema,
+	courseClassChapterCueEntitySchema,
+	courseClassListEntitySchema,
+	courseClassVideoEntitySchema,
+	courseClassVideoFormatEntitySchema,
+	courseClassVideoQualityEntitySchema,
+	courseEditionEntitySchema,
+	faqEntitySchema,
+	userEntitySchema,
+	userRoleEntitySchema,
+	userToUserRoleEntitySchema,
 ];

@@ -3,7 +3,7 @@ import { CourseClassVideoQualityRow } from "../../entities/CourseClassVideoQuali
 import { CourseClassVideoQuality } from "../../generated/graphql.types";
 
 export type CourseClassVideoQualityParent = Required<
-	SafeOmit<CourseClassVideoQualityRow, "createdAt" | "updatedAt" | "deletedAt">
+	SafeOmit<CourseClassVideoQualityRow, "created_at" | "updated_at" | "deleted_at">
 > &
 	Pick<Required<CourseClassVideoQuality>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">;
 
@@ -12,7 +12,7 @@ export const getCourseClassVideoQualityParent = (
 ): CourseClassVideoQualityParent => ({
 	__typename: "CourseClassVideoQuality",
 	...courseClassVideoQualityRow,
-	createdAt: courseClassVideoQualityRow.createdAt?.toISOString() || null,
-	updatedAt: courseClassVideoQualityRow.updatedAt?.toISOString() || null,
-	deletedAt: courseClassVideoQualityRow.deletedAt?.toISOString() || null,
+	createdAt: courseClassVideoQualityRow.created_at?.toISOString() || null,
+	updatedAt: courseClassVideoQualityRow.updated_at?.toISOString() || null,
+	deletedAt: courseClassVideoQualityRow.deleted_at?.toISOString() || null,
 });

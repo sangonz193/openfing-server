@@ -3,15 +3,15 @@ import { Connection } from "typeorm";
 import { getUuid } from "../../_utils/getUuid";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseClassChapterCue, courseClassChapterCueColumns } from "../../entities/CourseClassChapterCue";
+import { courseClassChapterCueColumns, courseClassChapterCueEntitySchema } from "../../entities/CourseClassChapterCue";
 import { CourseClassChapterCueRow } from "../../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import { CourseClassChapterCueRepository } from "./CourseClassChapterCue.repository.types";
 
 export const getCourseClassChapterCueRepository = (connection: Connection): CourseClassChapterCueRepository => {
-	const repo = getTypedRepository(CourseClassChapterCue, connection);
+	const repo = getTypedRepository(courseClassChapterCueEntitySchema, connection);
 
 	const is: CourseClassChapterCueRepository["is"] = (courseClassChapterCue, options) => {
-		return courseClassChapterCue.id === options.id && courseClassChapterCue.deletedAt === null;
+		return courseClassChapterCue.id === options.id && courseClassChapterCue.deleted_at === null;
 	};
 
 	return {
@@ -22,14 +22,14 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 
 			queryBuilder
 				.andWhere(
-					`cccc.${courseClassChapterCueColumns.courseClassId.name} = :courseClassId`,
-					identity<{ courseClassId: CourseClassChapterCueRow["courseClassId"] }>({
+					`cccc.${courseClassChapterCueColumns.course_class_id.name} = :courseClassId`,
+					identity<{ courseClassId: CourseClassChapterCueRow["course_class_id"] }>({
 						courseClassId: options.courseClassId,
 					})
 				)
-				.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`);
+				.andWhere(`cccc.${courseClassChapterCueColumns.deleted_at.name} is null`);
 
-			queryBuilder.orderBy(courseClassChapterCueColumns.startSeconds.name, "ASC");
+			queryBuilder.orderBy(courseClassChapterCueColumns.start_seconds.name, "ASC");
 
 			return queryBuilder.getMany();
 		},
@@ -38,7 +38,7 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 			const queryBuilder = repo.createQueryBuilder("cccc");
 
 			queryBuilder
-				.andWhere(`cccc.${courseClassChapterCueColumns.deletedAt.name} is null`)
+				.andWhere(`cccc.${courseClassChapterCueColumns.deleted_at.name} is null`)
 				.andWhereInIds(identity<Array<CourseClassChapterCueRow["id"]>>(options.map((options) => options.id)));
 
 			const courseClassChapterCues = await queryBuilder.getMany();
@@ -51,11 +51,11 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 		create: (data) => ({
 			...data,
 			id: data.id ?? getUuid(),
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
 		save: (data) => repo.save(data),

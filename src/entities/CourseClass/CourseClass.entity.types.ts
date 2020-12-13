@@ -1,57 +1,58 @@
-import {
-	Column,
-	EntityRow,
-	OneToManyRelation,
-	PrimaryColumn,
-	TypedEntitySchema,
-} from "../_utils/createTypedEntitySchema";
-import { CourseClassChapterCue } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
+import { BidirectionalRelation } from "../_utils/BidirectionalRelation";
+import { FieldColumn, PrimaryColumn } from "../_utils/Column";
+import { CommonVisibility } from "../_utils/CommonVisibility";
+import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { NamedColumns } from "../_utils/NamedColumns";
+import { NamedRelations } from "../_utils/NamedRelations";
+import { CourseClassChapterCueEntitySchema } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import { CourseClassListToCourseClass_courseClasses } from "../CourseClassList/CourseClassList.entity.types";
-import { CourseClassVideo } from "../CourseClassVideo/CourseClassVideo.entity.types";
+import { CourseClassVideoEntitySchema } from "../CourseClassVideo/CourseClassVideo.entity.types";
 import {
-	UserToCourseClass_created,
-	UserToCourseClass_deleted,
-	UserToCourseClass_updated,
+	UserToCourseClass_createdBy,
+	UserToCourseClass_deletedBy,
+	UserToCourseClass_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClass_id = PrimaryColumn<{ name: "id"; type: "integer"; entity: CourseClass }>;
-export type CourseClass_name = Column<{ name: "name"; type: "varchar" }>;
-export type CourseClass_number = Column<{ name: "number"; type: "smallint" }>;
-export type CourseClass_visibility = Column<{ name: "visibility"; type: "varchar" }>;
-export type CourseClass_publishedAt = Column<{ name: "published_at"; type: "timestamp with time zone" }>;
-export type CourseClass_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
-export type CourseClass_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
-export type CourseClass_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
+export type CourseClass_id = PrimaryColumn<"integer">;
+export type CourseClass_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
+export type CourseClass_number = FieldColumn<{ name: "number"; sqlType: "smallint" }>;
+export type CourseClass_visibility = FieldColumn<{
+	name: "visibility";
+	sqlType: "varchar";
+	typescriptType: CommonVisibility;
+}>;
+export type CourseClass_publishedAt = FieldColumn<{ name: "published_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClass_createdAt = FieldColumn<{ name: "created_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClass_updatedAt = FieldColumn<{ name: "updated_at"; sqlType: "timestamp with time zone" }>;
+export type CourseClass_deletedAt = FieldColumn<{ name: "deleted_at"; sqlType: "timestamp with time zone" }>;
 
-export type CourseClassToCourseClassVideo_videos = OneToManyRelation<{
+export type CourseClassToCourseClassVideo_videos = BidirectionalRelation<{
 	from: {
-		entity: () => CourseClass;
-		primaryColumn: CourseClass_id;
+		entity: CourseClassEntitySchema;
 		relationName: "courseClassVideos";
 	};
 	to: {
-		entity: () => CourseClassVideo;
+		entity: CourseClassVideoEntitySchema;
 		columnName: "course_class_id";
 		relationName: "courseClass";
 		nullable: true;
 	};
 }>;
 
-export type CourseClassToCourseClassChapterCue_chapterCues = OneToManyRelation<{
+export type CourseClassToCourseClassChapterCue_chapterCues = BidirectionalRelation<{
 	from: {
-		entity: () => CourseClass;
-		primaryColumn: CourseClass_id;
+		entity: CourseClassEntitySchema;
 		relationName: "courseClassChapterCue";
 	};
 	to: {
-		entity: () => CourseClassChapterCue;
+		entity: CourseClassChapterCueEntitySchema;
 		columnName: "course_class_id";
 		relationName: "courseClass";
 		nullable: false;
 	};
 }>;
 
-export type CourseClassColumns = {
+export type CourseClassColumns = NamedColumns<{
 	id: CourseClass_id;
 
 	name: CourseClass_name;
@@ -65,24 +66,24 @@ export type CourseClassColumns = {
 
 	courseClassListId: CourseClassListToCourseClass_courseClasses["to"]["column"];
 
-	createdById: UserToCourseClass_created["to"]["column"];
-	updatedById: UserToCourseClass_updated["to"]["column"];
-	deletedById: UserToCourseClass_deleted["to"]["column"];
-};
+	createdById: UserToCourseClass_createdBy["to"]["column"];
+	updatedById: UserToCourseClass_updatedBy["to"]["column"];
+	deletedById: UserToCourseClass_deletedBy["to"]["column"];
+}>;
 
-export type CourseClassRelations = {
+export type CourseClassRelations = NamedRelations<{
 	courseClassList: CourseClassListToCourseClass_courseClasses["to"]["relation"];
 	courseClassVideos: CourseClassToCourseClassVideo_videos["from"]["relation"];
 
-	createdBy: UserToCourseClass_created["to"]["relation"];
-	updatedBy: UserToCourseClass_updated["to"]["relation"];
-	deletedBy: UserToCourseClass_deleted["to"]["relation"];
-};
+	createdBy: UserToCourseClass_createdBy["to"]["relation"];
+	updatedBy: UserToCourseClass_updatedBy["to"]["relation"];
+	deletedBy: UserToCourseClass_deletedBy["to"]["relation"];
+}>;
 
-export type CourseClass = TypedEntitySchema<{
+export type CourseClassEntitySchema = TypedEntitySchema<{
 	name: "course_class";
 	columns: CourseClassColumns;
 	relations: CourseClassRelations;
 }>;
 
-export type CourseClassRow = EntityRow<CourseClass>;
+export type CourseClassRow = EntityRow<CourseClassEntitySchema>;

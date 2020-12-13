@@ -2,15 +2,18 @@ import { Connection } from "typeorm";
 
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseClassVideoQuality, courseClassVideoQualityColumns } from "../../entities/CourseClassVideoQuality";
+import {
+	courseClassVideoQualityColumns,
+	courseClassVideoQualityEntitySchema,
+} from "../../entities/CourseClassVideoQuality";
 import { CourseClassVideoQualityRow } from "../../entities/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
 import { CourseClassVideoQualityRepository } from "./CourseClassVideoQuality.repository.types";
 
 export const getCourseClassVideoQualityRepository = (connection: Connection): CourseClassVideoQualityRepository => {
-	const repo = getTypedRepository(CourseClassVideoQuality, connection);
+	const repo = getTypedRepository(courseClassVideoQualityEntitySchema, connection);
 
 	const is: CourseClassVideoQualityRepository["is"] = (courseClassVideoQuality, options) => {
-		return courseClassVideoQuality.id === options.id && courseClassVideoQuality.deletedAt === null;
+		return courseClassVideoQuality.id === options.id && courseClassVideoQuality.deleted_at === null;
 	};
 
 	return {
@@ -21,12 +24,12 @@ export const getCourseClassVideoQualityRepository = (connection: Connection): Co
 
 			queryBuilder
 				.andWhere(
-					`ccvq.${courseClassVideoQualityColumns.courseClassVideoId.name} = :courseClassVideoId`,
-					identity<{ courseClassVideoId: CourseClassVideoQualityRow["courseClassVideoId"] }>({
+					`ccvq.${courseClassVideoQualityColumns.course_class_video_id.name} = :courseClassVideoId`,
+					identity<{ courseClassVideoId: CourseClassVideoQualityRow["course_class_video_id"] }>({
 						courseClassVideoId: options.courseClassVideoId,
 					})
 				)
-				.andWhere(`ccvq.${courseClassVideoQualityColumns.deletedAt.name} is null`);
+				.andWhere(`ccvq.${courseClassVideoQualityColumns.deleted_at.name} is null`);
 
 			return queryBuilder.getMany();
 		},
@@ -35,7 +38,7 @@ export const getCourseClassVideoQualityRepository = (connection: Connection): Co
 			const queryBuilder = repo.createQueryBuilder("ccvq");
 
 			queryBuilder
-				.andWhere(`ccvq.${courseClassVideoQualityColumns.deletedAt.name} is null`)
+				.andWhere(`ccvq.${courseClassVideoQualityColumns.deleted_at.name} is null`)
 				.andWhereInIds(identity<Array<CourseClassVideoQualityRow["id"]>>(options.map((options) => options.id)));
 
 			const courseClassVideoQualitys = await queryBuilder.getMany();
@@ -51,11 +54,11 @@ export const getCourseClassVideoQualityRepository = (connection: Connection): Co
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
 		save: (data) => repo.save(data),

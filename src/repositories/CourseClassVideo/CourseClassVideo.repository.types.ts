@@ -1,6 +1,9 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
-import { CourseClassVideo, CourseClassVideoRow } from "../../entities/CourseClassVideo/CourseClassVideo.entity.types";
+import {
+	CourseClassVideoEntitySchema,
+	CourseClassVideoRow,
+} from "../../entities/CourseClassVideo/CourseClassVideo.entity.types";
 
 export type CourseClassVideoAccessOptions = {
 	includeHidden?: boolean;
@@ -12,19 +15,21 @@ export type CourseClassVideoFindOneOptions = CourseClassVideoAccessOptions & {
 };
 
 export type CourseClassVideoFindAllOptions = CourseClassVideoAccessOptions & {
-	courseClassId: CourseClassVideoRow["courseClassId"];
+	courseClassId: CourseClassVideoRow["course_class_id"];
 };
 
 export type SaveCourseClassVideoData = SafeOmit<CourseClassVideoRow, "id">;
 
 export type CreateCourseClassVideoData = SafeOmit<
 	CourseClassVideoRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
-	Partial<Pick<CourseClassVideoRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">>;
+	Partial<
+		Pick<CourseClassVideoRow, "id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id">
+	>;
 
 export type CourseClassVideoRepository = {
-	_typedRepository: TypedRepository<CourseClassVideo>;
+	_typedRepository: TypedRepository<CourseClassVideoEntitySchema>;
 
 	findAll: (options: CourseClassVideoFindAllOptions) => Promise<CourseClassVideoRow[]>;
 	findBatch: (options: readonly CourseClassVideoFindOneOptions[]) => Promise<Array<CourseClassVideoRow | null>>;

@@ -1,11 +1,12 @@
 import { Connection } from "typeorm";
 
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { Faq, faqColumns } from "../../entities/Faq";
+import { faqColumns, faqEntitySchema } from "../../entities/Faq";
+import { FaqEntitySchema } from "../../entities/Faq/Faq.entity.types";
 import { FaqRepository } from "./Faq.repository.types";
 
 export const getFaqRepository = (connection: Connection): FaqRepository => {
-	const repo = getTypedRepository(Faq, connection);
+	const repo = getTypedRepository<FaqEntitySchema>(faqEntitySchema, connection);
 
 	return {
 		_typedRepository: repo,
@@ -13,18 +14,18 @@ export const getFaqRepository = (connection: Connection): FaqRepository => {
 		findAll: () => {
 			const queryBuilder = repo.createQueryBuilder("f");
 
-			queryBuilder.andWhere(`f.${faqColumns.deletedAt.name} is null`).orderBy(faqColumns.position.name, "ASC");
+			queryBuilder.andWhere(`f.${faqColumns.deleted_at.name} is null`).orderBy(faqColumns.position.name, "ASC");
 
 			return queryBuilder.getMany();
 		},
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
 		save: (data) => repo.save(data),

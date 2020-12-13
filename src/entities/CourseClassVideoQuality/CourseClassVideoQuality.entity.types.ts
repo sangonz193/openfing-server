@@ -1,44 +1,46 @@
-import {
-	Column,
-	EntityRow,
-	OneToManyRelation,
-	PrimaryColumn,
-	TypedEntitySchema,
-} from "../_utils/createTypedEntitySchema";
+import { BidirectionalRelation } from "../_utils/BidirectionalRelation";
+import { FieldColumn, PrimaryColumn } from "../_utils/Column";
+import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { NamedColumns } from "../_utils/NamedColumns";
+import { NamedRelations } from "../_utils/NamedRelations";
 import { CourseClassVideoToCourseClassVideoQuality_qualities } from "../CourseClassVideo/CourseClassVideo.entity.types";
-import { CourseClassVideoFormat } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
+import { CourseClassVideoFormatEntitySchema } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
 import {
-	UserToCourseClassVideoQuality_created,
-	UserToCourseClassVideoQuality_deleted,
-	UserToCourseClassVideoQuality_updated,
+	UserToCourseClassVideoQuality_createdBy,
+	UserToCourseClassVideoQuality_deletedBy,
+	UserToCourseClassVideoQuality_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassVideoQuality_id = PrimaryColumn<{
-	name: "id";
-	type: "integer";
-	entity: CourseClassVideoQuality;
+export type CourseClassVideoQuality_id = PrimaryColumn<"integer">;
+export type CourseClassVideoQuality_width = FieldColumn<{ name: "width"; sqlType: "integer" }>;
+export type CourseClassVideoQuality_height = FieldColumn<{ name: "height"; sqlType: "integer" }>;
+export type CourseClassVideoQuality_createdAt = FieldColumn<{
+	name: "created_at";
+	sqlType: "timestamp with time zone";
 }>;
-export type CourseClassVideoQuality_width = Column<{ name: "width"; type: "integer" }>;
-export type CourseClassVideoQuality_height = Column<{ name: "height"; type: "integer" }>;
-export type CourseClassVideoQuality_createdAt = Column<{ name: "created_at"; type: "timestamp with time zone" }>;
-export type CourseClassVideoQuality_updatedAt = Column<{ name: "updated_at"; type: "timestamp with time zone" }>;
-export type CourseClassVideoQuality_deletedAt = Column<{ name: "deleted_at"; type: "timestamp with time zone" }>;
+export type CourseClassVideoQuality_updatedAt = FieldColumn<{
+	name: "updated_at";
+	sqlType: "timestamp with time zone";
+}>;
+export type CourseClassVideoQuality_deletedAt = FieldColumn<{
+	name: "deleted_at";
+	sqlType: "timestamp with time zone";
+}>;
 
-export type CourseClassVideoQualityToCourseClassVideoFormat_courseClassVideoFormats = OneToManyRelation<{
+export type CourseClassVideoQualityToCourseClassVideoFormat_courseClassVideoFormats = BidirectionalRelation<{
 	from: {
-		entity: () => CourseClassVideoQuality;
-		primaryColumn: CourseClassVideoQuality_id;
+		entity: CourseClassVideoQualityEntitySchema;
 		relationName: "courseClassVideoFormats";
 	};
 	to: {
-		entity: () => CourseClassVideoFormat;
+		entity: CourseClassVideoFormatEntitySchema;
 		columnName: "course_class_video_quality_id";
 		relationName: "courseClassVideoQuality";
 		nullable: true;
 	};
 }>;
 
-export type CourseClassVideoQualityColumns = {
+export type CourseClassVideoQualityColumns = NamedColumns<{
 	id: CourseClassVideoQuality_id;
 
 	width: CourseClassVideoQuality_width;
@@ -50,24 +52,24 @@ export type CourseClassVideoQualityColumns = {
 
 	courseClassVideoId: CourseClassVideoToCourseClassVideoQuality_qualities["to"]["column"];
 
-	createdById: UserToCourseClassVideoQuality_created["to"]["column"];
-	updatedById: UserToCourseClassVideoQuality_updated["to"]["column"];
-	deletedById: UserToCourseClassVideoQuality_deleted["to"]["column"];
-};
+	createdById: UserToCourseClassVideoQuality_createdBy["to"]["column"];
+	updatedById: UserToCourseClassVideoQuality_updatedBy["to"]["column"];
+	deletedById: UserToCourseClassVideoQuality_deletedBy["to"]["column"];
+}>;
 
-export type CourseClassVideoQualityRelations = {
+export type CourseClassVideoQualityRelations = NamedRelations<{
 	courseClassVideo: CourseClassVideoToCourseClassVideoQuality_qualities["to"]["relation"];
 	courseClassVideoFormats: CourseClassVideoQualityToCourseClassVideoFormat_courseClassVideoFormats["from"]["relation"];
 
-	createdBy: UserToCourseClassVideoQuality_created["to"]["relation"];
-	updatedBy: UserToCourseClassVideoQuality_updated["to"]["relation"];
-	deletedBy: UserToCourseClassVideoQuality_deleted["to"]["relation"];
-};
+	createdBy: UserToCourseClassVideoQuality_createdBy["to"]["relation"];
+	updatedBy: UserToCourseClassVideoQuality_updatedBy["to"]["relation"];
+	deletedBy: UserToCourseClassVideoQuality_deletedBy["to"]["relation"];
+}>;
 
-export type CourseClassVideoQuality = TypedEntitySchema<{
+export type CourseClassVideoQualityEntitySchema = TypedEntitySchema<{
 	name: "course_class_video_quality";
 	columns: CourseClassVideoQualityColumns;
 	relations: CourseClassVideoQualityRelations;
 }>;
 
-export type CourseClassVideoQualityRow = EntityRow<CourseClassVideoQuality>;
+export type CourseClassVideoQualityRow = EntityRow<CourseClassVideoQualityEntitySchema>;

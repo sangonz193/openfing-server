@@ -1,7 +1,7 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
 import { CourseRow } from "../../entities/Course/Course.entity.types";
-import { CourseEdition, CourseEditionRow } from "../../entities/CourseEdition/CourseEdition.entity.types";
+import { CourseEditionEntitySchema, CourseEditionRow } from "../../entities/CourseEdition/CourseEdition.entity.types";
 
 export type CourseEditionAccessOptions = {
 	includeHidden?: boolean;
@@ -20,12 +20,14 @@ export type SaveCourseEditionData = SafeOmit<CourseEditionRow, "id">;
 
 export type CreateCourseEditionData = SafeOmit<
 	CourseEditionRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
-	Partial<Pick<CourseEditionRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">>;
+	Partial<
+		Pick<CourseEditionRow, "id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id">
+	>;
 
 export type CourseEditionRepository = {
-	_typedRepository: TypedRepository<CourseEdition>;
+	_typedRepository: TypedRepository<CourseEditionEntitySchema>;
 
 	findAll: (options: CourseEditionFindAllOptions) => Promise<CourseEditionRow[]>;
 	findBatch: (options: readonly CourseEditionFindOneOptions[]) => Promise<Array<CourseEditionRow | null>>;

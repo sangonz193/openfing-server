@@ -5,7 +5,6 @@ import { CommandModule } from "yargs";
 import { fs } from "../../_utils/fs";
 import { fsExists } from "../../_utils/fsExists";
 import { projectPath } from "../../_utils/projectPath";
-import { spawnStdio } from "../../_utils/spawnStdio";
 
 const command: CommandModule<{}, {}> = {
 	command: "build",
@@ -23,7 +22,7 @@ const command: CommandModule<{}, {}> = {
 			path.resolve(projectPath, "node_modules", ".bin", "babel"),
 			["src", ...["--out-dir", distPath], "--copy-files", ...["--extensions", ".ts,.js"]],
 			{
-				stdio: spawnStdio,
+				stdio: "inherit",
 				cwd: projectPath,
 			}
 		);

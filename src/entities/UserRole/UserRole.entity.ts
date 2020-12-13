@@ -1,28 +1,28 @@
+import { ColumnsOptions } from "../_utils/ColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
+import { RelationsOptions } from "../_utils/RelationsOptions";
 import { identityMap } from "../../_utils/identityMap";
-import { UserRole as UserRoleType, UserRoleColumns, UserRoleRelations } from "./UserRole.entity.types";
+import { UserRoleColumns, UserRoleEntitySchema, UserRoleRelations } from "./UserRole.entity.types";
 
 export const UserRoleCode = identityMap<"admin" | "user">({
 	admin: "",
 	user: "",
 });
 
-export const userRoleColumns: UserRoleColumns = {
+export const userRoleColumns: ColumnsOptions<UserRoleColumns> = {
 	id: {
 		name: "id",
 		type: "integer",
 		primary: true,
 		generated: "increment",
 	},
-
 	code: {
 		name: "code",
 		type: "varchar",
-		nullable: false,
 	},
 };
 
-export const userRoleRelations: UserRoleRelations = {
+export const userRoleRelations: RelationsOptions<UserRoleRelations> = {
 	userToUserRoles: {
 		name: "userToUserRoles",
 		type: "one-to-many",
@@ -31,7 +31,7 @@ export const userRoleRelations: UserRoleRelations = {
 	},
 };
 
-export const UserRole: UserRoleType = createTypedEntitySchema<UserRoleType>({
+export const userRoleEntitySchema = createTypedEntitySchema<UserRoleEntitySchema>({
 	name: "user_role",
 	columns: userRoleColumns,
 	relations: userRoleRelations,

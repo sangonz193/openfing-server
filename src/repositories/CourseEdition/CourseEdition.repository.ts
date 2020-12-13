@@ -2,21 +2,21 @@ import { Connection } from "typeorm";
 
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseEdition, courseEditionColumns, CourseEditionVisibility } from "../../entities/CourseEdition";
+import { courseEditionColumns, courseEditionEntitySchema } from "../../entities/CourseEdition";
 import { CourseEditionRow } from "../../entities/CourseEdition/CourseEdition.entity.types";
 import { CourseEditionRepository } from "./CourseEdition.repository.types";
 
 export const getCourseEditionRepository = (connection: Connection): CourseEditionRepository => {
-	const repo = getTypedRepository(CourseEdition, connection);
+	const repo = getTypedRepository(courseEditionEntitySchema, connection);
 
 	const is: CourseEditionRepository["is"] = (courseEdition, options) => {
 		return (
 			courseEdition.id === options.id &&
-			courseEdition.deletedAt === null &&
+			courseEdition.deleted_at === null &&
 			(options.includeHidden ||
-				courseEdition.visibility === CourseEditionVisibility.public ||
+				courseEdition.visibility === "public" ||
 				options.includeDisabled ||
-				courseEdition.visibility === CourseEditionVisibility.disabled)
+				courseEdition.visibility === "disabled")
 		);
 	};
 
@@ -28,18 +28,18 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 
 			queryBuilder
 				.andWhere(
-					`ce.${courseEditionColumns.courseId.name} = :courseId`,
-					identity<{ courseId: CourseEditionRow["courseId"] }>({
+					`ce.${courseEditionColumns.course_id.name} = :courseId`,
+					identity<{ courseId: CourseEditionRow["course_id"] }>({
 						courseId: options.courseId,
 					})
 				)
-				.andWhere(`ce.${courseEditionColumns.deletedAt.name} is null`);
+				.andWhere(`ce.${courseEditionColumns.deleted_at.name} is null`);
 
 			if (!options.includeDisabled)
 				queryBuilder.andWhere(
 					`ce.${courseEditionColumns.visibility.name} != :v1`,
 					identity<{ v1: CourseEditionRow["visibility"] }>({
-						v1: CourseEditionVisibility.disabled,
+						v1: "disabled",
 					})
 				);
 
@@ -47,7 +47,7 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 				queryBuilder.andWhere(
 					`ce.${courseEditionColumns.visibility.name} != :v2`,
 					identity<{ v2: CourseEditionRow["visibility"] }>({
-						v2: CourseEditionVisibility.hidden,
+						v2: "hidden",
 					})
 				);
 
@@ -58,7 +58,7 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 			const queryBuilder = repo.createQueryBuilder("ce");
 
 			queryBuilder
-				.andWhere(`ce.${courseEditionColumns.deletedAt.name} is null`)
+				.andWhere(`ce.${courseEditionColumns.deleted_at.name} is null`)
 				.whereInIds(identity<Array<CourseEditionRow["id"]>>(options.map((o) => o.id)));
 
 			const courseEditions = await queryBuilder.getMany();
@@ -70,11 +70,11 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
 		save: (data) => repo.save(data),

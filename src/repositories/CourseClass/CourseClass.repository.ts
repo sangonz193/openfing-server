@@ -1,9 +1,11 @@
+import omitBy from "lodash/omitBy";
 import { Brackets, Connection } from "typeorm";
 
+import { createUpdate } from "../_utils/createUpdate";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseClass, courseClassColumns, CourseClassVisibility } from "../../entities/CourseClass";
+import { courseClassColumns, courseClassEntitySchema } from "../../entities/CourseClass";
 import { CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
 import {
 	CourseClassFindAllOptions,
@@ -12,41 +14,42 @@ import {
 } from "./CourseClass.repository.types";
 
 export const getCourseClassRepository = (connection: Connection): CourseClassRepository => {
-	const repo = getTypedRepository(CourseClass, connection);
+	const repo = getTypedRepository(courseClassEntitySchema, connection);
+	const update = createUpdate(repo);
 
 	const is: CourseClassRepository["is"] = (courseClass, options) => {
 		return (
 			(hasProperty(options, "id")
 				? courseClass.id === options.id
-				: courseClass.courseClassListId === options.courseClassListId &&
+				: courseClass.course_class_list_id === options.courseClassListId &&
 				  courseClass.number === options.number) &&
-			courseClass.deletedAt === null &&
+			courseClass.deleted_at === null &&
 			(options.includeHidden ||
-				courseClass.visibility === CourseClassVisibility.public ||
+				courseClass.visibility === "public" ||
 				options.includeDisabled ||
-				courseClass.visibility === CourseClassVisibility.disabled)
+				courseClass.visibility === "disabled")
 		);
 	};
 
 	const findAllFromCourseClassList = (
-		options: Extract<CourseClassFindAllOptions, { courseClassListId: CourseClassRow["courseClassListId"] }>
+		options: Extract<CourseClassFindAllOptions, { courseClassListId: CourseClassRow["course_class_list_id"] }>
 	) => {
 		const queryBuilder = repo.createQueryBuilder("ce");
 
 		queryBuilder
 			.andWhere(
-				`ce.${courseClassColumns.courseClassListId.name} = :courseClassListId`,
-				identity<{ courseClassListId: CourseClassRow["courseClassListId"] }>({
+				`ce.${courseClassColumns.course_class_list_id.name} = :courseClassListId`,
+				identity<{ courseClassListId: CourseClassRow["course_class_list_id"] }>({
 					courseClassListId: options.courseClassListId,
 				})
 			)
-			.andWhere(`ce.${courseClassColumns.deletedAt.name} is null`);
+			.andWhere(`ce.${courseClassColumns.deleted_at.name} is null`);
 
 		if (!options.includeDisabled)
 			queryBuilder.andWhere(
 				`ce.${courseClassColumns.visibility.name} != :visibility`,
 				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: CourseClassVisibility.disabled,
+					visibility: "disabled",
 				})
 			);
 
@@ -54,7 +57,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 			queryBuilder.andWhere(
 				`ce.${courseClassColumns.visibility.name} != :visibility`,
 				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: CourseClassVisibility.hidden,
+					visibility: "hidden",
 				})
 			);
 
@@ -66,11 +69,11 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 	const findLatestCourseClasses = (options: Extract<CourseClassFindAllOptions, { latest: number }>) => {
 		return repo.find({
 			where: {
-				deletedAt: null,
-				visibility: CourseClassVisibility.public,
+				deleted_at: null,
+				visibility: "public",
 			},
 			order: {
-				createdAt: "DESC",
+				created_at: "DESC",
 			},
 			take: options.latest,
 		});
@@ -86,7 +89,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 		findBatch: async (options) => {
 			const queryBuilder = repo.createQueryBuilder("cc");
 
-			queryBuilder.andWhere(`cc.${courseClassColumns.deletedAt.name} is null`).andWhere(
+			queryBuilder.andWhere(`cc.${courseClassColumns.deleted_at.name} is null`).andWhere(
 				new Brackets((qb) => {
 					const ids: Array<CourseClassRow["id"]> = [];
 					const byNumber: Array<Extract<CourseClassFindOneOptions, { number: number }>> = [];
@@ -103,13 +106,13 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 							new Brackets((qb) =>
 								qb
 									.where(
-										`ce.${courseClassColumns.courseClassListId.name} = :courseClassListId`,
-										identity<{ courseClassListId: CourseClassRow["courseClassListId"] }>({
+										`cc.${courseClassColumns.course_class_list_id.name} = :courseClassListId`,
+										identity<{ courseClassListId: CourseClassRow["course_class_list_id"] }>({
 											courseClassListId: byNumberOptions.courseClassListId,
 										})
 									)
 									.andWhere(
-										`ce.${courseClassColumns.number.name} = :number`,
+										`cc.${courseClassColumns.number.name} = :number`,
 										identity<{ number: CourseClassRow["number"] }>({
 											number: byNumberOptions.number,
 										})
@@ -135,11 +138,11 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
 		insert: (data) => repo.save(data),
@@ -149,13 +152,31 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 		},
 
 		async update(id, newValues) {
-			return repo.save({ ...newValues, id });
+			const acceptedKeysMap = identity<Record<keyof typeof newValues, true>>({
+				course_class_list_id: true,
+				created_at: true,
+				created_by_id: true,
+				deleted_at: true,
+				deleted_by_id: true,
+				name: true,
+				number: true,
+				published_at: true,
+				updated_by_id: true,
+				visibility: true,
+			});
+
+			return update(id, {
+				...omitBy(newValues, (_, key) => {
+					return !acceptedKeysMap[key as keyof typeof acceptedKeysMap];
+				}),
+				updated_at: new Date(),
+			});
 		},
 
 		delete(id, data) {
-			return this.update(id, {
-				deletedAt: new Date(),
-				deletedById: data.deletedById,
+			return update(id, {
+				deleted_at: new Date(),
+				deleted_by_id: data.deleted_by_id,
 			});
 		},
 	};

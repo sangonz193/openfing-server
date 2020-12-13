@@ -1,6 +1,6 @@
 import { SafeOmit } from "../../_utils/utilTypes";
 import { TypedRepository } from "../../entities/_utils/TypedRepository";
-import { CourseClass, CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
+import { CourseClassEntitySchema, CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
 import { CourseClassListRow } from "../../entities/CourseClassList/CourseClassList.entity.types";
 
 export type CourseClassRef =
@@ -21,7 +21,7 @@ export type CourseClassFindOneOptions = CourseClassAccessOptions & CourseClassRe
 
 export type CourseClassFindAllOptions =
 	| (CourseClassAccessOptions & {
-			courseClassListId: CourseClassRow["courseClassListId"];
+			courseClassListId: CourseClassRow["course_class_list_id"];
 	  })
 	| { latest: number };
 
@@ -29,12 +29,14 @@ export type InsertCourseClassData = SafeOmit<CourseClassRow, "id">;
 
 export type CreateCourseClassData = SafeOmit<
 	CourseClassRow,
-	"id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById"
+	"id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id"
 > &
-	Partial<Pick<CourseClassRow, "id" | "createdAt" | "updatedAt" | "deletedAt" | "updatedById" | "deletedById">>;
+	Partial<
+		Pick<CourseClassRow, "id" | "created_at" | "updated_at" | "deleted_at" | "updated_by_id" | "deleted_by_id">
+	>;
 
 export type CourseClassRepository = {
-	_typedRepository: TypedRepository<CourseClass>;
+	_typedRepository: TypedRepository<CourseClassEntitySchema>;
 
 	findOne: (options: CourseClassFindOneOptions) => Promise<CourseClassRow | null>;
 	findBatch: (options: readonly CourseClassFindOneOptions[]) => Promise<Array<CourseClassRow | null>>;
@@ -46,7 +48,14 @@ export type CourseClassRepository = {
 	insert: (data: InsertCourseClassData) => Promise<CourseClassRow>;
 	createAndInsert: (data: CreateCourseClassData) => Promise<CourseClassRow>;
 
-	update: (id: CourseClassRow["id"], newValues: Partial<SafeOmit<CourseClassRow, "id">>) => Promise<CourseClassRow>;
+	update: (
+		id: CourseClassRow["id"],
+		newValues: Partial<SafeOmit<CourseClassRow, "id" | "updated_at" | "updated_by_id">> &
+			Required<Pick<CourseClassRow, "updated_by_id">>
+	) => Promise<CourseClassRow>;
 
-	delete: (id: CourseClassRow["id"], data: Pick<Required<CourseClassRow>, "deletedById">) => Promise<CourseClassRow>;
+	delete: (
+		id: CourseClassRow["id"],
+		data: Pick<Required<CourseClassRow>, "deleted_by_id">
+	) => Promise<CourseClassRow>;
 };

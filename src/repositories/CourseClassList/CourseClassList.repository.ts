@@ -3,58 +3,31 @@ import { Connection } from "typeorm";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { CourseClassList, courseClassListColumns, CourseClassListVisibility } from "../../entities/CourseClassList";
+import { courseClassListColumns, courseClassListEntitySchema } from "../../entities/CourseClassList";
 import { CourseClassListRow } from "../../entities/CourseClassList/CourseClassList.entity.types";
 import { CourseClassListRepository } from "./CourseClassList.repository.types";
 
 export const getCourseClassListRepository = (connection: Connection): CourseClassListRepository => {
-	const repo = getTypedRepository(CourseClassList, connection);
+	const repo = getTypedRepository(courseClassListEntitySchema, connection);
 
 	const is: CourseClassListRepository["is"] = (courseClassList, options) => {
 		if (hasProperty(options, "id") ? courseClassList.id !== options.id : courseClassList.code !== options.code)
 			return false;
 
 		return (
-			courseClassList.deletedAt === null &&
+			courseClassList.deleted_at === null &&
 			(options.includeHidden ||
-				courseClassList.visibility === CourseClassListVisibility.public ||
+				courseClassList.visibility === "public" ||
 				options.includeDisabled ||
-				courseClassList.visibility === CourseClassListVisibility.disabled)
+				courseClassList.visibility === "disabled")
 		);
 	};
 
 	return {
 		_typedRepository: repo,
 
-		findAll: (options) => {
-			const queryBuilder = repo.createQueryBuilder("ccl");
-
-			queryBuilder
-				.andWhere(
-					`ccl.${courseClassListColumns.courseEditionId.name} = :courseEditionId`,
-					identity<{ courseEditionId: CourseClassListRow["courseEditionId"] }>({
-						courseEditionId: options.courseEditionId,
-					})
-				)
-				.andWhere(`ccl.${courseClassListColumns.deletedAt.name} is null`);
-
-			if (!options.includeDisabled)
-				queryBuilder.andWhere(
-					`ccl.${courseClassListColumns.visibility.name} != :v1`,
-					identity<{ v1: CourseClassListRow["visibility"] }>({
-						v1: CourseClassListVisibility.disabled,
-					})
-				);
-
-			if (!options.includeHidden)
-				queryBuilder.andWhere(
-					`ccl.${courseClassListColumns.visibility.name} != :v2`,
-					identity<{ v2: CourseClassListRow["visibility"] }>({
-						v2: CourseClassListVisibility.hidden,
-					})
-				);
-
-			return queryBuilder.getMany();
+		async findOne(options) {
+			return (await this.findBatch([options]))[0];
 		},
 
 		findBatch: async (options) => {
@@ -68,7 +41,7 @@ export const getCourseClassListRepository = (connection: Connection): CourseClas
 				else codes.push(i.code);
 			});
 
-			queryBuilder.andWhere(`ccl.${courseClassListColumns.deletedAt.name} is null`);
+			queryBuilder.andWhere(`ccl.${courseClassListColumns.deleted_at.name} is null`);
 
 			if (ids.length)
 				queryBuilder.orWhere(
@@ -89,17 +62,63 @@ export const getCourseClassListRepository = (connection: Connection): CourseClas
 			);
 		},
 
+		findAll: (options) => {
+			const queryBuilder = repo.createQueryBuilder("ccl");
+
+			queryBuilder
+				.andWhere(
+					`ccl.${courseClassListColumns.course_edition_id.name} = :courseEditionId`,
+					identity<{ courseEditionId: CourseClassListRow["course_edition_id"] }>({
+						courseEditionId: options.courseEditionId,
+					})
+				)
+				.andWhere(`ccl.${courseClassListColumns.deleted_at.name} is null`);
+
+			if (!options.includeDisabled)
+				queryBuilder.andWhere(
+					`ccl.${courseClassListColumns.visibility.name} != :v1`,
+					identity<{ v1: CourseClassListRow["visibility"] }>({
+						v1: "disabled",
+					})
+				);
+
+			if (!options.includeHidden)
+				queryBuilder.andWhere(
+					`ccl.${courseClassListColumns.visibility.name} != :v2`,
+					identity<{ v2: CourseClassListRow["visibility"] }>({
+						v2: "hidden",
+					})
+				);
+
+			return queryBuilder.getMany();
+		},
+
 		is,
 
 		create: (data) => ({
 			...data,
-			createdAt: data.createdAt || new Date(),
-			updatedAt: data.updatedAt || null,
-			deletedAt: data.deletedAt || null,
-			updatedById: data.updatedById || null,
-			deletedById: data.deletedById || null,
+			created_at: data.created_at || new Date(),
+			updated_at: data.updated_at || null,
+			deleted_at: data.deleted_at || null,
+			updated_by_id: data.updated_by_id || null,
+			deleted_by_id: data.deleted_by_id || null,
 		}),
 
-		save: (data) => repo.save(data),
+		insert: (data) => repo.save(data),
+
+		createAndInsert(...args) {
+			return this.insert(this.create(...args));
+		},
+
+		async update(id, newValues) {
+			return repo.save({ ...newValues, id });
+		},
+
+		delete(id, data) {
+			return this.update(id, {
+				deleted_at: new Date(),
+				deleted_by_id: data.deleted_by_id,
+			});
+		},
 	};
 };
