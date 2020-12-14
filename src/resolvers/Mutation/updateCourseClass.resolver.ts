@@ -1,3 +1,4 @@
+import { isValid, parse, set } from "date-fns";
 import path from "path";
 import SFTP from "ssh2-promise/dist/sftp";
 import * as yup from "yup";
@@ -10,6 +11,7 @@ import { MutationUpdateCourseClassArgs, Resolvers } from "../../generated/graphq
 import { getAuthenticationError } from "../_utils/getAuthenticationError";
 import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
 import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
+import { getGenericError } from "../_utils/getGenericError";
 import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getUpdateCourseClassPayload } from "../UpdateCourseClassPayload/UpdateCourseClassPayload.parent";
@@ -44,15 +46,32 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 			name: yup.string().trim().max(200).notRequired(),
 			number: yup.number().moreThan(0).lessThan(1000).notRequired(),
 			visibility: yup.mixed().nullable(),
+			publishedAt: yup.string().nullable(false).notRequired(),
 		})
 		.required()
 		.validate(args.input);
+
+	let newPublishedAt: Date | undefined;
+	if (typeof validatedData.publishedAt === "string") {
+		newPublishedAt = parse(validatedData.publishedAt, "uuuu-MM-dd", new Date());
+
+		if (courseClass.published_at)
+			newPublishedAt = set(newPublishedAt, {
+				hours: courseClass.published_at.getHours(),
+				minutes: courseClass.published_at.getMinutes(),
+				seconds: courseClass.published_at.getSeconds(),
+				milliseconds: courseClass.published_at.getMilliseconds(),
+			});
+
+		if (!isValid(newPublishedAt)) return getGenericError();
+	}
 
 	const updatedCourseClass = await repositories.courseClass.update(courseClass.id, {
 		updated_by_id: user.id,
 		name: validatedData.name,
 		number: validatedData.number,
 		visibility: validatedData.visibility && getDbCommonVisibilityValue(validatedData.visibility),
+		published_at: newPublishedAt,
 	});
 
 	const openFingVideoServerUrl = "https://openfing-video.fing.edu.uy";
