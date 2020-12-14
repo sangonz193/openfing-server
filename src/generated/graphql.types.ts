@@ -319,6 +319,7 @@ export type UpdateCourseClassInputVisibility = "PUBLIC" | "HIDDEN" | "DISABLED";
 export type UpdateCourseClassInput = {
 	name?: Maybe<Scalars["String"]>;
 	number?: Maybe<Scalars["Int"]>;
+	publishedAt?: Maybe<Scalars["String"]>;
 	visibility?: Maybe<UpdateCourseClassInputVisibility>;
 };
 

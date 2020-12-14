@@ -18,6 +18,7 @@ export default gql`
 	input UpdateCourseClassInput {
 		name: String
 		number: Int
+		publishedAt: String
 		visibility: UpdateCourseClassInputVisibility
 	}
 
