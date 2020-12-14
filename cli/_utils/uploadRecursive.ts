@@ -35,15 +35,12 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 			})(),
 		]);
 
-		await Promise.all(
-			folderContent.map((item) =>
-				uploadRecursive({
-					fromPath: path.join(fromPath, item),
-					toPath: path.join(toPath, item),
-					sftp,
-				})
-			)
-		);
+		for (const item of folderContent)
+			await uploadRecursive({
+				fromPath: path.join(fromPath, item),
+				toPath: path.join(toPath, item),
+				sftp,
+			});
 	}
 
 	console.log(`- uploaded: ${fromPath} to ${toPath}`);
