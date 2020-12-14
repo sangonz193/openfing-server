@@ -52,7 +52,7 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 		.validate(args.input);
 
 	let newPublishedAt: Date | undefined;
-	if (validatedData.publishedAt) {
+	if (typeof validatedData.publishedAt === "string") {
 		newPublishedAt = parse(validatedData.publishedAt, "uuuu-MM-dd", new Date());
 
 		if (courseClass.published_at)
