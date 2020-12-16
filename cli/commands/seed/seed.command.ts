@@ -36,13 +36,17 @@ const command: CommandModule<{}, {}> = {
 		await connection.query(`CREATE SCHEMA "${schema}"`);
 		await connection.runMigrations();
 
-		const adminUserRole = await getUserRoleRepository(connection).save({
-			code: UserRoleCode.admin,
-		});
+		const adminUserRole = await getUserRoleRepository(connection).save(
+			getUserRoleRepository(connection).create({
+				code: UserRoleCode.admin,
+			})
+		);
 
-		await getUserRoleRepository(connection).save({
-			code: UserRoleCode.user,
-		});
+		await getUserRoleRepository(connection).save(
+			getUserRoleRepository(connection).create({
+				code: UserRoleCode.user,
+			})
+		);
 
 		const user = await getUserRepository(connection).save(
 			getUserRepository(connection).create({
@@ -56,10 +60,12 @@ const command: CommandModule<{}, {}> = {
 			})
 		);
 
-		await getUserToUserRoleRepository(connection).save({
-			user_id: user.id,
-			user_role_id: adminUserRole.id,
-		});
+		await getUserToUserRoleRepository(connection).save(
+			getUserToUserRoleRepository(connection).create({
+				user_id: user.id,
+				user_role_id: adminUserRole.id,
+			})
+		);
 
 		await Promise.all(
 			entities.map(async (entityToCopy) => {
