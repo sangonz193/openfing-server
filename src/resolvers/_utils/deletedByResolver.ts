@@ -4,7 +4,7 @@ import { getUserParent, UserParent } from "../User/User.parent";
 
 export const deletedByResolver: ResolverFn<
 	UserParent | null,
-	Record<"deleted_by_id", number | null>,
+	Record<"deleted_by_id", string | null>,
 	Context,
 	{}
 > = async (parent, _, { dataLoaders }) => {

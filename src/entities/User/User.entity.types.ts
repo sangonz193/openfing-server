@@ -14,7 +14,7 @@ import { CourseEditionEntitySchema } from "../CourseEdition/CourseEdition.entity
 import { FaqEntitySchema } from "../Faq/Faq.entity.types";
 import { UserToUserRoleEntitySchema } from "../UserToUserRole/UserToUserRole.entity.types";
 
-export type User_id = PrimaryColumn<"integer">;
+export type User_id = PrimaryColumn<"uuid">;
 export type User_email = FieldColumn<{ name: "email"; sqlType: "varchar"; nullable: false }>;
 export type User_uid = FieldColumn<{ name: "uid"; sqlType: "varchar" }>;
 export type User_password = FieldColumn<{ name: "password"; sqlType: "text"; nullable: false }>;

@@ -7,9 +7,8 @@ import { UserColumns, UserEntitySchema, UserRelations } from "./User.entity.type
 export const userColumns: ColumnsOptions<UserColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	email: {
