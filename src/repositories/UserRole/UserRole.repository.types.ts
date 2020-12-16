@@ -2,7 +2,7 @@ import { SafeOmit } from "../../_utils/utilTypes";
 import { UserRow } from "../../entities/User/User.entity.types";
 import { UserRoleRow } from "../../entities/UserRole/UserRole.entity.types";
 
-export type SaveUserRoleData = SafeOmit<UserRoleRow, "id">;
+export type SaveUserRoleData = UserRoleRow;
 
 export type CreateUserRoleData = SafeOmit<UserRoleRow, "id"> & Partial<Pick<UserRoleRow, "id">>;
 

@@ -5,7 +5,7 @@ import { NamedColumns } from "../_utils/NamedColumns";
 import { NamedRelations } from "../_utils/NamedRelations";
 import { UserToUserRoleEntitySchema } from "../UserToUserRole/UserToUserRole.entity.types";
 
-export type UserRole_id = PrimaryColumn<"integer">;
+export type UserRole_id = PrimaryColumn<"uuid">;
 export type UserRole_code = FieldColumn<{ name: "code"; sqlType: "varchar"; nullable: false }>;
 
 export type UserRoleToUserToUserRole_userToUserRoles = BidirectionalRelation<{

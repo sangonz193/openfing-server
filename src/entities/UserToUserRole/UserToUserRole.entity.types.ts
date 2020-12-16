@@ -5,7 +5,7 @@ import { NamedRelations } from "../_utils/NamedRelations";
 import { UserToUserToUserRole_userToUserRoles } from "../User/User.entity.types";
 import { UserRoleToUserToUserRole_userToUserRoles } from "../UserRole/UserRole.entity.types";
 
-export type UserToUserRole_id = PrimaryColumn<"integer">;
+export type UserToUserRole_id = PrimaryColumn<"uuid">;
 
 export type UserToUserRoleColumns = NamedColumns<{
 	id: UserToUserRole_id;
