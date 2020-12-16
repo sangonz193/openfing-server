@@ -12,7 +12,7 @@ import {
 	UserToCourseClassVideo_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassVideo_id = PrimaryColumn<"integer">;
+export type CourseClassVideo_id = PrimaryColumn<"uuid">;
 export type CourseClassVideo_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
 export type CourseClassVideo_position = FieldColumn<{ name: "position"; sqlType: "smallint" }>;
 export type CourseClassVideo_visibility = FieldColumn<{

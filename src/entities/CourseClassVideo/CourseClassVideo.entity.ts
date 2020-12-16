@@ -14,9 +14,8 @@ export type CourseClassVideoVisibility = CommonVisibility;
 export const courseClassVideoColumns: ColumnsOptions<CourseClassVideoColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	name: {
