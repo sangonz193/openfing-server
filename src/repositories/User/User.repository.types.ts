@@ -9,7 +9,7 @@ export type UserFindOneOptions =
 			email: UserRow["email"];
 	  };
 
-export type SaveUserData = SafeOmit<UserRow, "id">;
+export type SaveUserData = UserRow;
 
 export type CreateUserData = SafeOmit<UserRow, "id" | "created_at" | "updated_at" | "deleted_at"> &
 	Partial<Pick<UserRow, "id" | "created_at" | "updated_at" | "deleted_at">>;

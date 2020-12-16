@@ -16,17 +16,17 @@ export const commonManagedColumnsOptions = {
 	},
 	created_by_id: {
 		name: "created_by_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 	updated_by_id: {
 		name: "updated_by_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 	deleted_by_id: {
 		name: "deleted_by_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 } as const;
