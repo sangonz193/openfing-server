@@ -4,7 +4,7 @@ import { NamedColumns } from "../_utils/NamedColumns";
 import { NamedRelations } from "../_utils/NamedRelations";
 import { UserToFaq_createdBy, UserToFaq_deletedBy, UserToFaq_updatedBy } from "../User/User.entity.types";
 
-export type Faq_id = PrimaryColumn<"integer">;
+export type Faq_id = PrimaryColumn<"uuid">;
 export type Faq_title = FieldColumn<{ name: "title"; sqlType: "varchar" }>;
 export type Faq_content = FieldColumn<{ name: "content"; sqlType: "text" }>;
 export type Faq_isHtml = FieldColumn<{ name: "is_html"; sqlType: "boolean" }>;
