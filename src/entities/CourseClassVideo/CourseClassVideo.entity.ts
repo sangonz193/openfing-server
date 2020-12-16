@@ -41,7 +41,7 @@ export const courseClassVideoColumns: ColumnsOptions<CourseClassVideoColumns> = 
 
 	course_class_id: {
 		name: "course_class_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 

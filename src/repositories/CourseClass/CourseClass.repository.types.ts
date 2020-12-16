@@ -25,7 +25,7 @@ export type CourseClassFindAllOptions =
 	  })
 	| { latest: number };
 
-export type InsertCourseClassData = SafeOmit<CourseClassRow, "id">;
+export type InsertCourseClassData = CourseClassRow;
 
 export type CreateCourseClassData = SafeOmit<
 	CourseClassRow,

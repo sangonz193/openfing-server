@@ -11,15 +11,12 @@ export const getCourseClassFromRef = async (
 ): Promise<CourseClassRow | null> => {
 	const { dataLoaders } = context;
 
-	if (ref.byId) {
-		const numberId = Number(ref.byId.id);
-
-		if (numberId)
-			return dataLoaders.courseClass.load({
-				...options,
-				id: numberId,
-			});
-	} else if (ref.byNumber) {
+	if (ref.byId)
+		return dataLoaders.courseClass.load({
+			...options,
+			id: ref.byId.id,
+		});
+	else if (ref.byNumber) {
 		const courseClassList = await getCourseClassListFromRef(
 			ref.byNumber.courseClassList,
 			{
