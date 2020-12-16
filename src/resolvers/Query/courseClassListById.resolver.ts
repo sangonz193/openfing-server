@@ -5,17 +5,15 @@ import { getCourseClassListParent } from "../CourseClassList/CourseClassList.par
 const resolver: Resolvers["Query"]["courseClassListById"] = async (_, args, context) => {
 	context.includeHidden = true;
 
+	const { id } = args;
 	const { dataLoaders } = context;
-	const parsedId = Number(args.id);
 
-	if (!isNaN(parsedId)) {
-		const courseClassList = await dataLoaders.courseClassList.load({
-			id: parsedId,
-			includeHidden: true,
-		});
+	const courseClassList = await dataLoaders.courseClassList.load({
+		id,
+		includeHidden: true,
+	});
 
-		if (courseClassList) return getCourseClassListParent(courseClassList);
-	}
+	if (courseClassList) return getCourseClassListParent(courseClassList);
 
 	return getNotFoundError();
 };

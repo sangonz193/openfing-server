@@ -12,7 +12,7 @@ import {
 	UserToCourseClassList_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassList_id = PrimaryColumn<"integer">;
+export type CourseClassList_id = PrimaryColumn<"uuid">;
 export type CourseClassList_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
 export type CourseClassList_code = FieldColumn<{ name: "code"; sqlType: "varchar" }>;
 export type CourseClassList_visibility = FieldColumn<{

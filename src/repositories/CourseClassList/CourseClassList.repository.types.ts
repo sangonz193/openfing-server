@@ -24,7 +24,7 @@ export type CourseClassListFindAllOptions = CourseClassListAccessOptions & {
 	courseEditionId: CourseClassListRow["course_edition_id"];
 };
 
-export type SaveCourseClassListData = SafeOmit<CourseClassListRow, "id">;
+export type SaveCourseClassListData = CourseClassListRow;
 
 export type CreateCourseClassListData = SafeOmit<
 	CourseClassListRow,
