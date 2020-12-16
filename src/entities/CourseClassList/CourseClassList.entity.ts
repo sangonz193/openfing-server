@@ -14,9 +14,8 @@ export type CourseClassListVisibility = CommonVisibility;
 export const courseClassListColumns: ColumnsOptions<CourseClassListColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	name: {

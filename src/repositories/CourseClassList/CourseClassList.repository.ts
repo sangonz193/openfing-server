@@ -1,5 +1,6 @@
 import { Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
@@ -33,7 +34,7 @@ export const getCourseClassListRepository = (connection: Connection): CourseClas
 		findBatch: async (options) => {
 			const queryBuilder = repo.createQueryBuilder("ccl");
 
-			const ids: number[] = [];
+			const ids: string[] = [];
 			const codes: string[] = [];
 
 			options.forEach((i) => {
@@ -97,6 +98,7 @@ export const getCourseClassListRepository = (connection: Connection): CourseClas
 
 		create: (data) => ({
 			...data,
+			id: data.id ?? getUuid(),
 			created_at: data.created_at || new Date(),
 			updated_at: data.updated_at || null,
 			deleted_at: data.deleted_at || null,

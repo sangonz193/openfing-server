@@ -1,7 +1,7 @@
 {
   "records": [
     {
-      "id": 1,
+      "id": "b1b1bed4-5e47-437c-a3eb-beda9d1696cc",
       "name": "Default",
       "code": "c1",
       "visibility": "public",
@@ -14,7 +14,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 2,
+      "id": "6098fdea-438c-425c-a386-f4fc09545fe3",
       "name": "Default",
       "code": "c2",
       "visibility": "public",
@@ -27,7 +27,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 3,
+      "id": "df6f5f6b-8402-411d-8e43-97af662fcfcf",
       "name": "Default",
       "code": "gal1",
       "visibility": "public",
@@ -40,7 +40,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 4,
+      "id": "bf555ada-249b-4869-8b87-abad336c6a78",
       "name": "Default",
       "code": "md1",
       "visibility": "public",
@@ -53,7 +53,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 5,
+      "id": "f82e170e-7c23-4701-8b75-ef2f69112f5b",
       "name": "Default",
       "code": "logica",
       "visibility": "public",
@@ -66,7 +66,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 6,
+      "id": "8205dbe3-e1ce-423f-a586-8f9c7ad46895",
       "name": "Default",
       "code": "fbd",
       "visibility": "public",
@@ -79,7 +79,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 7,
+      "id": "7fcbc64e-ab3f-46dc-9143-d8a6a8b557ef",
       "name": "Default",
       "code": "redes",
       "visibility": "public",
@@ -92,7 +92,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 8,
+      "id": "9425b53f-decb-4b3e-bb83-b0bf9b02591b",
       "name": "Default",
       "code": "economia",
       "visibility": "public",
@@ -105,7 +105,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 9,
+      "id": "e0d78860-9f33-46ef-a394-b330ca4cfb8b",
       "name": "Default",
       "code": "hpc",
       "visibility": "public",
@@ -118,7 +118,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 10,
+      "id": "3721de15-edde-449b-9229-1e0a1a016bfe",
       "name": "Default",
       "code": "est",
       "visibility": "public",
@@ -131,7 +131,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 11,
+      "id": "1e23e7a9-fa51-44f2-bd77-774ac3d7441c",
       "name": "Default",
       "code": "f1",
       "visibility": "public",
@@ -144,7 +144,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 12,
+      "id": "5b439daf-1668-47bd-98b7-664881c23131",
       "name": "Default",
       "code": "pye",
       "visibility": "public",
@@ -157,7 +157,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 13,
+      "id": "bf1527c1-af74-4c19-b57a-bdf739c8a705",
       "name": "Default",
       "code": "md2",
       "visibility": "public",
@@ -170,7 +170,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 14,
+      "id": "85b175bd-2e80-4c8b-9a54-71e66cf784f4",
       "name": "Default",
       "code": "so",
       "visibility": "public",
@@ -183,7 +183,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 15,
+      "id": "13926104-8d71-4e6a-8d74-98307bee6b44",
       "name": "Default",
       "code": "tl",
       "visibility": "public",
@@ -196,7 +196,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 16,
+      "id": "9246cb20-4844-495d-8b13-934f6042c523",
       "name": "Default",
       "code": "ac",
       "visibility": "public",
@@ -209,7 +209,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 17,
+      "id": "fc0b99fb-8494-4c18-9c9f-e4d5cd68da66",
       "name": "Default",
       "code": "sl2",
       "visibility": "public",
@@ -222,7 +222,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 18,
+      "id": "754ea6f4-7b15-42e8-ac4d-8fb785e6d302",
       "name": "Default",
       "code": "c3",
       "visibility": "public",
@@ -235,7 +235,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 19,
+      "id": "59b9e7f4-6b95-4d74-9054-5830a3d9a19d",
       "name": "Default",
       "code": "imp",
       "visibility": "public",
@@ -248,7 +248,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 20,
+      "id": "de23cb97-5588-47c1-9e10-6a7bba41de54",
       "name": "Default",
       "code": "ae",
       "visibility": "public",
@@ -261,7 +261,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 21,
+      "id": "8b7f6a0a-7f63-4359-82b9-ec301b830eee",
       "name": "Default",
       "code": "p2",
       "visibility": "public",
@@ -274,7 +274,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 22,
+      "id": "ae8272b5-ee4a-421d-a011-cbc0407f3daf",
       "name": "Default",
       "code": "pmm",
       "visibility": "public",
@@ -287,7 +287,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 23,
+      "id": "20eb4c83-f74f-4e6a-ac62-f5ff090a8d8b",
       "name": "Default",
       "code": "mpd",
       "visibility": "public",
@@ -300,7 +300,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 24,
+      "id": "60012713-8885-4cfd-93a0-2e1ced6bf263",
       "name": "Default",
       "code": "ed",
       "visibility": "public",
@@ -313,7 +313,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 25,
+      "id": "bed0580c-a164-40fb-a410-96a0748114a3",
       "name": "Default",
       "code": "f3",
       "visibility": "public",
@@ -326,7 +326,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 26,
+      "id": "2894cf2f-fe92-471f-8ac0-8298d569e005",
       "name": "Default",
       "code": "p3",
       "visibility": "public",
@@ -339,7 +339,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 27,
+      "id": "5994edf0-dfbc-4547-83d2-a53bede43496",
       "name": "Default",
       "code": "metn",
       "visibility": "public",
@@ -352,7 +352,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 28,
+      "id": "44f7ea53-0fe1-4931-8424-edafa282f341",
       "name": "Default",
       "code": "fm",
       "visibility": "public",
@@ -365,7 +365,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 29,
+      "id": "f478cd5a-a554-4eb1-b254-a5ebf93deabb",
       "name": "Default",
       "code": "iib",
       "visibility": "public",
@@ -378,7 +378,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 30,
+      "id": "2ef63dc6-4a25-4317-8d0a-0436e2420134",
       "name": "Default",
       "code": "psc",
       "visibility": "public",
@@ -391,7 +391,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 31,
+      "id": "57d0789e-5b57-467a-b10c-692ae3db4e84",
       "name": "Default",
       "code": "mecn",
       "visibility": "public",
@@ -404,7 +404,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 32,
+      "id": "f001192a-557c-4c92-b88e-3c112c2aab56",
       "name": "Default",
       "code": "sl1",
       "visibility": "public",
@@ -417,7 +417,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 33,
+      "id": "572d535c-8cf6-4ba1-b5bd-fe53832a81dd",
       "name": "Teórico",
       "code": "p4",
       "visibility": "public",
@@ -430,7 +430,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 34,
+      "id": "010dacbe-b2a0-4074-b5ed-b9bb8c04b7b9",
       "name": "Default",
       "code": "f2",
       "visibility": "public",
@@ -443,7 +443,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 35,
+      "id": "a7fc28f3-0eac-44da-90c3-cd3503f32427",
       "name": "Default",
       "code": "pl",
       "visibility": "public",
@@ -456,7 +456,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 36,
+      "id": "6412fa48-16ef-4b95-bada-b1e8653cd1e3",
       "name": "Default",
       "code": "gf",
       "visibility": "public",
@@ -469,7 +469,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 37,
+      "id": "3b27e298-0608-4288-b12c-39fc97ad67ca",
       "name": "Default",
       "code": "tp",
       "visibility": "public",
@@ -482,7 +482,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 38,
+      "id": "b1ab28c9-08f9-466f-a492-4650dbc38585",
       "name": "Default",
       "code": "em",
       "visibility": "public",
@@ -495,7 +495,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 39,
+      "id": "e85b9ee1-a6ca-44f7-a171-1f464ef56689",
       "name": "Default",
       "code": "rd",
       "visibility": "public",
@@ -508,7 +508,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 40,
+      "id": "eca3b2fb-3860-42d7-a23c-ba775ac65461",
       "name": "Default",
       "code": "pln",
       "visibility": "public",
@@ -521,7 +521,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 41,
+      "id": "5c6bd605-90ed-4226-a913-a1514420438d",
       "name": "Default",
       "code": "p1",
       "visibility": "public",
@@ -534,7 +534,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 42,
+      "id": "3697d4b0-dab0-45dc-b6a4-1f0f657fcb49",
       "name": "Default",
       "code": "e1",
       "visibility": "public",
@@ -547,7 +547,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 43,
+      "id": "517a16aa-d4c5-49a3-b5ef-39c414c97a5b",
       "name": "Default",
       "code": "agpi",
       "visibility": "public",
@@ -560,7 +560,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 44,
+      "id": "9880217b-9df0-4c4d-a010-1e4250c3e9a1",
       "name": "Default",
       "code": "nr",
       "visibility": "public",
@@ -573,7 +573,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 45,
+      "id": "13506ae6-70d9-4274-9f95-e76d3caa1c9d",
       "name": "Default",
       "code": "ipam",
       "visibility": "public",
@@ -586,7 +586,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 46,
+      "id": "a6f9c1e9-4c11-42a9-9188-af1d623f0d17",
       "name": "Default",
       "code": "civ",
       "visibility": "public",
@@ -599,7 +599,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 47,
+      "id": "63fe8f34-2a99-4a64-b894-8194b9463d46",
       "name": "Default",
       "code": "eco",
       "visibility": "public",
@@ -612,7 +612,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 48,
+      "id": "f16cb118-ef0e-4e62-a2f8-3aa3316621fb",
       "name": "Default",
       "code": "ib",
       "visibility": "public",
@@ -625,7 +625,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 49,
+      "id": "668366aa-2da1-49e4-a26e-e3a92277755f",
       "name": "Default",
       "code": "ft",
       "visibility": "public",
@@ -638,7 +638,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 50,
+      "id": "3c5fdc8c-14c9-47f8-aa61-d56503d7fb9d",
       "name": "Default",
       "code": "comp1",
       "visibility": "public",
@@ -651,7 +651,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 51,
+      "id": "50faca8c-0fd5-415a-ba1d-0f15ba95fa80",
       "name": "Default",
       "code": "dc",
       "visibility": "public",
@@ -664,7 +664,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 52,
+      "id": "695fb82c-74a9-4480-850a-b5456d543dd4",
       "name": "Default",
       "code": "tc",
       "visibility": "public",
@@ -677,7 +677,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 53,
+      "id": "4320373c-d465-428e-a421-6d33a974dc4b",
       "name": "Default",
       "code": "p3-2017",
       "visibility": "public",
@@ -690,7 +690,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 54,
+      "id": "f1e0b53f-9e76-4fb5-bb3a-0d790e5ff8aa",
       "name": "Default",
       "code": "iio",
       "visibility": "public",
@@ -703,7 +703,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 55,
+      "id": "292187ee-3482-4e7f-a79a-30ed8edb8d01",
       "name": "Default",
       "code": "gal2",
       "visibility": "public",
@@ -716,7 +716,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 56,
+      "id": "40aa5c65-c087-4225-835d-b01ce05574a6",
       "name": "Teórico",
       "code": "dl",
       "visibility": "public",
@@ -729,7 +729,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 57,
+      "id": "5a65df6f-a8ec-45ae-97a3-97dcce2af867",
       "name": "Default",
       "code": "etal",
       "visibility": "public",
@@ -742,7 +742,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 58,
+      "id": "56b69529-013a-4cdc-b9b3-a371b9e7ea83",
       "name": "Default",
       "code": "fege",
       "visibility": "public",
@@ -755,7 +755,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 59,
+      "id": "b61d08a8-7b42-451c-8bfd-04a112d58429",
       "name": "Default",
       "code": "cdivv",
       "visibility": "public",
@@ -768,7 +768,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 60,
+      "id": "509bb8fb-3cd9-418f-b17c-7f6f8d140f09",
       "name": "Default",
       "code": "pye18",
       "visibility": "public",
@@ -781,7 +781,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 61,
+      "id": "8a5b70ff-35f6-4d60-b7b3-7197ec942910",
       "name": "Default",
       "code": "ep",
       "visibility": "public",
@@ -794,7 +794,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 62,
+      "id": "6c8bf215-6876-44e9-aeb9-d43bc111cf76",
       "name": "Default",
       "code": "pie",
       "visibility": "public",
@@ -807,7 +807,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 63,
+      "id": "779762e0-76c0-4a16-92fd-cdb5d46fcee6",
       "name": "Default",
       "code": "brrd",
       "visibility": "public",
@@ -820,7 +820,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 64,
+      "id": "ae4545c7-07ae-44b8-8806-85defbb4dc96",
       "name": "Default",
       "code": "cmat2017",
       "visibility": "public",
@@ -833,7 +833,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 65,
+      "id": "5c4a7bed-8d49-47a6-ae7d-f112faf4ca12",
       "name": "Default",
       "code": "calcvec",
       "visibility": "public",
@@ -846,7 +846,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 66,
+      "id": "253dffcf-bbff-4255-93ac-5a77d75a3cb3",
       "name": "Default",
       "code": "f1-2018",
       "visibility": "public",
@@ -859,7 +859,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 67,
+      "id": "d57b9899-68bf-422b-91e3-050eebc7a7b4",
       "name": "Default",
       "code": "teocirc",
       "visibility": "public",
@@ -872,7 +872,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 68,
+      "id": "1b022fdb-bb1b-442c-a5b2-bf2bed8b4878",
       "name": "Default",
       "code": "prog3-2018",
       "visibility": "public",
@@ -885,7 +885,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 69,
+      "id": "b9aa940e-41ce-4911-a7ee-040883ca87f9",
       "name": "Default",
       "code": "workshop-ggd",
       "visibility": "public",
@@ -898,7 +898,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 70,
+      "id": "1251f354-b188-4a32-a718-f5f529d6c693",
       "name": "Default",
       "code": "pqg",
       "visibility": "public",
@@ -911,7 +911,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 71,
+      "id": "d7ea8101-52ec-4805-9049-2a3ccd123249",
       "name": "Default",
       "code": "ie",
       "visibility": "public",
@@ -924,7 +924,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 72,
+      "id": "5426aa38-7555-4f68-b5c8-18efe242f8ea",
       "name": "Default",
       "code": "ayp",
       "visibility": "public",
@@ -937,7 +937,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 73,
+      "id": "7e670e0b-f65f-4b34-bd29-9e75d95f2094",
       "name": "Default",
       "code": "logica19",
       "visibility": "public",
@@ -950,7 +950,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 74,
+      "id": "a87af341-a2c5-4edf-a9be-5daac361663b",
       "name": "Teórico",
       "code": "et1",
       "visibility": "public",
@@ -963,7 +963,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 75,
+      "id": "c148eb84-9609-4c9f-8d53-a0b013d0cfe3",
       "name": "Práctico",
       "code": "et1p",
       "visibility": "public",
@@ -976,7 +976,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 76,
+      "id": "a95c98ef-d134-406d-abc6-47a40bf7a3dd",
       "name": "Default",
       "code": "ef",
       "visibility": "public",
@@ -989,7 +989,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 77,
+      "id": "3202f825-40f4-4acc-b87f-bbab113e8682",
       "name": "Teórico",
       "code": "iis19",
       "visibility": "public",
@@ -1002,7 +1002,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 78,
+      "id": "20fb9135-97d9-44d2-8f62-a67c1ee773df",
       "name": "Ciclos de charlas Ingeniería de Software",
       "code": "cis",
       "visibility": "public",
@@ -1015,7 +1015,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 79,
+      "id": "23f64af1-41ed-4bb3-9646-ba1891a87155",
       "name": "Default",
       "code": "negsoftare",
       "visibility": "public",
@@ -1028,7 +1028,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 80,
+      "id": "4115fbcb-b7fc-4488-8482-0a254bd20de5",
       "name": "Default",
       "code": "ed19",
       "visibility": "public",
@@ -1041,7 +1041,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 81,
+      "id": "f10c2bec-bf9b-4024-98fd-32680dc7b54d",
       "name": "Default",
       "code": "fsi",
       "visibility": "public",
@@ -1054,7 +1054,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 82,
+      "id": "868e7a15-3183-4d4d-9118-6a851ce9448d",
       "name": "Default",
       "code": "gal119",
       "visibility": "public",
@@ -1067,7 +1067,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 83,
+      "id": "b71f173c-feb0-43e6-ac59-db75e5f3fdbe",
       "name": "Default",
       "code": "gal219",
       "visibility": "public",
@@ -1080,7 +1080,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 84,
+      "id": "19d06223-fb1d-4cb4-b4eb-950ce025a13a",
       "name": "Default",
       "code": "paar",
       "visibility": "public",
@@ -1093,7 +1093,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 85,
+      "id": "43b8c654-db3c-431d-b27d-678cd139aba1",
       "name": "Default",
       "code": "e2",
       "visibility": "public",
@@ -1106,7 +1106,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 86,
+      "id": "21ef2734-c6f0-41eb-aff5-0ea5522b7005",
       "name": "Default",
       "code": "tmu",
       "visibility": "public",
@@ -1119,7 +1119,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 87,
+      "id": "53bad925-5ba0-47d3-9a51-f36c12061997",
       "name": "Práctico",
       "code": "cmm1p",
       "visibility": "public",
@@ -1132,7 +1132,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 88,
+      "id": "f934e212-6bcc-4a34-bdee-9d10e27af01d",
       "name": "Default",
       "code": "imaginary18",
       "visibility": "public",
@@ -1145,7 +1145,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 89,
+      "id": "ad5f145e-cf48-47e2-995b-688531de2fb5",
       "name": "Default",
       "code": "en1",
       "visibility": "public",
@@ -1158,7 +1158,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 90,
+      "id": "da18a75b-33ad-4ce4-aac0-35a1934fddc3",
       "name": "Ejercicios",
       "code": "cmm1e",
       "visibility": "public",
@@ -1171,7 +1171,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 91,
+      "id": "776faaa4-e328-41fc-aa19-85a461f14316",
       "name": "Práctico",
       "code": "p4p",
       "visibility": "public",
@@ -1184,7 +1184,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 92,
+      "id": "144e3e44-3195-4948-9a1b-b40d25b0bd33",
       "name": "Práctico",
       "code": "dlp",
       "visibility": "public",
@@ -1197,7 +1197,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 93,
+      "id": "876db035-6aa1-4e93-917c-933380fa7d7d",
       "name": "Teórico",
       "code": "cmm1",
       "visibility": "public",
@@ -1210,7 +1210,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 94,
+      "id": "da5d9914-b88e-4b9d-b695-17ff57044eed",
       "name": "Default",
       "code": "iti",
       "visibility": "public",
@@ -1223,7 +1223,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 95,
+      "id": "dccc5067-ce1e-4dfb-924a-69b534b64c91",
       "name": "Default",
       "code": "taagl",
       "visibility": "public",
@@ -1236,7 +1236,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 96,
+      "id": "4f6af1d3-c613-40c8-ad9a-fba96a736987",
       "name": "Default",
       "code": "irq2",
       "visibility": "public",
@@ -1249,7 +1249,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 97,
+      "id": "d8321999-0cdd-49ea-acd6-1d924af61cae",
       "name": "Default",
       "code": "iiee",
       "visibility": "public",
@@ -1262,7 +1262,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 98,
+      "id": "c9d9e5a0-1607-4c39-898a-fadfb615a29e",
       "name": "Default",
       "code": "he2",
       "visibility": "public",
@@ -1275,7 +1275,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 99,
+      "id": "a75e3612-a0ea-4abb-a610-81487aa59d3b",
       "name": "Default",
       "code": "prog3-2020",
       "visibility": "public",
@@ -1288,7 +1288,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 100,
+      "id": "3ec26a4e-9d34-475b-815f-5b665813ebde",
       "name": "Default",
       "code": "mcpp",
       "visibility": "public",
@@ -1301,7 +1301,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 101,
+      "id": "ebf3f82d-9fb8-4a38-a476-170f5eff1f20",
       "name": "Consulta Teórico",
       "code": "fbd-2020ct",
       "visibility": "public",
@@ -1314,7 +1314,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 102,
+      "id": "01b7c628-e3ea-4fb3-8d00-213d07d11e5e",
       "name": "Práctico",
       "code": "fbd-2020p",
       "visibility": "public",
@@ -1327,7 +1327,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 103,
+      "id": "7830e4f8-c801-418a-a184-8c69c7fa737b",
       "name": "Default",
       "code": "redes-2020",
       "visibility": "public",
@@ -1340,7 +1340,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 104,
+      "id": "0597c25e-2f2b-4e9d-9830-bad421fa8dc1",
       "name": "Teórico",
       "code": "cmm2",
       "visibility": "public",
@@ -1353,7 +1353,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 105,
+      "id": "64b3f49c-3b73-4b93-8b58-4a520fa783d3",
       "name": "Default",
       "code": "hsi",
       "visibility": "public",
@@ -1366,7 +1366,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 106,
+      "id": "4d12fb38-c771-449c-b2bd-5fcb9a841e06",
       "name": "Práctico",
       "code": "ac-2020p",
       "visibility": "public",
@@ -1379,7 +1379,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 107,
+      "id": "21a94b92-718b-45bd-aaad-b3546d07aff1",
       "name": "Teórico",
       "code": "ac-2020",
       "visibility": "public",
@@ -1392,7 +1392,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 108,
+      "id": "0691b2b2-3699-4802-9e9c-8886855ff150",
       "name": "Default",
       "code": "webir",
       "visibility": "public",
@@ -1405,7 +1405,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 109,
+      "id": "ff6d7a37-6cfa-43e8-9151-533287ee6414",
       "name": "Práctico",
       "code": "cmm2p",
       "visibility": "public",
@@ -1418,7 +1418,7 @@
       "deleted_by_id": null
     },
     {
-      "id": 110,
+      "id": "aa2d2050-8591-4163-8b46-0c2ac2c29947",
       "name": "Default",
       "code": "md1-2020",
       "visibility": "public",
