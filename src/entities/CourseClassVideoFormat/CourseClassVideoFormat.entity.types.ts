@@ -9,7 +9,7 @@ import {
 	UserToCourseClassVideoFormat_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassVideoFormat_id = PrimaryColumn<"integer">;
+export type CourseClassVideoFormat_id = PrimaryColumn<"uuid">;
 export type CourseClassVideoFormat_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
 export type CourseClassVideoFormat_url = FieldColumn<{ name: "url"; sqlType: "varchar" }>;
 export type CourseClassVideoFormat_createdAt = FieldColumn<{ name: "created_at"; sqlType: "timestamp with time zone" }>;

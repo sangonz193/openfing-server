@@ -1,6 +1,7 @@
 import omitBy from "lodash/omitBy";
 import { Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
 import {
@@ -59,6 +60,7 @@ export const getCourseClassVideoFormatRepository = (connection: Connection): Cou
 
 		create: (data) => ({
 			...data,
+			id: data.id ?? getUuid(),
 			created_at: data.created_at || new Date(),
 			updated_at: data.updated_at || null,
 			deleted_at: data.deleted_at || null,

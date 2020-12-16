@@ -13,7 +13,7 @@ export type CourseClassVideoFormatFindAllOptions = {
 	courseClassVideoQualityId: CourseClassVideoFormatRow["course_class_video_quality_id"];
 };
 
-export type InsertCourseClassVideoFormatData = SafeOmit<CourseClassVideoFormatRow, "id">;
+export type InsertCourseClassVideoFormatData = CourseClassVideoFormatRow;
 
 export type CreateCourseClassVideoFormatData = SafeOmit<
 	CourseClassVideoFormatRow,
