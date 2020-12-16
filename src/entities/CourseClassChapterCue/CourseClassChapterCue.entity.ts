@@ -34,7 +34,7 @@ export const courseClassChapterCueColumns: ColumnsOptions<CourseClassChapterCueC
 
 	course_class_id: {
 		name: "course_class_id",
-		type: "integer",
+		type: "uuid",
 	},
 
 	created_by_id: commonManagedColumnsOptions.created_by_id,
