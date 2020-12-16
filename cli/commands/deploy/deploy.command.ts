@@ -62,7 +62,7 @@ const command: CommandModule<{}, {}> = {
 			"dist",
 			"package.json",
 			"package-lock.json",
-			{ from: pm2ConfigPath, to: path.resolve(deployConfig.DESTINATION_PATH, pm2ConfigFilename) },
+			{ from: pm2ConfigPath, to: path.posix.resolve(deployConfig.DESTINATION_PATH, pm2ConfigFilename) },
 		];
 
 		await ssh.exec(`rm -rfv ${path.posix.resolve(deployConfig.DESTINATION_PATH, "dist")}`);
