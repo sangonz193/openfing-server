@@ -3,15 +3,11 @@ import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getCourseEditionParent } from "../CourseEdition/CourseEdition.parent";
 
 const resolver: Resolvers["Query"]["courseEditionById"] = async (_, args, { dataLoaders }) => {
-	const parsedId = Number(args.id);
+	const { id } = args;
 
-	if (!isNaN(parsedId)) {
-		const courseEdition = await dataLoaders.courseEdition.load({ id: parsedId });
+	const courseEdition = await dataLoaders.courseEdition.load({ id });
 
-		if (courseEdition) return getCourseEditionParent(courseEdition);
-	}
-
-	return getNotFoundError();
+	return courseEdition ? getCourseEditionParent(courseEdition) : getNotFoundError();
 };
 
 export default resolver;

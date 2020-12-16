@@ -7,9 +7,8 @@ import { CourseEditionColumns, CourseEditionEntitySchema, CourseEditionRelations
 export const courseEditionColumns: ColumnsOptions<CourseEditionColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	name: {

@@ -40,7 +40,7 @@ export const courseClassListColumns: ColumnsOptions<CourseClassListColumns> = {
 
 	course_edition_id: {
 		name: "course_edition_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 
