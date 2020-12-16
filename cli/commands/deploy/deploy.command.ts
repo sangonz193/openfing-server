@@ -94,8 +94,8 @@ const command: CommandModule<{}, {}> = {
 				command: `pm2 stop ${deployConfig.PM2_PROCESS_NAME} && pm2 delete ${deployConfig.PM2_PROCESS_NAME}`,
 				ignore: true,
 			},
-			// `npx pm2 start ${pm2ConfigFilename}`,
-			// `npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
+			`npx pm2 start ${pm2ConfigFilename}`,
+			`npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
 		])
 			try {
 				console.log(`running`, command);
