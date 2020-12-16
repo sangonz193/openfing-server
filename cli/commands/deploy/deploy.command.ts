@@ -43,6 +43,8 @@ const command: CommandModule<{}, {}> = {
 				{
 					name: deployConfig.PM2_PROCESS_NAME,
 					script: "dist",
+					instances: "max",
+					exec_mode: "cluster",
 					interpreter: path.resolve(deployConfig.DESTINATION_PATH, "node_modules", ".bin", "node"),
 					max_restarts: 3,
 					min_uptime: "1m",
@@ -92,9 +94,11 @@ const command: CommandModule<{}, {}> = {
 				command: `pm2 stop ${deployConfig.PM2_PROCESS_NAME} && pm2 delete ${deployConfig.PM2_PROCESS_NAME}`,
 				ignore: true,
 			},
-			`pm2 start ${pm2ConfigFilename}`,
+			`npx pm2 start ${pm2ConfigFilename}`,
+			`npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
 		])
 			try {
+				console.log(`running`, command);
 				const commandSpawn: ChildProcessWithoutNullStreams = await ssh.spawn(
 					[
 						`cd ${deployConfig.DESTINATION_PATH}`,
@@ -109,6 +113,7 @@ const command: CommandModule<{}, {}> = {
 					commandSpawn.on("error", reject);
 					commandSpawn.on("exit", resolve);
 				});
+				console.log(`finish`, command);
 			} catch (e) {
 				console.log(e.toString("utf8"));
 
