@@ -16,7 +16,7 @@ export type CourseEditionFindAllOptions = CourseEditionAccessOptions & {
 	courseId: CourseRow["id"];
 };
 
-export type SaveCourseEditionData = SafeOmit<CourseEditionRow, "id">;
+export type SaveCourseEditionData = CourseEditionRow;
 
 export type CreateCourseEditionData = SafeOmit<
 	CourseEditionRow,
