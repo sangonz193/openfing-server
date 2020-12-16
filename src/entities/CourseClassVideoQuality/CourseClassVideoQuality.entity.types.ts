@@ -11,7 +11,7 @@ import {
 	UserToCourseClassVideoQuality_updatedBy,
 } from "../User/User.entity.types";
 
-export type CourseClassVideoQuality_id = PrimaryColumn<"integer">;
+export type CourseClassVideoQuality_id = PrimaryColumn<"uuid">;
 export type CourseClassVideoQuality_width = FieldColumn<{ name: "width"; sqlType: "integer" }>;
 export type CourseClassVideoQuality_height = FieldColumn<{ name: "height"; sqlType: "integer" }>;
 export type CourseClassVideoQuality_createdAt = FieldColumn<{
