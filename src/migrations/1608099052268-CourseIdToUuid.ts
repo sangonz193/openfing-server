@@ -9,7 +9,7 @@ export class CourseIdToUuid1608099052268 implements MigrationInterface {
 		const courseEditionTableName = "openfing.course_edition";
 		const courseEditionTable = await queryRunner.getTable(courseEditionTableName);
 
-		if (!table || !courseEditionTable) throw new Error(`table not found: ${tableName}`);
+		if (!table || !courseEditionTable) throw new Error(`table not found`);
 
 		await queryRunner.renameColumn(table, "id", "_id");
 		await queryRunner.addColumn(
@@ -44,9 +44,9 @@ export class CourseIdToUuid1608099052268 implements MigrationInterface {
 		);
 
 		await Promise.all(
-			rows.map(async (course) => {
+			rows.map(async (row) => {
 				await queryRunner.query(
-					`UPDATE ${courseEditionTableName} SET course_id = '${course.id}' where _course_id = ${course._id}`,
+					`UPDATE ${courseEditionTableName} SET course_id = '${row.id}' where _course_id = ${row._id}`,
 					[]
 				);
 			})
