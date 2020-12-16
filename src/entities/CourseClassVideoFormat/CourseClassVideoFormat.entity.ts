@@ -32,7 +32,7 @@ export const courseClassVideoFormatColumns: ColumnsOptions<CourseClassVideoForma
 
 	course_class_video_quality_id: {
 		name: "course_class_video_quality_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 
