@@ -38,7 +38,7 @@ export const courseEditionColumns: ColumnsOptions<CourseEditionColumns> = {
 
 	course_id: {
 		name: "course_id",
-		type: "integer",
+		type: "uuid",
 		nullable: true,
 	},
 

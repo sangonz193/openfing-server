@@ -7,7 +7,7 @@ import { NamedRelations } from "../_utils/NamedRelations";
 import { CourseEditionEntitySchema } from "../CourseEdition/CourseEdition.entity.types";
 import { UserToCourse_createdBy, UserToCourse_deletedBy, UserToCourse_updatedBy } from "../User/User.entity.types";
 
-export type Course_id = PrimaryColumn<"integer">;
+export type Course_id = PrimaryColumn<"uuid">;
 export type Course_name = FieldColumn<{ name: "name"; sqlType: "varchar" }>;
 export type Course_visibility = FieldColumn<{
 	name: "visibility";

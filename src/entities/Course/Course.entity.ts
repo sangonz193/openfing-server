@@ -10,9 +10,8 @@ export type CourseVisibility = CommonVisibility;
 export const courseColumns: ColumnsOptions<CourseColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	name: {
