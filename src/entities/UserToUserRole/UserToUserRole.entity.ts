@@ -10,9 +10,8 @@ import {
 export const userToUserRoleColumns: ColumnsOptions<UserToUserRoleColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 	user_id: {
 		name: "user_id",
@@ -20,7 +19,7 @@ export const userToUserRoleColumns: ColumnsOptions<UserToUserRoleColumns> = {
 	},
 	user_role_id: {
 		name: "user_role_id",
-		type: "integer",
+		type: "uuid",
 	},
 };
 

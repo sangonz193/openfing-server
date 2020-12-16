@@ -12,9 +12,8 @@ export const UserRoleCode = identityMap<"admin" | "user">({
 export const userRoleColumns: ColumnsOptions<UserRoleColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 	code: {
 		name: "code",
