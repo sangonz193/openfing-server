@@ -66,6 +66,15 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 		if (!isValid(newPublishedAt)) return getGenericError();
 	}
 
+	if (typeof validatedData.number === "number" && courseClass.course_class_list_id !== null) {
+		const courseClassWithSameNumber = await dataLoaders.courseClass.load({
+			courseClassListId: courseClass.course_class_list_id,
+			number: validatedData.number,
+		});
+
+		if (courseClassWithSameNumber) return getGenericError();
+	}
+
 	const updatedCourseClass = await repositories.courseClass.update(courseClass.id, {
 		updated_by_id: user.id,
 		name: validatedData.name,
