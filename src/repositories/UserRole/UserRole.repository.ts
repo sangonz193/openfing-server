@@ -1,5 +1,6 @@
 import { Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
@@ -27,7 +28,10 @@ export const getUserRoleRepository = (connection: Connection): UserRoleRepositor
 						.getMany()
 				: repo.find(),
 
-		create: (data) => data,
+		create: (data) => ({
+			...data,
+			id: data.id ?? getUuid(),
+		}),
 
 		save: (data) => repo.save(data),
 	};

@@ -9,8 +9,8 @@
       "end_seconds": 887,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -22,8 +22,8 @@
       "end_seconds": 1139,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -35,8 +35,8 @@
       "end_seconds": 1436,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -48,8 +48,8 @@
       "end_seconds": 1749,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -61,8 +61,8 @@
       "end_seconds": 1900,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -74,8 +74,8 @@
       "end_seconds": 2089,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -87,8 +87,8 @@
       "end_seconds": 2535,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -100,8 +100,8 @@
       "end_seconds": 2599,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -113,8 +113,8 @@
       "end_seconds": 3700,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     },
     {
@@ -126,8 +126,8 @@
       "end_seconds": 3902,
       "deleted_at": null,
       "course_class_id": "a1eb29e0-e0f1-4764-9c2f-8cf89a91b5c4",
-      "created_by_id": 1,
-      "updated_by_id": 1,
+      "created_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
+      "updated_by_id": "02412a7e-d52f-472d-8e55-cea9f17436cb",
       "deleted_by_id": null
     }
   ]

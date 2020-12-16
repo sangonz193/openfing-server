@@ -4,7 +4,7 @@ import { getUserParent, UserParent } from "../User/User.parent";
 
 export const updatedByResolver: ResolverFn<
 	UserParent | null,
-	Record<"updated_by_id", number | null>,
+	Record<"updated_by_id", string | null>,
 	Context,
 	{}
 > = async (parent, _, { dataLoaders }) => {
