@@ -48,7 +48,7 @@ export class UserIdToUuid1608109356011 implements MigrationInterface {
 		await Promise.all(
 			tableNames.map(async (tableName) => {
 				return Promise.all(
-					["created_by", "updated_by", "deleted_by", "user_id"].map(async (column) => {
+					["created_by_id", "updated_by_id", "deleted_by_id", "user_id"].map(async (column) => {
 						try {
 							await queryRunner.renameColumn(tableName, column, "_" + column);
 						} catch (e) {
