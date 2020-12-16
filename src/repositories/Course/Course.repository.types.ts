@@ -17,7 +17,7 @@ export type CourseFindOneOptions = CourseAccessOptions &
 		  }
 	);
 
-export type InsertCourseData = SafeOmit<CourseRow, "id">;
+export type InsertCourseData = CourseRow;
 
 export type CreateCourseData = SafeOmit<
 	CourseRow,

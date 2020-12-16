@@ -1,6 +1,7 @@
 import omitBy from "lodash/omitBy";
 import { Brackets, Connection } from "typeorm";
 
+import { getUuid } from "../../_utils/getUuid";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
@@ -52,7 +53,7 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 		findBatch: async (options) => {
 			const queryBuilder = repo.createQueryBuilder("c");
 
-			const ids: number[] = [];
+			const ids: string[] = [];
 			const codes: string[] = [];
 
 			options.forEach((i) => {
@@ -87,6 +88,7 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 
 		create: (data) => ({
 			...data,
+			id: data.id ?? getUuid(),
 			created_at: data.created_at || new Date(),
 			updated_at: data.updated_at || null,
 			deleted_at: data.deleted_at || null,
