@@ -11,9 +11,8 @@ import {
 export const courseClassVideoFormatColumns: ColumnsOptions<CourseClassVideoFormatColumns> = {
 	id: {
 		name: "id",
-		type: "integer",
+		type: "uuid",
 		primary: true,
-		generated: "increment",
 	},
 
 	name: {

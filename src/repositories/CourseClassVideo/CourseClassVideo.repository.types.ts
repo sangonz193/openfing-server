@@ -18,7 +18,7 @@ export type CourseClassVideoFindAllOptions = CourseClassVideoAccessOptions & {
 	courseClassId: CourseClassVideoRow["course_class_id"];
 };
 
-export type SaveCourseClassVideoData = SafeOmit<CourseClassVideoRow, "id">;
+export type SaveCourseClassVideoData = CourseClassVideoRow;
 
 export type CreateCourseClassVideoData = SafeOmit<
 	CourseClassVideoRow,
