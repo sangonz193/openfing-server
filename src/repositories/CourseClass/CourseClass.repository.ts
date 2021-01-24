@@ -74,7 +74,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				visibility: "public",
 			},
 			order: {
-				created_at: "DESC",
+				published_at: "DESC",
 			},
 			take: options.latest,
 		});
