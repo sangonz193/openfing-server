@@ -98,6 +98,10 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 			}),
 			options.sftp.rename(options.from, options.to),
 		]);
+
+		const torrentFromPath = `${options.from}.torrent`;
+		const torrentToPath = `${options.to}.torrent`;
+		await options.sftp.rename(torrentFromPath, torrentToPath).catch(() => null);
 	};
 
 	const getVideosData = async () => {
