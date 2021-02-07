@@ -50,6 +50,7 @@ const command: CommandModule<{}, {}> = {
 
 		const user = await getUserRepository(connection).save(
 			getUserRepository(connection).create({
+				id: "02412a7e-d52f-472d-8e55-cea9f17436cb",
 				email: "open@fing.edu.uy",
 				uid: "openfing",
 				password: await hashPassword("password"),
