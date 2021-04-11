@@ -1,10 +1,10 @@
 import DataLoader from "dataloader";
 
-import { CourseClassChapterCueRow } from "../entities/CourseClassChapterCue/CourseClassChapterCue.entity.types";
+import { CourseClassChapterCueRow } from "../database/CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import {
 	CourseClassChapterCueFindOneOptions,
 	CourseClassChapterCueRepository,
-} from "../repositories/CourseClassChapterCue/CourseClassChapterCue.repository.types";
+} from "../database/CourseClassChapterCue/CourseClassChapterCue.repository.types";
 
 export type CourseClassChapterCueDataLoader = DataLoader<
 	CourseClassChapterCueFindOneOptions,

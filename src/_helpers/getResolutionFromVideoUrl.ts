@@ -8,7 +8,9 @@ export const getResolutionFromVideoUrl = async (url: string): Promise<{ width: n
 		.then((streams) => {
 			const streamWithResolution = streams.streams.find((s) => s.width && s.height);
 
-			if (!streamWithResolution) throw new Error(`Resolution not found for ${url}`);
+			if (!streamWithResolution) {
+				throw new Error(`Resolution not found for ${url}`);
+			}
 
 			const { height, width } = streamWithResolution;
 

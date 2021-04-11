@@ -29,6 +29,6 @@ module.exports = {
 		"no-unused-vars": "off",
 		"prettier/prettier": "warn",
 		"simple-import-sort/imports": "warn",
-		curly: ["warn", "multi"],
+		curly: ["warn", "all"],
 	},
 };

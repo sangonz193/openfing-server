@@ -8,7 +8,7 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 	const { fromPath, toPath, sftp } = options;
 	const isDirectory = (await fs.lstat(fromPath)).isDirectory();
 
-	if (!isDirectory)
+	if (!isDirectory) {
 		await new Promise<void>(async (resolve, reject) => {
 			const readStream = _fs.createReadStream(fromPath);
 			const writeStream = await sftp.createWriteStream(toPath);
@@ -18,29 +18,35 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 
 			readStream.pipe(writeStream);
 		});
-	else {
+	} else {
 		let shouldCreateFolder = true;
 
 		try {
 			const lsStat = await sftp.lstat(toPath);
 
-			if (!lsStat.isDirectory()) await sftp.unlink(toPath);
-			else shouldCreateFolder = false;
+			if (!lsStat.isDirectory()) {
+				await sftp.unlink(toPath);
+			} else {
+				shouldCreateFolder = false;
+			}
 		} catch (e) {}
 
 		const [folderContent] = await Promise.all([
 			fs.readdir(fromPath),
 			(async () => {
-				if (shouldCreateFolder) await sftp.mkdir(toPath);
+				if (shouldCreateFolder) {
+					await sftp.mkdir(toPath);
+				}
 			})(),
 		]);
 
-		for (const item of folderContent)
+		for (const item of folderContent) {
 			await uploadRecursive({
 				fromPath: path.join(fromPath, item),
 				toPath: path.join(toPath, item),
 				sftp,
 			});
+		}
 	}
 
 	console.log(`- uploaded: ${fromPath} to ${toPath}`);

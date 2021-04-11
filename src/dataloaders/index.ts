@@ -1,4 +1,4 @@
-import { Repositories } from "../repositories";
+import { Repositories } from "../database/repositories";
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
 import {
