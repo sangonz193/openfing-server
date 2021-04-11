@@ -7,14 +7,16 @@ import { projectPath } from "../../_utils/projectPath";
 const command: CommandModule<{}, {}> = {
 	command: "typeorm",
 
-	describe: "Will run the typeorm cli. Pass the arguments after --",
+	describe: "Will run the typeorm cli. Pass the arguments after `--`.",
 
 	builder: (yargs) => yargs.strict(false),
 
 	handler: async () => {
 		const argsIndex = process.argv.indexOf("--");
 
-		if (argsIndex === -1) throw new Error("Must specify typeorm arguments after `--`");
+		if (argsIndex === -1) {
+			throw new Error("Must specify typeorm arguments after `--`");
+		}
 
 		await spawn(
 			"node",

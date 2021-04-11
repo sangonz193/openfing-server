@@ -1,17 +1,16 @@
 import SSH2Promise from "ssh2-promise";
 
-import { appConfig } from "../appConfig";
+import { openFingVideoSftpConfig } from "../config/openFingVideoSftp.config";
 
 export const getOpenFingVideoSftpConnection = async () => {
-	const { openFingVideoSftpConnectionOptions } = appConfig;
-	if (!openFingVideoSftpConnectionOptions) return;
+	const { connectionOptions } = openFingVideoSftpConfig;
+
+	if (!connectionOptions) {
+		return;
+	}
 
 	try {
-		const ssh = new SSH2Promise({
-			host: openFingVideoSftpConnectionOptions.host,
-			username: openFingVideoSftpConnectionOptions.username,
-			privateKey: Buffer.from(openFingVideoSftpConnectionOptions.privateKeyBase64, "base64").toString("utf-8"),
-		});
+		const ssh = new SSH2Promise(connectionOptions);
 		await ssh.connect();
 
 		return ssh.sftp();
