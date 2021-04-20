@@ -5,8 +5,10 @@ import { getUuid } from "../../_utils/getUuid";
 import { hasProperty } from "../../_utils/hasProperty";
 import { identity } from "../../_utils/identity";
 import { getTypedRepository } from "../../entities/_utils/getTypedRepository";
-import { courseClassColumns, courseClassEntitySchema } from "../../entities/CourseClass";
+import { courseClassColumns, courseClassEntitySchema, courseClassRelations } from "../../entities/CourseClass";
 import { CourseClassRow } from "../../entities/CourseClass/CourseClass.entity.types";
+import { courseClassListColumns } from "../../entities/CourseClassList";
+import { CourseClassListRow } from "../../entities/CourseClassList/CourseClassList.entity.types";
 import { createUpdate } from "../_utils/createUpdate";
 import {
 	CourseClassFindAllOptions,
@@ -35,20 +37,20 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 	const findAllFromCourseClassList = (
 		options: Extract<CourseClassFindAllOptions, { courseClassListId: CourseClassRow["course_class_list_id"] }>
 	) => {
-		const queryBuilder = repo.createQueryBuilder("ce");
+		const queryBuilder = repo.createQueryBuilder("courseClass");
 
 		queryBuilder
 			.andWhere(
-				`ce.${courseClassColumns.course_class_list_id.name} = :courseClassListId`,
+				`courseClass.${courseClassColumns.course_class_list_id.name} = :courseClassListId`,
 				identity<{ courseClassListId: CourseClassRow["course_class_list_id"] }>({
 					courseClassListId: options.courseClassListId,
 				})
 			)
-			.andWhere(`ce.${courseClassColumns.deleted_at.name} is null`);
+			.andWhere(`courseClass.${courseClassColumns.deleted_at.name} is null`);
 
 		if (!options.includeDisabled)
 			queryBuilder.andWhere(
-				`ce.${courseClassColumns.visibility.name} != :visibility`,
+				`courseClass.${courseClassColumns.visibility.name} != :visibility`,
 				identity<{ visibility: CourseClassRow["visibility"] }>({
 					visibility: "disabled",
 				})
@@ -56,7 +58,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 
 		if (!options.includeHidden)
 			queryBuilder.andWhere(
-				`ce.${courseClassColumns.visibility.name} != :visibility`,
+				`courseClass.${courseClassColumns.visibility.name} != :visibility`,
 				identity<{ visibility: CourseClassRow["visibility"] }>({
 					visibility: "hidden",
 				})
@@ -68,16 +70,34 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 	};
 
 	const findLatestCourseClasses = (options: Extract<CourseClassFindAllOptions, { latest: number }>) => {
-		return repo.find({
-			where: {
-				deleted_at: null,
-				visibility: "public",
-			},
-			order: {
-				published_at: "DESC",
-			},
-			take: options.latest,
-		});
+		return repo
+			.createQueryBuilder("courseClass")
+			.leftJoin(`courseClass.${courseClassRelations.courseClassList.name}`, "courseClassList")
+			.where(`courseClass.${courseClassColumns.deleted_at.name} is null`)
+			.andWhere(
+				new Brackets((qb) =>
+					qb.where(`courseClass.${courseClassColumns.visibility.name} is null`).orWhere(
+						`courseClass.${courseClassColumns.visibility.name} = :v1`,
+						identity<{ v1: CourseClassRow["visibility"] }>({
+							v1: "public",
+						})
+					)
+				)
+			)
+			.andWhere(`courseClassList.${courseClassListColumns.deleted_at.name} is null`)
+			.andWhere(
+				new Brackets((qb) =>
+					qb.where(`courseClassList.${courseClassListColumns.visibility.name} is null`).orWhere(
+						`courseClassList.${courseClassListColumns.visibility.name} = :v2`,
+						identity<{ v2: CourseClassListRow["visibility"] }>({
+							v2: "public",
+						})
+					)
+				)
+			)
+			.orderBy(`courseClass.${courseClassColumns.published_at.name}`, "DESC")
+			.take(options.latest)
+			.getMany();
 	};
 
 	return {

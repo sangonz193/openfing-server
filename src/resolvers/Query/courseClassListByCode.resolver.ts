@@ -3,15 +3,16 @@ import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent";
 
 const resolver: Resolvers["Query"]["courseClassListByCode"] = async (_, args, context) => {
-	context.includeHidden = true;
-
 	const { dataLoaders } = context;
 	const courseClassList = await dataLoaders.courseClassList.load({
 		code: args.code,
 		includeHidden: true,
 	});
 
-	if (courseClassList) return getCourseClassListParent(courseClassList);
+	if (courseClassList) {
+		context.includeHidden = courseClassList.visibility === "hidden";
+		return getCourseClassListParent(courseClassList);
+	}
 
 	return getNotFoundError();
 };

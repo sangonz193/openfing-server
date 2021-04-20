@@ -3,8 +3,6 @@ import { getNotFoundError } from "../_utils/getNotFoundError";
 import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent";
 
 const resolver: Resolvers["Query"]["courseClassListById"] = async (_, args, context) => {
-	context.includeHidden = true;
-
 	const { id } = args;
 	const { dataLoaders } = context;
 
@@ -13,7 +11,10 @@ const resolver: Resolvers["Query"]["courseClassListById"] = async (_, args, cont
 		includeHidden: true,
 	});
 
-	if (courseClassList) return getCourseClassListParent(courseClassList);
+	if (courseClassList) {
+		context.includeHidden = courseClassList.visibility === "hidden";
+		return getCourseClassListParent(courseClassList);
+	}
 
 	return getNotFoundError();
 };
