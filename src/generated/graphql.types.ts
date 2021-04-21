@@ -6,6 +6,7 @@ import { CourseParent } from "../resolvers/Course/Course.parent";
 import { CourseClassParent } from "../resolvers/CourseClass/CourseClass.parent";
 import { CourseClassChapterCueParent } from "../resolvers/CourseClassChapterCue/CourseClassChapterCue.parent";
 import { CourseClassListParent } from "../resolvers/CourseClassList/CourseClassList.parent";
+import { CourseClassLiveStateParent } from "../resolvers/CourseClassLiveState/CourseClassLiveState.parent";
 import { CourseClassVideoParent } from "../resolvers/CourseClassVideo/CourseClassVideo.parent";
 import { CourseClassVideoFormatParent } from "../resolvers/CourseClassVideoFormat/CourseClassVideoFormat.parent";
 import { CourseClassVideoQualityParent } from "../resolvers/CourseClassVideoQuality/CourseClassVideoQuality.parent";
@@ -32,6 +33,7 @@ export type Scalars = {
 	Int: number;
 	Float: number;
 	Void: any;
+	ISODate: any;
 };
 
 export type Mutation = {
@@ -123,6 +125,7 @@ export type CourseClass = {
 	id: Scalars["ID"];
 	number?: Maybe<Scalars["Int"]>;
 	name?: Maybe<Scalars["String"]>;
+	liveState?: Maybe<CourseClassLiveState>;
 	videos: CourseClassVideo[];
 	chapterCues: CourseClassChapterCue[];
 	courseClassList?: Maybe<CourseClassList>;
@@ -188,6 +191,15 @@ export type CourseClassListRefByCode = {
 export type CourseClassListRef = {
 	byId?: Maybe<CourseClassListRefById>;
 	byCode?: Maybe<CourseClassListRefByCode>;
+};
+
+export type CourseClassLiveState = {
+	__typename: "CourseClassLiveState";
+	id: Scalars["ID"];
+	html?: Maybe<Scalars["String"]>;
+	isProgress?: Maybe<Scalars["Boolean"]>;
+	startDate?: Maybe<Scalars["ISODate"]>;
+	courseClass?: Maybe<CourseClass>;
 };
 
 export type CourseClassVideo = {
@@ -517,12 +529,14 @@ export type ResolversTypes = {
 	CourseClassListRefById: CourseClassListRefById;
 	CourseClassListRefByCode: CourseClassListRefByCode;
 	CourseClassListRef: CourseClassListRef;
+	CourseClassLiveState: ResolverTypeWrapper<CourseClassLiveStateParent>;
+	Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
 	CourseClassVideo: ResolverTypeWrapper<CourseClassVideoParent>;
 	CourseClassVideoFormat: ResolverTypeWrapper<CourseClassVideoFormatParent>;
-	Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
 	CourseClassVideoQuality: ResolverTypeWrapper<CourseClassVideoQualityParent>;
 	CourseEdition: ResolverTypeWrapper<CourseEditionParent>;
 	Faq: ResolverTypeWrapper<FaqParent>;
+	ISODate: ResolverTypeWrapper<Scalars["ISODate"]>;
 	CreateCourseInputVisibility: CreateCourseInputVisibility;
 	CreateCourseInput: CreateCourseInput;
 	CreateCoursePayload: ResolverTypeWrapper<CreateCoursePayloadParent>;
@@ -592,12 +606,14 @@ export type ResolversParentTypes = {
 	CourseClassListRefById: CourseClassListRefById;
 	CourseClassListRefByCode: CourseClassListRefByCode;
 	CourseClassListRef: CourseClassListRef;
+	CourseClassLiveState: CourseClassLiveStateParent;
+	Boolean: Scalars["Boolean"];
 	CourseClassVideo: CourseClassVideoParent;
 	CourseClassVideoFormat: CourseClassVideoFormatParent;
-	Boolean: Scalars["Boolean"];
 	CourseClassVideoQuality: CourseClassVideoQualityParent;
 	CourseEdition: CourseEditionParent;
 	Faq: FaqParent;
+	ISODate: Scalars["ISODate"];
 	CreateCourseInput: CreateCourseInput;
 	CreateCoursePayload: CreateCoursePayloadParent;
 	CreateCourseResult:
@@ -750,6 +766,7 @@ export type CourseClassResolvers<
 	id: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
 	number: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
 	name: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+	liveState: Resolver<Maybe<ResolversTypes["CourseClassLiveState"]>, ParentType, ContextType>;
 	videos: Resolver<Array<ResolversTypes["CourseClassVideo"]>, ParentType, ContextType>;
 	chapterCues: Resolver<Array<ResolversTypes["CourseClassChapterCue"]>, ParentType, ContextType>;
 	courseClassList: Resolver<Maybe<ResolversTypes["CourseClassList"]>, ParentType, ContextType>;
@@ -794,6 +811,18 @@ export type CourseClassListResolvers<
 	createdBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	updatedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CourseClassLiveStateResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["CourseClassLiveState"] = ResolversParentTypes["CourseClassLiveState"]
+> = {
+	id: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+	html: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+	isProgress: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
+	startDate: Resolver<Maybe<ResolversTypes["ISODate"]>, ParentType, ContextType>;
+	courseClass: Resolver<Maybe<ResolversTypes["CourseClass"]>, ParentType, ContextType>;
 	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -885,6 +914,10 @@ export type FaqResolvers<
 	deletedBy: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface IsoDateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes["ISODate"], any> {
+	name: "ISODate";
+}
 
 export type CreateCoursePayloadResolvers<
 	ContextType = Context,
@@ -1104,11 +1137,13 @@ export type _Resolvers<ContextType = Context> = {
 	CourseClass: CourseClassResolvers<ContextType>;
 	CourseClassChapterCue: CourseClassChapterCueResolvers<ContextType>;
 	CourseClassList: CourseClassListResolvers<ContextType>;
+	CourseClassLiveState: CourseClassLiveStateResolvers<ContextType>;
 	CourseClassVideo: CourseClassVideoResolvers<ContextType>;
 	CourseClassVideoFormat: CourseClassVideoFormatResolvers<ContextType>;
 	CourseClassVideoQuality: CourseClassVideoQualityResolvers<ContextType>;
 	CourseEdition: CourseEditionResolvers<ContextType>;
 	Faq: FaqResolvers<ContextType>;
+	ISODate: GraphQLScalarType;
 	CreateCoursePayload: CreateCoursePayloadResolvers<ContextType>;
 	CreateCourseResult: CreateCourseResultResolvers<ContextType>;
 	CreateCourseClassPayload: CreateCourseClassPayloadResolvers<ContextType>;
@@ -1153,6 +1188,7 @@ export type CustomResolvers = {
 	CourseClass: ResolversByParent<_Resolvers["CourseClass"], CourseClassParent>;
 	CourseClassChapterCue: ResolversByParent<_Resolvers["CourseClassChapterCue"], CourseClassChapterCueParent>;
 	CourseClassList: ResolversByParent<_Resolvers["CourseClassList"], CourseClassListParent>;
+	CourseClassLiveState: ResolversByParent<_Resolvers["CourseClassLiveState"], CourseClassLiveStateParent>;
 	CourseClassVideo: ResolversByParent<_Resolvers["CourseClassVideo"], CourseClassVideoParent>;
 	CourseClassVideoFormat: ResolversByParent<_Resolvers["CourseClassVideoFormat"], CourseClassVideoFormatParent>;
 	CourseClassVideoQuality: ResolversByParent<_Resolvers["CourseClassVideoQuality"], CourseClassVideoQualityParent>;

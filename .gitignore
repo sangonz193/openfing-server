@@ -10,3 +10,4 @@ src/logs
 _files
 .vscode
 .DS_Store
+docker

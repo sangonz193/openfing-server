@@ -44,7 +44,7 @@ import { getRepositories } from "./repositories";
 			ormConnection: connection,
 			req,
 			res,
-			dataLoaders: getDataLoaders(repositories),
+			dataLoaders: getDataLoaders(repositories, connection),
 			repositories,
 		};
 	};

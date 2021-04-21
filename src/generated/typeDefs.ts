@@ -5,11 +5,13 @@ import CourseDoc from "../schemas/Course.schema";
 import CourseClassDoc from "../schemas/CourseClass.schema";
 import CourseClassChapterCueDoc from "../schemas/CourseClassChapterCue.schema";
 import CourseClassListDoc from "../schemas/CourseClassList.schema";
+import CourseClassLiveStateDoc from "../schemas/CourseClassLiveState.schema";
 import CourseClassVideoDoc from "../schemas/CourseClassVideo.schema";
 import CourseClassVideoFormatDoc from "../schemas/CourseClassVideoFormat.schema";
 import CourseClassVideoQualityDoc from "../schemas/CourseClassVideoQuality.schema";
 import CourseEditionDoc from "../schemas/CourseEdition.schema";
 import FaqDoc from "../schemas/Faq.schema";
+import ISODateDoc from "../schemas/ISODate.schema";
 import backupDbDoc from "../schemas/Mutation/backupDb.schema";
 import createCourseDoc from "../schemas/Mutation/createCourse.schema";
 import createCourseClassDoc from "../schemas/Mutation/createCourseClass.schema";
@@ -37,12 +39,14 @@ export const typeDefs: DocumentNode[] = [
 	CourseClassChapterCueDoc,
 	CourseClassDoc,
 	CourseClassListDoc,
+	CourseClassLiveStateDoc,
 	CourseClassVideoDoc,
 	CourseClassVideoFormatDoc,
 	CourseClassVideoQualityDoc,
 	CourseDoc,
 	CourseEditionDoc,
 	FaqDoc,
+	ISODateDoc,
 	QueryDoc,
 	UserDoc,
 	UserRoleDoc,
