@@ -1,11 +1,9 @@
-import { Connection } from "typeorm";
 import * as yup from "yup";
 
 import { SafeOmit } from "../../../../_utils/SafeOmit";
 import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types";
 import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types";
-import { deleteCourseClassLiveStateByCourseClassId } from "../../../../database/CourseClassLiveState/deleteCourseClassLiveStateByCourseClassId";
-import { insertCourseClassLiveState } from "../../../../database/CourseClassLiveState/insertCourseClassLiveState";
+import { Repositories } from "../../../../database/repositories";
 import { backupDb } from "../../../../modules/backup-db/backupDb";
 import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef";
 import { getUserFromSecret } from "../../_utils/getUserFromSecret";
@@ -20,7 +18,7 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 		return getAuthenticationErrorParent();
 	}
 
-	const { dataLoaders, ormConnection } = context;
+	const { repositories, dataLoaders } = context;
 
 	const validatedDataPromise = yup
 		.object<
@@ -59,19 +57,21 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 		return getGenericErrorParent();
 	}
 
-	const prevCourseClassLiveState = await dataLoaders.courseClassLiveStateByCourseClassId.load(courseClass.id);
+	const prevCourseClassLiveState = await dataLoaders.courseClassLiveState.findCourseClassLiveStateByCourseClassId.load(
+		courseClass.id
+	);
 	if (prevCourseClassLiveState?.course_class_id) {
-		deleteCourseClassLiveStateByCourseClassId(ormConnection, prevCourseClassLiveState.course_class_id);
+		repositories.courseClassLiveState.deleteCourseClassLiveStateByCourseClassId({
+			courseClassId: prevCourseClassLiveState.course_class_id,
+		});
 	}
 
 	const courseClassLiveState = await createCourseClassLiveState(
-		ormConnection,
+		repositories,
 		courseClass,
 		validatedData,
 		prevCourseClassLiveState
 	);
-	dataLoaders.courseClassLiveStateByCourseClassId.clearAll();
-	// TODO: necessary?
 
 	await backupDb(context.ormConnection);
 
@@ -83,25 +83,27 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 export default resolver;
 
 async function createCourseClassLiveState(
-	ormConnection: Connection,
+	repositories: Repositories,
 	courseClass: CourseClassRow,
 	validatedData: SafeOmit<Extract<MutationSetCourseClassLiveStateArgs["input"]["data"], {}>, "startDate"> & {
 		startDate: Date | null | undefined;
 	},
 	prevCourseClassLiveState: CourseClassLiveStateRow | null
 ) {
-	return await insertCourseClassLiveState(ormConnection, {
-		course_class_id: courseClass.id,
-		html: validatedData.html === null ? null : validatedData.html ?? prevCourseClassLiveState?.html ?? null,
-		in_progress:
-			validatedData.inProgress === null
-				? null
-				: validatedData.inProgress ?? prevCourseClassLiveState?.in_progress ?? false,
-		start_date:
-			validatedData.startDate === null
-				? null
-				: (validatedData.startDate ? validatedData.startDate : null) ??
-				  prevCourseClassLiveState?.start_date ??
-				  null,
+	return repositories.courseClassLiveState.insertCourseClassLiveState({
+		data: {
+			course_class_id: courseClass.id,
+			html: validatedData.html === null ? null : validatedData.html ?? prevCourseClassLiveState?.html ?? null,
+			in_progress:
+				validatedData.inProgress === null
+					? null
+					: validatedData.inProgress ?? prevCourseClassLiveState?.in_progress ?? false,
+			start_date:
+				validatedData.startDate === null
+					? null
+					: (validatedData.startDate ? validatedData.startDate : null) ??
+					  prevCourseClassLiveState?.start_date ??
+					  null,
+		},
 	});
 }

@@ -1,6 +1,7 @@
 import path from "path";
 
 import { fs } from "../../../src/_utils/fs";
+import { fsExists } from "../../_utils/fsExists";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
 import { getImportPath } from "./_utils/getImportPath";
@@ -17,29 +18,36 @@ export const generateRepositoriesIndex = async () => {
 	const imports: string[] = ['import { Connection } from "typeorm";'];
 	const entitiesNames: string[] = [];
 
-	repositoryFilesPaths.forEach((repositoryFilePath) => {
-		const fileName = path.basename(repositoryFilePath);
-		const entityNameMatch = fileName.match(/(\w+)\.repository\.ts/);
+	await Promise.all(
+		repositoryFilesPaths.map(async (repositoryFilePath) => {
+			const fileName = path.basename(repositoryFilePath);
+			const entityNameMatch = fileName.match(/(\w+)\.repository\.ts/);
 
-		if (entityNameMatch) {
-			const entityName = entityNameMatch[1];
-			entitiesNames.push(entityName);
+			if (entityNameMatch) {
+				const entityName = entityNameMatch[1];
+				entitiesNames.push(entityName);
 
-			imports.push(
-				`import { get${entityName}Repository } from "${getImportPath(
-					repositoryIndexFilePath,
-					repositoryFilePath
-				)}"`
-			);
+				const repositoryTypesFilePath = repositoryFilePath.replace(/\.ts$/, ".types.ts");
 
-			imports.push(
-				`import { ${entityName}Repository } from "${getImportPath(
-					repositoryIndexFilePath,
-					repositoryFilePath.replace(/\.ts$/, ".types.ts")
-				)}"`
-			);
-		}
-	});
+				imports.push(
+					`import { get${entityName}Repository } from "${getImportPath(
+						repositoryIndexFilePath,
+						repositoryFilePath
+					)}"`
+				);
+
+				const repositoryTypeFilePath = (await fsExists(repositoryTypesFilePath))
+					? repositoryTypesFilePath
+					: repositoryFilePath;
+				imports.push(
+					`import { ${entityName}Repository } from "${getImportPath(
+						repositoryIndexFilePath,
+						repositoryTypeFilePath
+					)}"`
+				);
+			}
+		})
+	);
 
 	const fileContent =
 		generatedFileHeaderContent +

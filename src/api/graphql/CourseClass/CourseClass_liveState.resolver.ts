@@ -2,7 +2,9 @@ import { getCourseClassLiveStateParent } from "../CourseClassLiveState/CourseCla
 import { Resolvers } from "../schemas.types";
 
 const resolver: Resolvers["CourseClass"]["liveState"] = async (parent, _, context) => {
-	const liveState = await context.dataLoaders.courseClassLiveStateByCourseClassId.load(parent.id);
+	const liveState = await context.dataLoaders.courseClassLiveState.findCourseClassLiveStateByCourseClassId.load(
+		parent.id
+	);
 
 	return liveState && getCourseClassLiveStateParent(liveState);
 };

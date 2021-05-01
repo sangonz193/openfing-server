@@ -4,10 +4,15 @@ import { Connection } from "typeorm";
 import { courseClassLiveStateColumns, courseClassLiveStateEntitySchema } from "./CourseClassLiveState.entity";
 import { CourseClassLiveStateRow } from "./CourseClassLiveState.entity.types";
 
+export type DeleteCourseClassLiveStateByCourseClassIdOptions = {
+	connection: Connection;
+	courseClassId: string;
+};
+
 export async function deleteCourseClassLiveStateByCourseClassId(
-	connection: Connection,
-	courseClassId: string
+	options: DeleteCourseClassLiveStateByCourseClassIdOptions
 ): Promise<boolean> {
+	const { connection, courseClassId } = options;
 	const rows = await connection
 		.createQueryBuilder(courseClassLiveStateEntitySchema, "liveState")
 		.delete()

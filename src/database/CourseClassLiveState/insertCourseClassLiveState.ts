@@ -13,10 +13,16 @@ export type InsertCourseClassLiveStateData = SafeOmit<
 > &
 	Partial<Pick<CourseClassLiveStateRow, NullableInsertCourseClassLiveStateDataKeys>>;
 
+export type InsertCourseClassLiveStateOptions = {
+	connection: Connection;
+	data: InsertCourseClassLiveStateData;
+};
+
 export async function insertCourseClassLiveState(
-	connection: Connection,
-	data: InsertCourseClassLiveStateData
+	options: InsertCourseClassLiveStateOptions
 ): Promise<CourseClassLiveStateRow> {
+	const { connection, data } = options;
+
 	const { generatedMaps } = await connection
 		.createQueryBuilder()
 		.insert()
