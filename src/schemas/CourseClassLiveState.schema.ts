@@ -5,7 +5,7 @@ export default gql`
 		id: ID!
 
 		html: String
-		isProgress: Boolean
+		inProgress: Boolean
 		startDate: ISODate
 
 		courseClass: CourseClass

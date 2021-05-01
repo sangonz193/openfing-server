@@ -15,6 +15,7 @@ import { CreateCourseClassListPayloadParent } from "../resolvers/CreateCourseCla
 import { CreateCourseClassPayloadParent } from "../resolvers/CreateCourseClassPayload/CreateCourseClassPayload.parent";
 import { CreateCoursePayloadParent } from "../resolvers/CreateCoursePayload/CreateCoursePayload.parent";
 import { FaqParent } from "../resolvers/Faq/Faq.parent";
+import { SetCourseClassLiveStatePayloadParent } from "../resolvers/SetCourseClassLiveStatePayload/SetCourseClassLiveStatePayload.parent";
 import { UpdateCourseClassListPayloadParent } from "../resolvers/UpdateCourseClassListPayload/UpdateCourseClassListPayload.parent";
 import { UpdateCourseClassPayloadParent } from "../resolvers/UpdateCourseClassPayload/UpdateCourseClassPayload.parent";
 import { UserParent } from "../resolvers/User/User.parent";
@@ -33,7 +34,7 @@ export type Scalars = {
 	Int: number;
 	Float: number;
 	Void: any;
-	ISODate: any;
+	ISODate: Date;
 };
 
 export type Mutation = {
@@ -44,6 +45,7 @@ export type Mutation = {
 	createCourseClass: CreateCourseClassResult;
 	createCourseClassList: CreateCourseClassListResult;
 	resetDatabaseFromBackup?: Maybe<Scalars["String"]>;
+	setCourseClassLiveState: SetCourseClassLiveStateResult;
 	updateCourseClass: UpdateCourseClassResult;
 	updateCourseClassList: UpdateCourseClassListResult;
 	updateCourseClassVideos?: Maybe<NotFoundError>;
@@ -69,6 +71,11 @@ export type MutationCreateCourseClassListArgs = {
 };
 
 export type MutationResetDatabaseFromBackupArgs = {
+	secret: Scalars["String"];
+};
+
+export type MutationSetCourseClassLiveStateArgs = {
+	input: SetCourseClassLiveStateInput;
 	secret: Scalars["String"];
 };
 
@@ -197,7 +204,7 @@ export type CourseClassLiveState = {
 	__typename: "CourseClassLiveState";
 	id: Scalars["ID"];
 	html?: Maybe<Scalars["String"]>;
-	isProgress?: Maybe<Scalars["Boolean"]>;
+	inProgress?: Maybe<Scalars["Boolean"]>;
 	startDate?: Maybe<Scalars["ISODate"]>;
 	courseClass?: Maybe<CourseClass>;
 };
@@ -325,6 +332,24 @@ export type CreateCourseClassListPayload = {
 };
 
 export type CreateCourseClassListResult = CreateCourseClassListPayload | GenericError | AuthenticationError;
+
+export type SetCourseClassLiveStateInput = {
+	courseClassRef: CourseClassRef;
+	data?: Maybe<SetCourseClassLiveStateDataInput>;
+};
+
+export type SetCourseClassLiveStateDataInput = {
+	inProgress?: Maybe<Scalars["Boolean"]>;
+	html?: Maybe<Scalars["String"]>;
+	startDate?: Maybe<Scalars["ISODate"]>;
+};
+
+export type SetCourseClassLiveStatePayload = {
+	__typename: "SetCourseClassLiveStatePayload";
+	courseClassLiveState: CourseClassLiveState;
+};
+
+export type SetCourseClassLiveStateResult = SetCourseClassLiveStatePayload | GenericError | AuthenticationError;
 
 export type UpdateCourseClassInputVisibility = "PUBLIC" | "HIDDEN" | "DISABLED";
 
@@ -558,6 +583,13 @@ export type ResolversTypes = {
 		| ResolversTypes["CreateCourseClassListPayload"]
 		| ResolversTypes["GenericError"]
 		| ResolversTypes["AuthenticationError"];
+	SetCourseClassLiveStateInput: SetCourseClassLiveStateInput;
+	SetCourseClassLiveStateDataInput: SetCourseClassLiveStateDataInput;
+	SetCourseClassLiveStatePayload: ResolverTypeWrapper<SetCourseClassLiveStatePayloadParent>;
+	SetCourseClassLiveStateResult:
+		| ResolversTypes["SetCourseClassLiveStatePayload"]
+		| ResolversTypes["GenericError"]
+		| ResolversTypes["AuthenticationError"];
 	UpdateCourseClassInputVisibility: UpdateCourseClassInputVisibility;
 	UpdateCourseClassInput: UpdateCourseClassInput;
 	UpdateCourseClassPayload: ResolverTypeWrapper<UpdateCourseClassPayloadParent>;
@@ -632,6 +664,13 @@ export type ResolversParentTypes = {
 		| ResolversParentTypes["CreateCourseClassListPayload"]
 		| ResolversParentTypes["GenericError"]
 		| ResolversParentTypes["AuthenticationError"];
+	SetCourseClassLiveStateInput: SetCourseClassLiveStateInput;
+	SetCourseClassLiveStateDataInput: SetCourseClassLiveStateDataInput;
+	SetCourseClassLiveStatePayload: SetCourseClassLiveStatePayloadParent;
+	SetCourseClassLiveStateResult:
+		| ResolversParentTypes["SetCourseClassLiveStatePayload"]
+		| ResolversParentTypes["GenericError"]
+		| ResolversParentTypes["AuthenticationError"];
 	UpdateCourseClassInput: UpdateCourseClassInput;
 	UpdateCourseClassPayload: UpdateCourseClassPayloadParent;
 	UpdateCourseClassResult:
@@ -695,6 +734,12 @@ export type MutationResolvers<
 		ParentType,
 		ContextType,
 		RequireFields<MutationResetDatabaseFromBackupArgs, "secret">
+	>;
+	setCourseClassLiveState: Resolver<
+		ResolversTypes["SetCourseClassLiveStateResult"],
+		ParentType,
+		ContextType,
+		RequireFields<MutationSetCourseClassLiveStateArgs, "input" | "secret">
 	>;
 	updateCourseClass: Resolver<
 		ResolversTypes["UpdateCourseClassResult"],
@@ -820,7 +865,7 @@ export type CourseClassLiveStateResolvers<
 > = {
 	id: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
 	html: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-	isProgress: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
+	inProgress: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
 	startDate: Resolver<Maybe<ResolversTypes["ISODate"]>, ParentType, ContextType>;
 	courseClass: Resolver<Maybe<ResolversTypes["CourseClass"]>, ParentType, ContextType>;
 	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -971,6 +1016,25 @@ export type CreateCourseClassListResultResolvers<
 > = {
 	__resolveType: TypeResolveFn<
 		"CreateCourseClassListPayload" | "GenericError" | "AuthenticationError",
+		ParentType,
+		ContextType
+	>;
+};
+
+export type SetCourseClassLiveStatePayloadResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["SetCourseClassLiveStatePayload"] = ResolversParentTypes["SetCourseClassLiveStatePayload"]
+> = {
+	courseClassLiveState: Resolver<ResolversTypes["CourseClassLiveState"], ParentType, ContextType>;
+	__isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SetCourseClassLiveStateResultResolvers<
+	ContextType = Context,
+	ParentType extends ResolversParentTypes["SetCourseClassLiveStateResult"] = ResolversParentTypes["SetCourseClassLiveStateResult"]
+> = {
+	__resolveType: TypeResolveFn<
+		"SetCourseClassLiveStatePayload" | "GenericError" | "AuthenticationError",
 		ParentType,
 		ContextType
 	>;
@@ -1150,6 +1214,8 @@ export type _Resolvers<ContextType = Context> = {
 	CreateCourseClassResult: CreateCourseClassResultResolvers<ContextType>;
 	CreateCourseClassListPayload: CreateCourseClassListPayloadResolvers<ContextType>;
 	CreateCourseClassListResult: CreateCourseClassListResultResolvers<ContextType>;
+	SetCourseClassLiveStatePayload: SetCourseClassLiveStatePayloadResolvers<ContextType>;
+	SetCourseClassLiveStateResult: SetCourseClassLiveStateResultResolvers<ContextType>;
 	UpdateCourseClassPayload: UpdateCourseClassPayloadResolvers<ContextType>;
 	UpdateCourseClassResult: UpdateCourseClassResultResolvers<ContextType>;
 	UpdateCourseClassListPayload: UpdateCourseClassListPayloadResolvers<ContextType>;
@@ -1200,6 +1266,10 @@ export type CustomResolvers = {
 	CreateCourseClassPayload: ResolversByParent<_Resolvers["CreateCourseClassPayload"], CreateCourseClassPayloadParent>;
 	CreateCoursePayload: ResolversByParent<_Resolvers["CreateCoursePayload"], CreateCoursePayloadParent>;
 	Faq: ResolversByParent<_Resolvers["Faq"], FaqParent>;
+	SetCourseClassLiveStatePayload: ResolversByParent<
+		_Resolvers["SetCourseClassLiveStatePayload"],
+		SetCourseClassLiveStatePayloadParent
+	>;
 	UpdateCourseClassListPayload: ResolversByParent<
 		_Resolvers["UpdateCourseClassListPayload"],
 		UpdateCourseClassListPayloadParent

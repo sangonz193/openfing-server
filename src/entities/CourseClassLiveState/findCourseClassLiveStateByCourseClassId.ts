@@ -9,11 +9,10 @@ export async function findCourseClassLiveStateByCourseClassIdBatch(
 	courseClassIds: string[]
 ): Promise<Array<CourseClassLiveStateRow | null>> {
 	const rows = await connection
-		.createQueryBuilder()
-		.from<CourseClassLiveStateRow>(courseClassLiveStateEntitySchema, "liveState")
+		.createQueryBuilder<CourseClassLiveStateRow>(courseClassLiveStateEntitySchema, "liveState")
 		.where(
 			`liveState.${courseClassLiveStateColumns.course_class_id.name} in (:...ids)`,
-			identity<{ ids: Array<CourseClassLiveStateRow["id"]> }>({ ids: courseClassIds })
+			identity<{ ids: Array<CourseClassLiveStateRow["course_class_id"]> }>({ ids: courseClassIds })
 		)
 		.getMany();
 

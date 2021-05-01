@@ -3,6 +3,7 @@ import * as typescriptPlugin from "@graphql-codegen/typescript";
 import * as typescriptResolversPlugin from "@graphql-codegen/typescript-resolvers";
 import { glob } from "glob";
 import { GraphQLSchema, printSchema } from "graphql";
+import identity from "lodash/identity";
 import path from "path";
 
 import { fs } from "../../_utils/fs";
@@ -48,10 +49,13 @@ export const generateGraphqlTypes = async (options: GenerateGraphqlOptions): Pro
 			[typesFilePath]: {
 				plugins: [
 					{
-						typescript: {
+						typescript: identity<typescriptPlugin.TypeScriptPluginConfig>({
 							nonOptionalTypename: true,
 							enumsAsTypes: true,
-						},
+							scalars: {
+								ISODate: "Date",
+							},
+						}),
 					},
 					{
 						typescriptResolvers: {
@@ -115,8 +119,6 @@ export const generateGraphqlTypes = async (options: GenerateGraphqlOptions): Pro
 			);
 		})
 	);
-
-	await fs.readFile(typesFilePath, "utf-8").then((content) => fs.writeFile(typesFilePath, content));
 
 	return generatedFilesPaths;
 };

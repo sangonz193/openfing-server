@@ -55,6 +55,7 @@ import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.re
 import Mutation_createCourseClassResolver from "../resolvers/Mutation/createCourseClass.resolver";
 import Mutation_createCourseClassListResolver from "../resolvers/Mutation/createCourseClassList.resolver";
 import Mutation_resetDatabaseFromBackupResolver from "../resolvers/Mutation/resetDatabaseFromBackup.resolver";
+import Mutation_setCourseClassLiveStateResolver from "../resolvers/Mutation/setCourseClassLiveState.resolver";
 import Mutation_updateCourseClassResolver from "../resolvers/Mutation/updateCourseClass.resolver";
 import Mutation_updateCourseClassListResolver from "../resolvers/Mutation/updateCourseClassList.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
@@ -194,6 +195,7 @@ export const resolvers: Resolvers = {
 		createCourseClass: Mutation_createCourseClassResolver,
 		createCourseClassList: Mutation_createCourseClassListResolver,
 		resetDatabaseFromBackup: Mutation_resetDatabaseFromBackupResolver,
+		setCourseClassLiveState: Mutation_setCourseClassLiveStateResolver,
 		updateCourseClass: Mutation_updateCourseClassResolver,
 		updateCourseClassList: Mutation_updateCourseClassListResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
@@ -213,6 +215,10 @@ export const resolvers: Resolvers = {
 		faqs: Query_faqsResolver,
 		latestCourseClasses: Query_latestCourseClassesResolver,
 		userRoles: Query_userRolesResolver,
+	},
+	SetCourseClassLiveStatePayload: {},
+	SetCourseClassLiveStateResult: {
+		__resolveType,
 	},
 	UpdateCourseClassListPayload: {},
 	UpdateCourseClassListResult: {

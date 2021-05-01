@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:13.2
+    environment:
+      POSTGRES_PASSWORD: "${WRITE_DB_PASSWORD}"
+      POSTGRES_USER: "${WRITE_DB_USERNAME}"
+      POSTGRES_DB: "${WRITE_DB_NAME}"
+    volumes:
+      - ./docker/db-data:/var/lib/postgresql/data
+      - ./docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    networks:
+      - server
+    ports:
+      - "${WRITE_DB_PORT}:5432"
+
+networks: 
+  server:
+    name: server

@@ -17,6 +17,7 @@ import createCourseDoc from "../schemas/Mutation/createCourse.schema";
 import createCourseClassDoc from "../schemas/Mutation/createCourseClass.schema";
 import createCourseClassListDoc from "../schemas/Mutation/createCourseClassList.schema";
 import resetDatabaseFromBackupDoc from "../schemas/Mutation/resetDatabaseFromBackup.schema";
+import setCourseClassLiveStateDoc from "../schemas/Mutation/setCourseClassLiveState.schema";
 import updateCourseClassDoc from "../schemas/Mutation/updateCourseClass.schema";
 import updateCourseClassListDoc from "../schemas/Mutation/updateCourseClassList.schema";
 import updateCourseClassVideosDoc from "../schemas/Mutation/updateCourseClassVideos.schema";
@@ -64,6 +65,7 @@ export const typeDefs: DocumentNode[] = [
 	faqsDoc,
 	latestCourseClassesDoc,
 	resetDatabaseFromBackupDoc,
+	setCourseClassLiveStateDoc,
 	updateCourseClassDoc,
 	updateCourseClassListDoc,
 	updateCourseClassVideosDoc,

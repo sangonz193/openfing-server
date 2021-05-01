@@ -27,10 +27,10 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				: courseClass.course_class_list_id === options.courseClassListId &&
 				  courseClass.number === options.number) &&
 			courseClass.deleted_at === null &&
-			(options.includeHidden ||
-				courseClass.visibility === "public" ||
-				options.includeDisabled ||
-				courseClass.visibility === "disabled")
+			(courseClass.visibility === "public" ||
+				courseClass.visibility === null ||
+				(!!options.includeHidden && courseClass.visibility === "hidden") ||
+				(!!options.includeDisabled && courseClass.visibility === "disabled"))
 		);
 	};
 
@@ -50,17 +50,17 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 
 		if (!options.includeDisabled)
 			queryBuilder.andWhere(
-				`courseClass.${courseClassColumns.visibility.name} != :visibility`,
-				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: "disabled",
+				`courseClass.${courseClassColumns.visibility.name} != :v1`,
+				identity<{ v1: CourseClassRow["visibility"] }>({
+					v1: "disabled",
 				})
 			);
 
 		if (!options.includeHidden)
 			queryBuilder.andWhere(
-				`courseClass.${courseClassColumns.visibility.name} != :visibility`,
-				identity<{ visibility: CourseClassRow["visibility"] }>({
-					visibility: "hidden",
+				`courseClass.${courseClassColumns.visibility.name} != :v2`,
+				identity<{ v2: CourseClassRow["visibility"] }>({
+					v2: "hidden",
 				})
 			);
 
