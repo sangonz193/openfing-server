@@ -2,7 +2,7 @@ import identity from "lodash/identity";
 import { Connection } from "typeorm";
 
 import { getUuid } from "../../_utils/getUuid";
-import { SafeOmit } from "../../_utils/utilTypes";
+import { SafeOmit } from "../../_utils/SafeOmit";
 import { courseClassLiveStateEntitySchema } from "./CourseClassLiveState.entity";
 import { CourseClassLiveStateRow } from "./CourseClassLiveState.entity.types";
 

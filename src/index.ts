@@ -7,7 +7,6 @@ import "./_utils/configEnv";
 import cors from "cors";
 import express from "express";
 
-import { registerAuthHandler } from "./api/auth/registerAuthHandler";
 import { registerApolloServer } from "./api/graphql/registerApolloServer";
 import { appConfig } from "./config/app.config";
 import { getOrmConnection } from "./database/getOrmConnection";
@@ -27,7 +26,6 @@ const run = async () => {
 	const repositories = getRepositories(ormConnection);
 
 	expressApp.use(cors());
-	registerAuthHandler(expressApp);
 	await registerApolloServer({
 		expressApp,
 		keycloakAdminClient,

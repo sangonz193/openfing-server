@@ -28,7 +28,7 @@ export const registerApolloServer = async (options: GetApolloServerOptions) => {
 			ormConnection,
 			req,
 			res,
-			dataLoaders: getDataLoaders(repositories),
+			dataLoaders: getDataLoaders(repositories, ormConnection),
 			repositories,
 			keycloak: keycloakAdminClient,
 		};
