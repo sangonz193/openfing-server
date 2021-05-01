@@ -5,16 +5,19 @@ import CourseDoc from "../schemas/Course.schema";
 import CourseClassDoc from "../schemas/CourseClass.schema";
 import CourseClassChapterCueDoc from "../schemas/CourseClassChapterCue.schema";
 import CourseClassListDoc from "../schemas/CourseClassList.schema";
+import CourseClassLiveStateDoc from "../schemas/CourseClassLiveState.schema";
 import CourseClassVideoDoc from "../schemas/CourseClassVideo.schema";
 import CourseClassVideoFormatDoc from "../schemas/CourseClassVideoFormat.schema";
 import CourseClassVideoQualityDoc from "../schemas/CourseClassVideoQuality.schema";
 import CourseEditionDoc from "../schemas/CourseEdition.schema";
 import FaqDoc from "../schemas/Faq.schema";
+import ISODateDoc from "../schemas/ISODate.schema";
 import backupDbDoc from "../schemas/Mutation/backupDb.schema";
 import createCourseDoc from "../schemas/Mutation/createCourse.schema";
 import createCourseClassDoc from "../schemas/Mutation/createCourseClass.schema";
 import createCourseClassListDoc from "../schemas/Mutation/createCourseClassList.schema";
 import resetDatabaseFromBackupDoc from "../schemas/Mutation/resetDatabaseFromBackup.schema";
+import setCourseClassLiveStateDoc from "../schemas/Mutation/setCourseClassLiveState.schema";
 import updateCourseClassDoc from "../schemas/Mutation/updateCourseClass.schema";
 import updateCourseClassListDoc from "../schemas/Mutation/updateCourseClassList.schema";
 import updateCourseClassVideosDoc from "../schemas/Mutation/updateCourseClassVideos.schema";
@@ -37,12 +40,14 @@ export const typeDefs: DocumentNode[] = [
 	CourseClassChapterCueDoc,
 	CourseClassDoc,
 	CourseClassListDoc,
+	CourseClassLiveStateDoc,
 	CourseClassVideoDoc,
 	CourseClassVideoFormatDoc,
 	CourseClassVideoQualityDoc,
 	CourseDoc,
 	CourseEditionDoc,
 	FaqDoc,
+	ISODateDoc,
 	QueryDoc,
 	UserDoc,
 	UserRoleDoc,
@@ -60,6 +65,7 @@ export const typeDefs: DocumentNode[] = [
 	faqsDoc,
 	latestCourseClassesDoc,
 	resetDatabaseFromBackupDoc,
+	setCourseClassLiveStateDoc,
 	updateCourseClassDoc,
 	updateCourseClassListDoc,
 	updateCourseClassVideosDoc,

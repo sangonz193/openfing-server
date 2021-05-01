@@ -7,6 +7,7 @@ export default gql`
 		number: Int
 		name: String
 
+		liveState: CourseClassLiveState
 		videos: [CourseClassVideo!]!
 		chapterCues: [CourseClassChapterCue!]!
 		courseClassList: CourseClassList

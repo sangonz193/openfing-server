@@ -2,6 +2,7 @@ import { courseEntitySchema } from "./Course";
 import { courseClassEntitySchema } from "./CourseClass";
 import { courseClassChapterCueEntitySchema } from "./CourseClassChapterCue";
 import { courseClassListEntitySchema } from "./CourseClassList";
+import { courseClassLiveStateEntitySchema } from "./CourseClassLiveState";
 import { courseClassVideoEntitySchema } from "./CourseClassVideo";
 import { courseClassVideoFormatEntitySchema } from "./CourseClassVideoFormat";
 import { courseClassVideoQualityEntitySchema } from "./CourseClassVideoQuality";
@@ -16,6 +17,7 @@ export const entities = [
 	courseClassEntitySchema,
 	courseClassChapterCueEntitySchema,
 	courseClassListEntitySchema,
+	courseClassLiveStateEntitySchema,
 	courseClassVideoEntitySchema,
 	courseClassVideoFormatEntitySchema,
 	courseClassVideoQualityEntitySchema,

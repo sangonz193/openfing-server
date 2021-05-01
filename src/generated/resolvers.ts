@@ -8,6 +8,7 @@ import CourseClass_chapterCuesResolver from "../resolvers/CourseClass/chapterCue
 import CourseClass_courseClassListResolver from "../resolvers/CourseClass/courseClassList.resolver";
 import CourseClass_createdByResolver from "../resolvers/CourseClass/createdBy.resolver";
 import CourseClass_idResolver from "../resolvers/CourseClass/id.resolver";
+import CourseClass_liveStateResolver from "../resolvers/CourseClass/liveState.resolver";
 import CourseClass_updatedByResolver from "../resolvers/CourseClass/updatedBy.resolver";
 import CourseClass_videosResolver from "../resolvers/CourseClass/videos.resolver";
 import CourseClassChapterCue_courseClassResolver from "../resolvers/CourseClassChapterCue/courseClass.resolver";
@@ -20,6 +21,7 @@ import CourseClassList_createdByResolver from "../resolvers/CourseClassList/crea
 import CourseClassList_deletedByResolver from "../resolvers/CourseClassList/deletedBy.resolver";
 import CourseClassList_idResolver from "../resolvers/CourseClassList/id.resolver";
 import CourseClassList_updatedByResolver from "../resolvers/CourseClassList/updatedBy.resolver";
+import CourseClassLiveState_courseClassResolver from "../resolvers/CourseClassLiveState/courseClass.resolver";
 import CourseClassVideo_courseClassResolver from "../resolvers/CourseClassVideo/courseClass.resolver";
 import CourseClassVideo_createdByResolver from "../resolvers/CourseClassVideo/createdBy.resolver";
 import CourseClassVideo_deletedByResolver from "../resolvers/CourseClassVideo/deletedBy.resolver";
@@ -47,11 +49,13 @@ import CourseEdition_updatedByResolver from "../resolvers/CourseEdition/updatedB
 import Faq_createdByResolver from "../resolvers/Faq/createdBy.resolver";
 import Faq_deletedByResolver from "../resolvers/Faq/deletedBy.resolver";
 import Faq_updatedByResolver from "../resolvers/Faq/updatedBy.resolver";
+import ISODateResolver from "../resolvers/ISODate.resolver";
 import Mutation_backupDbResolver from "../resolvers/Mutation/backupDb.resolver";
 import Mutation_createCourseResolver from "../resolvers/Mutation/createCourse.resolver";
 import Mutation_createCourseClassResolver from "../resolvers/Mutation/createCourseClass.resolver";
 import Mutation_createCourseClassListResolver from "../resolvers/Mutation/createCourseClassList.resolver";
 import Mutation_resetDatabaseFromBackupResolver from "../resolvers/Mutation/resetDatabaseFromBackup.resolver";
+import Mutation_setCourseClassLiveStateResolver from "../resolvers/Mutation/setCourseClassLiveState.resolver";
 import Mutation_updateCourseClassResolver from "../resolvers/Mutation/updateCourseClass.resolver";
 import Mutation_updateCourseClassListResolver from "../resolvers/Mutation/updateCourseClassList.resolver";
 import Mutation_updateCourseClassVideosResolver from "../resolvers/Mutation/updateCourseClassVideos.resolver";
@@ -98,6 +102,7 @@ export const resolvers: Resolvers = {
 		courseClassList: CourseClass_courseClassListResolver,
 		createdBy: CourseClass_createdByResolver,
 		id: CourseClass_idResolver,
+		liveState: CourseClass_liveStateResolver,
 		updatedBy: CourseClass_updatedByResolver,
 		videos: CourseClass_videosResolver,
 	},
@@ -123,6 +128,9 @@ export const resolvers: Resolvers = {
 	},
 	CourseClassListByIdResult: {
 		__resolveType,
+	},
+	CourseClassLiveState: {
+		courseClass: CourseClassLiveState_courseClassResolver,
 	},
 	CourseClassVideo: {
 		courseClass: CourseClassVideo_courseClassResolver,
@@ -179,6 +187,7 @@ export const resolvers: Resolvers = {
 	GenericError: {
 		_,
 	},
+	ISODate: ISODateResolver,
 	Mutation: {
 		_,
 		backupDb: Mutation_backupDbResolver,
@@ -186,6 +195,7 @@ export const resolvers: Resolvers = {
 		createCourseClass: Mutation_createCourseClassResolver,
 		createCourseClassList: Mutation_createCourseClassListResolver,
 		resetDatabaseFromBackup: Mutation_resetDatabaseFromBackupResolver,
+		setCourseClassLiveState: Mutation_setCourseClassLiveStateResolver,
 		updateCourseClass: Mutation_updateCourseClassResolver,
 		updateCourseClassList: Mutation_updateCourseClassListResolver,
 		updateCourseClassVideos: Mutation_updateCourseClassVideosResolver,
@@ -205,6 +215,10 @@ export const resolvers: Resolvers = {
 		faqs: Query_faqsResolver,
 		latestCourseClasses: Query_latestCourseClassesResolver,
 		userRoles: Query_userRolesResolver,
+	},
+	SetCourseClassLiveStatePayload: {},
+	SetCourseClassLiveStateResult: {
+		__resolveType,
 	},
 	UpdateCourseClassListPayload: {},
 	UpdateCourseClassListResult: {
