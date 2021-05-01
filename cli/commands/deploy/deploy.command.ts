@@ -88,8 +88,8 @@ const command: CommandModule<{}, {}> = {
 		await fs.unlink(pm2ConfigPath);
 
 		for (const command of [
-			// "rm -rf node_modules",
-			// `npm ci`,
+			"rm -rf node_modules",
+			`npm ci`,
 			{
 				command: `pm2 stop ${deployConfig.PM2_PROCESS_NAME} && pm2 delete ${deployConfig.PM2_PROCESS_NAME}`,
 				ignore: true,
