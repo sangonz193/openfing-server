@@ -12,7 +12,7 @@ import { getUserFromSecret } from "../../_utils/getUserFromSecret";
 import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
 import { MutationSetCourseClassLiveStateArgs, Resolvers } from "../../schemas.types";
-import { getSetCourseClassLiveStatePayloadParent } from "../../SetCourseClassLiveStatePayload/SetCourseClassLiveStatePayload.parent";
+import { getSetCourseClassLiveStatePayloadParent } from "./SetCourseClassLiveStatePayload.parent";
 
 const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, args, context) => {
 	const user = await getUserFromSecret(args.secret, context);
