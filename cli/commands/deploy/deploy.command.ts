@@ -4,7 +4,7 @@ import SSH2Promise from "ssh2-promise";
 import { CommandModule } from "yargs";
 import * as yup from "yup";
 
-import { fs } from "../../../src/_utils/fs";
+import { fs } from "../../_utils/fs";
 import { projectPath } from "../../_utils/projectPath";
 import { uploadRecursive } from "../../_utils/uploadRecursive";
 
@@ -96,7 +96,7 @@ const command: CommandModule<{}, {}> = {
 			},
 			`npx pm2 start ${pm2ConfigFilename}`,
 			`npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
-		]) {
+		])
 			try {
 				console.log(`running`, command);
 				const commandSpawn: ChildProcessWithoutNullStreams = await ssh.spawn(
@@ -117,11 +117,8 @@ const command: CommandModule<{}, {}> = {
 			} catch (e) {
 				console.log(e.toString("utf8"));
 
-				if (typeof command === "string" || !command.ignore) {
-					throw e;
-				}
+				if (typeof command === "string" || !command.ignore) throw e;
 			}
-		}
 
 		console.log("- done");
 		ssh.close();

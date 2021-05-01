@@ -2,16 +2,19 @@ import csvStringify from "csv-stringify";
 import path from "path";
 import { Pool } from "pg";
 import { from as copyFrom } from "pg-copy-streams";
-import { getRepository } from "typeorm";
+import { createConnection, getRepository } from "typeorm";
 import { CommandModule } from "yargs";
 
+import { hashPassword } from "../../../src/_helpers/hashPassword";
 import { dangerousKeysOf } from "../../../src/_utils/dangerousKeysOf";
-import { _fs, fs } from "../../../src/_utils/fs";
-import { hashPassword } from "../../../src/_utils/hashPassword";
-import { databaseConfig } from "../../../src/database/database.config";
-import { entities } from "../../../src/database/entities";
-import { getOrmConnection } from "../../../src/database/getOrmConnection";
-import { getUserRepository } from "../../../src/database/User";
+import { _fs } from "../../../src/_utils/fs";
+import { getDbConnectionOptions } from "../../../src/config/getDbConnectionOptions";
+import { entities } from "../../../src/entities";
+import { UserRoleCode } from "../../../src/entities/UserRole";
+import { getUserRepository } from "../../../src/repositories/User";
+import { getUserRoleRepository } from "../../../src/repositories/UserRole";
+import { getUserToUserRoleRepository } from "../../../src/repositories/UserToUserRole";
+import { fs } from "../../_utils/fs";
 import { fsExists } from "../../_utils/fsExists";
 import { valueToCSV } from "./valueToCSV";
 
@@ -22,20 +25,34 @@ const command: CommandModule<{}, {}> = {
 		"Populates the database with dummy values. Not to be used on production. " +
 		"Should only be called once. Deletes any current data!",
 
+	builder: (yargs) => yargs,
+
 	handler: async () => {
-		const connection = await getOrmConnection();
-		const { schema } = databaseConfig.typeormConfig;
+		const dbConnectionOptions = getDbConnectionOptions();
+		const connection = await createConnection(dbConnectionOptions);
+		const { schema } = dbConnectionOptions;
 
 		await connection.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
 		await connection.query(`CREATE SCHEMA "${schema}"`);
 		await connection.runMigrations();
 
-		await getUserRepository(connection).save(
+		const adminUserRole = await getUserRoleRepository(connection).save(
+			getUserRoleRepository(connection).create({
+				code: UserRoleCode.admin,
+			})
+		);
+
+		await getUserRoleRepository(connection).save(
+			getUserRoleRepository(connection).create({
+				code: UserRoleCode.user,
+			})
+		);
+
+		const user = await getUserRepository(connection).save(
 			getUserRepository(connection).create({
-				id: "02412a7e-d52f-472d-8e55-cea9f17436cb",
 				email: "open@fing.edu.uy",
 				uid: "openfing",
-				password: await hashPassword("Password01"),
+				password: await hashPassword("password"),
 				name: "OpenFING",
 				created_at: new Date(),
 				updated_at: new Date(),
@@ -43,21 +60,26 @@ const command: CommandModule<{}, {}> = {
 			})
 		);
 
+		await getUserToUserRoleRepository(connection).save(
+			getUserToUserRoleRepository(connection).create({
+				user_id: user.id,
+				user_role_id: adminUserRole.id,
+			})
+		);
+
 		await Promise.all(
 			entities.map(async (entityToCopy) => {
 				const dumpFilePath = path.resolve(__dirname, "data", entityToCopy.options.name + ".json");
 
-				if (!(await fsExists(dumpFilePath))) {
-					return;
-				}
+				if (!(await fsExists(dumpFilePath))) return;
 
 				const { records } = require(dumpFilePath) as { records: Array<Record<string, unknown>> };
 
 				const stringify = async (p: unknown[][]) => {
 					p = p.map((i) => i.map((value) => valueToCSV(value)));
 
-					const result = await new Promise<string>((resolve) =>
-						csvStringify(p, (_, output) => {
+					const result = await new Promise((resolve) =>
+						csvStringify(p, (err, output) => {
 							resolve(output);
 						})
 					);
@@ -81,11 +103,11 @@ const command: CommandModule<{}, {}> = {
 				const fileStream = _fs.createReadStream(filePath);
 
 				const pool = new Pool({
-					database: databaseConfig.typeormConfig.database,
-					password: databaseConfig.typeormConfig.password,
-					port: databaseConfig.typeormConfig.port,
-					user: databaseConfig.typeormConfig.username,
-					host: databaseConfig.typeormConfig.host,
+					database: dbConnectionOptions.database,
+					password: dbConnectionOptions.password,
+					port: dbConnectionOptions.port,
+					user: dbConnectionOptions.username,
+					host: dbConnectionOptions.host,
 				});
 
 				const repository = getRepository(entityToCopy);
@@ -96,9 +118,7 @@ const command: CommandModule<{}, {}> = {
 				try {
 					await new Promise<void>((resolve, reject) => {
 						pool.connect((err, client, done) => {
-							if (err) {
-								reject(err);
-							}
+							if (err) reject(err);
 
 							const stream = client.query(
 								copyFrom(
@@ -129,11 +149,10 @@ const command: CommandModule<{}, {}> = {
 						});
 					});
 
-					if (entityToCopy.options.columns.id?.type !== "uuid") {
+					if (entityToCopy.options.columns.id?.type !== "uuid")
 						await connection.query(
 							`SELECT setval(pg_get_serial_sequence('${schema}.${tableName}', 'id'), max(id)) FROM ${schema}.${tableName}; `
 						);
-					}
 				} catch (e) {
 					console.log(e);
 					process.exit(1);

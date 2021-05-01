@@ -3,12 +3,11 @@ import yargs, { CommandModule } from "yargs";
 
 import { fs } from "../src/_utils/fs";
 
-const run = async () => {
+(async () => {
 	const commands: Array<CommandModule<unknown, unknown>> = [];
 
 	const commandsDirPath = path.resolve(__dirname, "commands");
-	const commandsDirItems =
-		process.argv[2] === "generate-files" ? ["generate-files"] : await fs.readdir(commandsDirPath);
+	const commandsDirItems = await fs.readdir(commandsDirPath);
 	await Promise.all(
 		commandsDirItems.map(async (commandsDirItem) => {
 			const commandsDirItemPath = path.resolve(commandsDirPath, commandsDirItem);
@@ -18,18 +17,14 @@ const run = async () => {
 
 				const commandFile = nestedDirItems.find((nestedDirItem) => nestedDirItem.endsWith(".command.ts"));
 
-				if (commandFile) {
-					commands.push(require(path.resolve(commandsDirItemPath, commandFile)).default);
-				}
+				if (commandFile) commands.push(require(path.resolve(commandsDirItemPath, commandFile)).default);
 			}
 		})
 	);
 
-	const _yargs = yargs.scriptName("node cli");
+	const _yargs = yargs.scriptName("");
 
 	commands.forEach((command) => _yargs.command(command));
 
 	_yargs.locale("en_US").parserConfiguration({ "camel-case-expansion": false }).showHelpOnFail(false).strict().argv;
-};
-
-run();
+})();

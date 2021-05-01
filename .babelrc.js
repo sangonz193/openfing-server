@@ -6,7 +6,7 @@ module.exports = function (api) {
 			[
 				"@babel/preset-env",
 				{
-					targets: { node: 15 },
+					targets: { node: 12 },
 				},
 			],
 			"@babel/preset-typescript",

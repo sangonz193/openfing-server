@@ -1,10 +1,10 @@
 import DataLoader from "dataloader";
 
-import { CourseClassVideoQualityRow } from "../database/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
+import { CourseClassVideoQualityRow } from "../entities/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
 import {
 	CourseClassVideoQualityFindOneOptions,
 	CourseClassVideoQualityRepository,
-} from "../database/CourseClassVideoQuality/CourseClassVideoQuality.repository.types";
+} from "../repositories/CourseClassVideoQuality/CourseClassVideoQuality.repository.types";
 
 export type CourseClassVideoQualityDataLoader = DataLoader<
 	CourseClassVideoQualityFindOneOptions,
