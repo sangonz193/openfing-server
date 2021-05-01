@@ -1,7 +1,7 @@
-import { CourseClassRow } from "../../../database/CourseClass/CourseClass.entity.types";
-import { CourseClassVideoRow } from "../../../database/CourseClassVideo/CourseClassVideo.entity.types";
-import { CourseClassVideoFormatRow } from "../../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
-import { CourseClassVideoQualityRow } from "../../../database/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
+import { CourseClassRow } from "../../database/CourseClass/CourseClass.entity.types";
+import { CourseClassVideoRow } from "../../database/CourseClassVideo/CourseClassVideo.entity.types";
+import { CourseClassVideoFormatRow } from "../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
+import { CourseClassVideoQualityRow } from "../../database/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
 import { encryptCourseClassVideoName } from "./encryptCourseClassVideoName";
 
 export type GetCourseClassVideoFileNameOptions = {

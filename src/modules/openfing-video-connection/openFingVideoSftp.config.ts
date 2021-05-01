@@ -1,5 +1,7 @@
 import * as yup from "yup";
 
+import { validateEnv } from "../../_utils/validateEnv";
+
 let validatedData:
 	| {
 			OPEN_FING_VIDEO_SSH_KEY: string;
@@ -9,16 +11,11 @@ let validatedData:
 	| undefined;
 
 try {
-	validatedData = yup
-		.object({
-			OPEN_FING_VIDEO_SSH_KEY: yup.string().required(),
-			OPEN_FING_VIDEO_SSH_HOST: yup.string().required(),
-			OPEN_FING_VIDEO_SSH_USERNAME: yup.string().required(),
-		})
-		.required()
-		.validateSync(process.env, {
-			stripUnknown: true,
-		});
+	validatedData = validateEnv({
+		OPEN_FING_VIDEO_SSH_KEY: yup.string().required(),
+		OPEN_FING_VIDEO_SSH_HOST: yup.string().required(),
+		OPEN_FING_VIDEO_SSH_USERNAME: yup.string().required(),
+	});
 } catch {}
 
 export const openFingVideoSftpConfig = {

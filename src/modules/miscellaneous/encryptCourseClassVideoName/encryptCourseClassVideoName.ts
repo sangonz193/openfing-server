@@ -1,9 +1,9 @@
 import { spawn } from "promisify-child-process";
 
-import { appConfig } from "../../../config/app.config";
+import { courseClassVideoNameEncryption } from "./courseClassVideoNameEncryption.config";
 
 export const encryptCourseClassVideoName = async (name: string): Promise<string | null> => {
-	const { disabledCourseClassVideoEncryptionKey } = appConfig;
+	const { disabledCourseClassVideoEncryptionKey } = courseClassVideoNameEncryption;
 	if (!disabledCourseClassVideoEncryptionKey) {
 		return null;
 	}

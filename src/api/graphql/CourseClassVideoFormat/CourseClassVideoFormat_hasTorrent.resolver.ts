@@ -1,7 +1,7 @@
-import { hasTorrent } from "../_utils/hasTorrent";
+import { videoUrlHasTorrent } from "../../../modules/miscellaneous/videoUrlHasTorrent";
 import { Resolvers } from "../schemas.types";
 
 const resolver: Resolvers["CourseClassVideoFormat"]["hasTorrent"] = async (parent) =>
-	!!parent.url && (await hasTorrent({ url: parent.url }));
+	!!parent.url && (await videoUrlHasTorrent(parent.url));
 
 export default resolver;

@@ -9,7 +9,6 @@ const validatedEnv = validateEnv({
 	PORT: yup.number().required().integer(),
 	FILES_PATH: yup.string().required().min(1),
 	FILES_URL: yup.string().required().min(1),
-	DISABLED_COURSE_CLASS_VIDEO_ENCRYPTION_KEY: yup.string().notRequired(),
 });
 
 const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets");
@@ -21,8 +20,6 @@ const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons");
 export const appConfig = {
 	host: validatedEnv.HOST,
 	port: validatedEnv.PORT,
-
-	disabledCourseClassVideoEncryptionKey: validatedEnv.DISABLED_COURSE_CLASS_VIDEO_ENCRYPTION_KEY,
 
 	assets: {
 		defaultCourseIcon: {

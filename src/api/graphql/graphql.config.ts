@@ -7,5 +7,5 @@ const validatedEnv = validateEnv({
 });
 
 export const graphqlConfig = {
-	path: validatedEnv.GRAPHQL_PATH.startsWith("/") ? validatedEnv.GRAPHQL_PATH : `/${validatedEnv.GRAPHQL_PATH}`,
+	path: validatedEnv.GRAPHQL_PATH.replace(/^([^\/])/, "$1/"),
 };

@@ -1,6 +1,6 @@
 import SSH2Promise from "ssh2-promise";
 
-import { openFingVideoSftpConfig } from "../config/openFingVideoSftp.config";
+import { openFingVideoSftpConfig } from "./openFingVideoSftp.config";
 
 export const getOpenFingVideoSftpConnection = async () => {
 	const { connectionOptions } = openFingVideoSftpConfig;

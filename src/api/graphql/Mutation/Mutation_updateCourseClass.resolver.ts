@@ -3,11 +3,11 @@ import path from "path";
 import SFTP from "ssh2-promise/dist/sftp";
 import * as yup from "yup";
 
-import { getOpenFingVideoSftpConnection } from "../../../_helpers/getOpenFingVideoSftpConnection";
 import { CourseClassVideoRow } from "../../../database/CourseClassVideo/CourseClassVideo.entity.types";
 import { CourseClassVideoFormatRow } from "../../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
+import { getCourseClassVideoFileName } from "../../../modules/miscellaneous/getCourseClassVideoFileName";
+import { getOpenFingVideoSftpConnection } from "../../../modules/openfing-video-connection/getOpenFingVideoSftpConnection";
 import { getCourseClassFromRef } from "../_utils/getCourseClassFromRef";
-import { getCourseClassVideoFileName } from "../_utils/getCourseClassVideoFileName";
 import { getDbCommonVisibilityValue } from "../_utils/getDbCommonVisibilityValue";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
 import { getAuthenticationErrorParent } from "../AuthenticationError/AuthenticationError.parent";

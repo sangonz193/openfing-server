@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
-import { getResolutionFromVideoUrl } from "../../../_helpers/getResolutionFromVideoUrl";
 import { SafeOmit } from "../../../_utils/SafeOmit";
 import { backupDb } from "../../../modules/backup-db/backupDb";
+import { getResolutionFromVideoUrl } from "../../../modules/miscellaneous/getResolutionFromVideoUrl";
 import { getCourseClassListFromRef } from "../_utils/getCourseClassListFromRef";
 import { getDbCommonVisibilityValue } from "../_utils/getDbCommonVisibilityValue";
 import { getUserFromSecret } from "../_utils/getUserFromSecret";
