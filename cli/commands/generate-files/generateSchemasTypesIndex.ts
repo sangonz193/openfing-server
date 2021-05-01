@@ -2,6 +2,7 @@ import { executeCodegen } from "@graphql-codegen/cli";
 import * as typescriptPlugin from "@graphql-codegen/typescript";
 import * as typescriptResolversPlugin from "@graphql-codegen/typescript-resolvers";
 import { GraphQLSchema, printSchema } from "graphql";
+import identity from "lodash/identity";
 import path from "path";
 
 import { fs } from "../../../src/_utils/fs";
@@ -44,10 +45,13 @@ export const generateSchemasTypesIndex = async (schema: GraphQLSchema) => {
 			[typesFilePath]: {
 				plugins: [
 					{
-						typescript: {
+						typescript: identity<typescriptPlugin.TypeScriptPluginConfig>({
 							nonOptionalTypename: true,
 							enumsAsTypes: true,
-						},
+							scalars: {
+								ISODate: "Date",
+							},
+						}),
 					},
 					{
 						typescriptResolvers: {

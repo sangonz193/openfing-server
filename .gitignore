@@ -105,11 +105,10 @@ dist
 
 .DS_Store
 
+.gitignore
+
 # IDEs
 .vscode
-
-# Docker database
-docker/db-data
 
 # 
 # Auto-generated files

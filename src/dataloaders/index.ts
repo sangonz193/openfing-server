@@ -1,3 +1,8 @@
+import DataLoader from "dataloader";
+import { Connection } from "typeorm";
+
+import { CourseClassLiveStateRow } from "../database/CourseClassLiveState/CourseClassLiveState.entity.types";
+import { findCourseClassLiveStateByCourseClassIdBatch } from "../database/CourseClassLiveState/findCourseClassLiveStateByCourseClassId";
 import { Repositories } from "../database/repositories";
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
@@ -28,9 +33,10 @@ export type DataLoaders = {
 	courseClassList: CourseClassListDataLoader;
 	courseEdition: CourseEditionDataLoader;
 	user: UserDataLoader;
+	courseClassLiveStateByCourseClassId: DataLoader<string, CourseClassLiveStateRow | null>;
 };
 
-export const getDataLoaders = (repositories: Repositories) => ({
+export const getDataLoaders = (repositories: Repositories, connection: Connection): DataLoaders => ({
 	course: getCourseDataLoader(repositories.course),
 	courseClass: getCourseClassDataLoader(repositories.courseClass),
 	courseClassChapterCue: getCourseClassChapterCueDataLoader(repositories.courseClassChapterCue),
@@ -40,4 +46,7 @@ export const getDataLoaders = (repositories: Repositories) => ({
 	courseClassList: getCourseClassListDataLoader(repositories.courseClassList),
 	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
 	user: getUserDataLoader(repositories.user),
+	courseClassLiveStateByCourseClassId: new DataLoader((courseClassIds) =>
+		findCourseClassLiveStateByCourseClassIdBatch(connection, [...courseClassIds])
+	),
 });
