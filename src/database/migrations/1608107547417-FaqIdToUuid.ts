@@ -27,7 +27,7 @@ export class FaqIdToUuid1608107547417 implements MigrationInterface {
 					id: getUuid(),
 					_id: row._id,
 				};
-				await queryRunner.query(`UPDATE ${tableName} SET id = '${newRow.id}' where _id = ${newRow._id}`, []);
+				await queryRunner.query(`UPDATE ${tableName} SET id = '${newRow.id}' where _id = '${newRow._id}'`, []);
 			})
 		);
 

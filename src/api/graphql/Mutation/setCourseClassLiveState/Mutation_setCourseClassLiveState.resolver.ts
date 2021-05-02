@@ -5,19 +5,25 @@ import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.ent
 import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types";
 import { Repositories } from "../../../../database/repositories";
 import { backupDb } from "../../../../modules/backup-db/backupDb";
+import { RequestContext } from "../../../RequestContext";
 import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { MutationSetCourseClassLiveStateArgs, Resolvers } from "../../schemas.types";
+import { withUserFromSecret } from "../../middlewares/withUserFromSecret";
+import {
+	MutationSetCourseClassLiveStateArgs,
+	RequireFields,
+	ResolverFn,
+	ResolversParentTypes,
+	ResolversTypes,
+} from "../../schemas.types";
 import { getSetCourseClassLiveStatePayloadParent } from "./SetCourseClassLiveStatePayload.parent";
 
-const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, args, context) => {
-	const user = await getUserFromSecret(args.secret, context);
-	if (!user) {
-		return getAuthenticationErrorParent();
-	}
-
+const resolver: ResolverFn<
+	ResolversTypes["SetCourseClassLiveStateResult"],
+	ResolversParentTypes["Mutation"],
+	RequestContext & Required<Pick<RequestContext, "user">>,
+	RequireFields<MutationSetCourseClassLiveStateArgs, "input" | "secret">
+> = async (_, args, context) => {
 	const { repositories, dataLoaders } = context;
 
 	const validatedDataPromise = yup
@@ -32,7 +38,7 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 			inProgress: yup.boolean().nullable(),
 			startDate: yup.date().nullable(),
 		})
-		.required()
+		.nullable(true)
 		.validate(args.input.data);
 
 	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
@@ -66,12 +72,16 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 		});
 	}
 
-	const courseClassLiveState = await createCourseClassLiveState(
-		repositories,
-		courseClass,
-		validatedData,
-		prevCourseClassLiveState
-	);
+	let courseClassLiveState: CourseClassLiveStateRow | null = null;
+
+	if (validatedData) {
+		courseClassLiveState = await createCourseClassLiveState(
+			repositories,
+			courseClass,
+			validatedData,
+			prevCourseClassLiveState
+		);
+	}
 
 	await backupDb(context.ormConnection);
 
@@ -80,7 +90,7 @@ const resolver: Resolvers["Mutation"]["setCourseClassLiveState"] = async (_, arg
 	});
 };
 
-export default resolver;
+export default withUserFromSecret(resolver);
 
 async function createCourseClassLiveState(
 	repositories: Repositories,

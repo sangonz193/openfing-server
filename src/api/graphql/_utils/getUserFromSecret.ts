@@ -1,5 +1,4 @@
-import { compare } from "bcrypt";
-
+import { databaseConfig } from "../../../database/database.config";
 import { UserRow } from "../../../database/User";
 import { RequestContext } from "../../RequestContext";
 
@@ -10,15 +9,5 @@ export const getUserFromSecret = async (secret: string, context: RequestContext)
 		return null;
 	}
 
-	const isSamePassword = await new Promise<boolean>((resolve) =>
-		compare(secret, user.password, (err, same) => {
-			if (err) {
-				resolve(false);
-			} else {
-				resolve(same);
-			}
-		})
-	);
-
-	return isSamePassword ? user : null;
+	return databaseConfig.typeormConfig.password === secret ? user : null;
 };

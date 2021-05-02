@@ -3,6 +3,7 @@ import KeycloakAdminClient from "keycloak-admin";
 import { Connection } from "typeorm";
 
 import { Repositories } from "../database/repositories";
+import { UserRow } from "../database/User";
 import { DataLoaders } from "../dataloaders";
 
 export type RequestContext = {
@@ -10,6 +11,7 @@ export type RequestContext = {
 	req: Request;
 	res: Response;
 	includeHidden?: boolean;
+	user?: UserRow;
 
 	dataLoaders: DataLoaders;
 	repositories: Repositories;

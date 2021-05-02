@@ -6,12 +6,12 @@ import {
 import { SetCourseClassLiveStatePayload } from "../../schemas.types";
 
 export type SetCourseClassLiveStatePayloadParent = Pick<Required<SetCourseClassLiveStatePayload>, "__typename"> & {
-	courseClassLiveState: CourseClassLiveStateParent;
+	courseClassLiveState: CourseClassLiveStateParent | null;
 };
 
 export const getSetCourseClassLiveStatePayloadParent = (payload: {
-	courseClassLiveState: CourseClassLiveStateRow;
+	courseClassLiveState: CourseClassLiveStateRow | null;
 }): SetCourseClassLiveStatePayloadParent => ({
 	__typename: "SetCourseClassLiveStatePayload",
-	courseClassLiveState: getCourseClassLiveStateParent(payload.courseClassLiveState),
+	courseClassLiveState: payload.courseClassLiveState && getCourseClassLiveStateParent(payload.courseClassLiveState),
 });

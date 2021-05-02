@@ -29,7 +29,7 @@ export class UserIdToUuid1608109356011 implements MigrationInterface {
 					_id: row._id,
 				};
 				idMap.set(newRow._id, newRow.id);
-				await queryRunner.query(`UPDATE ${tableName} SET id = '${newRow.id}' where _id = ${newRow._id}`, []);
+				await queryRunner.query(`UPDATE ${tableName} SET id = '${newRow.id}' where _id = '${newRow._id}'`);
 			})
 		);
 
@@ -69,7 +69,7 @@ export class UserIdToUuid1608109356011 implements MigrationInterface {
 						await Promise.all(
 							Array.from(idMap).map(async ([numberId, stringId]) => {
 								await queryRunner.query(
-									`UPDATE ${tableName} SET ${column} = '${stringId}' where _${column} = ${numberId}`
+									`UPDATE ${tableName} SET ${column} = '${stringId}' where _${column} = '${numberId}'`
 								);
 							})
 						);

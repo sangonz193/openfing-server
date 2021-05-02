@@ -3,22 +3,27 @@ import * as yup from "yup";
 import { SafeOmit } from "../../../../_utils/SafeOmit";
 import { backupDb } from "../../../../modules/backup-db/backupDb";
 import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl";
+import { RequestContext } from "../../../RequestContext";
 import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef";
 import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { MutationCreateCourseClassArgs, Resolvers } from "../../schemas.types";
+import { withUserFromSecret } from "../../middlewares/withUserFromSecret";
+import {
+	MutationCreateCourseClassArgs,
+	RequireFields,
+	ResolverFn,
+	ResolversParentTypes,
+	ResolversTypes,
+} from "../../schemas.types";
 import { getCreateCourseClassPayloadParent } from "./CreateCourseClassPayload.parent";
 
-const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, context) => {
-	const user = await getUserFromSecret(args.secret, context);
-
-	if (!user) {
-		return getAuthenticationErrorParent();
-	}
-
-	const { dataLoaders, repositories } = context;
+const resolver: ResolverFn<
+	ResolversTypes["CreateCourseClassResult"],
+	ResolversParentTypes["Mutation"],
+	RequestContext & Required<Pick<RequestContext, "user">>,
+	RequireFields<MutationCreateCourseClassArgs, "input" | "secret">
+> = async (_, args, context) => {
+	const { dataLoaders, repositories, user } = context;
 
 	const validatedDataPromise = yup
 		.object<yup.SchemaOf<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>["fields"]>({
@@ -168,4 +173,4 @@ const resolver: Resolvers["Mutation"]["createCourseClass"] = async (_, args, con
 	});
 };
 
-export default resolver;
+export default withUserFromSecret(resolver);

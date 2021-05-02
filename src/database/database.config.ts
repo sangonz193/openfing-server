@@ -27,7 +27,7 @@ export const databaseConfig: {
 		port: validatedEnv.DB_PORT,
 		username: validatedEnv.DB_USERNAME,
 		password: validatedEnv.DB_PASSWORD,
-		schema: "app",
+		schema: "openfing",
 		entities: Object.values(entities),
 		logging: !isProduction,
 		migrations: [isProduction ? "dist/database/migrations/*.js" : "src/database/migrations/*.ts"],

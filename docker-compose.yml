@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: "${DB_USERNAME}"
       POSTGRES_DB: "${DB_NAME}"
     volumes:
-      - ./docker/db-data:/var/lib/postgresql/data
+      - ./docker/db-data-gitignore:/var/lib/postgresql/data
       - ./docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     networks:
       - server
@@ -35,4 +35,4 @@ services:
 
 networks: 
   server:
-    name: server
+    name: openfing-server
