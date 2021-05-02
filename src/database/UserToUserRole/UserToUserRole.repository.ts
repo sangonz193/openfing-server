@@ -1,6 +1,5 @@
 import { Connection } from "typeorm";
 
-import { getUuid } from "../../_utils/getUuid";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { userToUserRoleEntitySchema } from "./UserToUserRole.entity";
 import { UserToUserRoleRepository } from "./UserToUserRole.repository.types";
@@ -10,11 +9,6 @@ export const getUserToUserRoleRepository = (connection: Connection): UserToUserR
 
 	return {
 		findAll: () => repo.find(),
-
-		create: (data) => ({
-			...data,
-			id: data.id ?? getUuid(),
-		}),
 
 		save: (data) => repo.save(data),
 	};

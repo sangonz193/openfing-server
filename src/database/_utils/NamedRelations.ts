@@ -1,4 +1,5 @@
-import { UnionToIntersection } from "../../_utils/UnionToIntersection";
+import { UnionToIntersection } from "@sangonz193/utils/UnionToIntersection";
+
 import { UnidirectionalRelation } from "./UnidirectionalRelation";
 
 export type NamedRelations<TRelations extends { [k: string]: UnidirectionalRelation<any> } = {}> = UnionToIntersection<

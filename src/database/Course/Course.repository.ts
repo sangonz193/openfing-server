@@ -1,9 +1,9 @@
+import { getUuid } from "@sangonz193/utils/getUuid";
+import { hasProperty } from "@sangonz193/utils/hasProperty";
 import identity from "lodash/identity";
 import omitBy from "lodash/omitBy";
 import { Brackets, Connection } from "typeorm";
 
-import { getUuid } from "../../_utils/getUuid";
-import { hasProperty } from "../../_utils/hasProperty";
 import { createUpdate } from "../_utils/createUpdate";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { courseColumns, courseEntitySchema } from "./Course.entity";

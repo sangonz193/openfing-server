@@ -1,4 +1,5 @@
-import { identityMap } from "../../_utils/identityMap";
+import { identityMap } from "@sangonz193/utils/identityMap";
+
 import { ColumnsOptions } from "../_utils/ColumnsOptions";
 import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import { RelationsOptions } from "../_utils/RelationsOptions";

@@ -1,6 +1,6 @@
+import { wait } from "@sangonz193/utils/wait";
 import { Connection, createConnection } from "typeorm";
 
-import { wait } from "../_utils/wait";
 import { databaseConfig } from "./database.config";
 
 export const getOrmConnection = async (): Promise<Connection> => {

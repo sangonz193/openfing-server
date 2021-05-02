@@ -1,6 +1,6 @@
+import { SafeExtract } from "@sangonz193/utils/SafeExtract";
 import { EntitySchemaColumnOptions } from "typeorm";
 
-import { SafeExtract } from "../../_utils/SafeExtract";
 import { Column, ColumnSqlTypeMap } from "./Column";
 
 export type ColumnOptions<TColumn extends Column<any>> = {

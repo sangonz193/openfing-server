@@ -1,4 +1,5 @@
-import { UnionToIntersection } from "../../_utils/UnionToIntersection";
+import { UnionToIntersection } from "@sangonz193/utils/UnionToIntersection";
+
 import { Column } from "./Column";
 
 export type NamedColumns<TColumns extends { [k: string]: Column<any> } = {}> = UnionToIntersection<

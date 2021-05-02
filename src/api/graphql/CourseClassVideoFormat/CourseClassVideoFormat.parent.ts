@@ -1,4 +1,4 @@
-import { SafeOmit } from "../../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { CourseClassVideoFormatRow } from "../../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
 import { CourseClassVideoFormat } from "../schemas.types";
 

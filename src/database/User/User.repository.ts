@@ -1,8 +1,8 @@
+import { getUuid } from "@sangonz193/utils/getUuid";
+import { hasProperty } from "@sangonz193/utils/hasProperty";
 import identity from "lodash/identity";
 import { Connection } from "typeorm";
 
-import { getUuid } from "../../_utils/getUuid";
-import { hasProperty } from "../../_utils/hasProperty";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { userColumns, userEntitySchema } from "./User.entity";
 import { UserRow } from "./User.entity.types";

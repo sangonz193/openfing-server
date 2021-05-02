@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { SafeOmit } from "../../../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { backupDb } from "../../../../modules/backup-db/backupDb";
 import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl";
 import { RequestContext } from "../../../RequestContext";

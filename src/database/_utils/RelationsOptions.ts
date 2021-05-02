@@ -1,4 +1,5 @@
-import { UnionToIntersection } from "../../_utils/UnionToIntersection";
+import { UnionToIntersection } from "@sangonz193/utils/UnionToIntersection";
+
 import { NamedRelations } from "./NamedRelations";
 import { RelationOptions } from "./RelationOptions";
 

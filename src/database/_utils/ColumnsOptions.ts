@@ -1,4 +1,5 @@
-import { UnionToIntersection } from "../../_utils/UnionToIntersection";
+import { UnionToIntersection } from "@sangonz193/utils/UnionToIntersection";
+
 import { ColumnOptions } from "./ColumnOptions";
 import { NamedColumns } from "./NamedColumns";
 

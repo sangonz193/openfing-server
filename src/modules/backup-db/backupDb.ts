@@ -1,10 +1,10 @@
+import { _fs } from "@sangonz193/utils/node/fs";
 import path from "path";
 import { Pool } from "pg";
 import { to as copyTo } from "pg-copy-streams";
 import simpleGit from "simple-git";
 import { Connection } from "typeorm";
 
-import { _fs } from "../../_utils/fs";
 import { databaseConfig } from "../../database/database.config";
 import { entities } from "../../database/entities";
 import { backupConfig } from "./backupDb.config";

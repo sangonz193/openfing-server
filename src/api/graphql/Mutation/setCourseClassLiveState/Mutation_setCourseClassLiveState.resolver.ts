@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { SafeOmit } from "../../../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types";
 import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types";
 import { Repositories } from "../../../../database/repositories";

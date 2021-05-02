@@ -1,9 +1,9 @@
+import { fs } from "@sangonz193/utils/node/fs";
+import { fsExists } from "@sangonz193/utils/node/fsExists";
 import path from "path";
 import { spawn } from "promisify-child-process";
 import { CommandModule } from "yargs";
 
-import { fs } from "../../../src/_utils/fs";
-import { fsExists } from "../../_utils/fsExists";
 import { projectPath } from "../../_utils/projectPath";
 
 const command: CommandModule<{}, {}> = {

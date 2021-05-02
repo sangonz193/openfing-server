@@ -1,10 +1,10 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import path from "path";
 import SSH2Promise from "ssh2-promise";
 import { CommandModule } from "yargs";
 import * as yup from "yup";
 
-import { fs } from "../../../src/_utils/fs";
 import { projectPath } from "../../_utils/projectPath";
 import { uploadRecursive } from "../../_utils/uploadRecursive";
 

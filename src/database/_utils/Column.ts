@@ -1,7 +1,7 @@
+import { SafeExtract } from "@sangonz193/utils/SafeExtract";
 import { ColumnType } from "typeorm";
 
 import { ExtendsTOrT } from "../../_utils/ExtendsTOrT";
-import { SafeExtract } from "../../_utils/SafeExtract";
 
 export type ColumnSqlTypeMap = {
 	[K in SafeExtract<ColumnType, "varchar" | "text" | "uuid">]: string;

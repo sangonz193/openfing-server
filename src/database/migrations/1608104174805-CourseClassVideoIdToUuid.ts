@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
-import { getUuid } from "../../_utils/getUuid";
+import { getUuid } from "@sangonz193/utils/getUuid";
 
 export class CourseClassVideoIdToUuid1608104174805 implements MigrationInterface {
 	public async up(queryRunner: QueryRunner): Promise<void> {

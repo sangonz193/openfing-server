@@ -5,7 +5,7 @@ import { GraphQLSchema, printSchema } from "graphql";
 import identity from "lodash/identity";
 import path from "path";
 
-import { fs } from "../../../src/_utils/fs";
+import { fs } from "@sangonz193/utils/node/fs";
 import { projectPath } from "../../_utils/projectPath";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
@@ -86,10 +86,7 @@ export const generateSchemasTypesIndex = async (schema: GraphQLSchema) => {
 							result.filename,
 							path.resolve(projectPath, "src", "_utils", "OptionalUndefinedKeys.ts")
 						)}";\n` +
-						`import { SafeOmit } from "${getImportPath(
-							result.filename,
-							path.resolve(projectPath, "src", "_utils", "SafeOmit.ts")
-						)}";\n` +
+						`import { SafeOmit } from "@sangonz193/utils/SafeOmit";\n` +
 						result.content.replace(/\bResolvers\b/g, "_Resolvers") +
 						`\n` +
 						`export type ResolversByParent<TResolvers, TParent> = OptionalUndefinedKeys<

@@ -1,4 +1,4 @@
-import { SafeOmit } from "../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { FaqEntitySchema, FaqRow } from "../../database/Faq/Faq.entity.types";
 import { TypedRepository } from "../_utils/TypedRepository";
 

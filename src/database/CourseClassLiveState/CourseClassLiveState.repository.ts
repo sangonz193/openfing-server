@@ -1,6 +1,6 @@
 import { Connection } from "typeorm";
 
-import { SafeOmit } from "../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import {
 	deleteCourseClassLiveStateByCourseClassId,
 	DeleteCourseClassLiveStateByCourseClassIdOptions,

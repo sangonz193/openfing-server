@@ -1,4 +1,4 @@
-import { SafeOmit } from "../../_utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { TypedRepository } from "../_utils/TypedRepository";
 import { CourseRow } from "../Course/Course.entity.types";
 import { CourseEditionEntitySchema, CourseEditionRow } from "./CourseEdition.entity.types";

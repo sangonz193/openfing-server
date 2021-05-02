@@ -1,6 +1,6 @@
 import { Connection } from "typeorm";
 
-import { getUuid } from "../../_utils/getUuid";
+import { getUuid } from "@sangonz193/utils/getUuid";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { faqColumns, faqEntitySchema } from ".";
 import { FaqEntitySchema } from "./Faq.entity.types";

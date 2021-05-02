@@ -66,6 +66,7 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.12.18",
+		"@sangonz193/utils": "^1.0.3",
 		"apollo-errors": "^1.9.0",
 		"apollo-server-core": "^2.21.0",
 		"apollo-server-express": "^2.21.0",

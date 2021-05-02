@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 
-import { _fs } from "./fs";
+import { _fs } from "@sangonz193/utils/node/fs";
 import { projectPath } from "./projectPath";
 
 const envFilePath = path.resolve(projectPath, ".env");

@@ -1,7 +1,6 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import path from "path";
 import yargs, { CommandModule } from "yargs";
-
-import { fs } from "../src/_utils/fs";
 
 const run = async () => {
 	const commands: Array<CommandModule<unknown, unknown>> = [];
