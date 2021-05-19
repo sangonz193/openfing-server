@@ -1,3 +1,4 @@
+import identity from "lodash/identity";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import * as yup from "yup";
 
@@ -21,17 +22,16 @@ try {
 	});
 } catch {}
 
-export const nodemailerConfig: {
-	transportOptions: SMTPTransport.Options | undefined;
-} = {
-	transportOptions: validatedData
-		? {
+export const nodemailerConfig = validatedData
+	? {
+			emailAddress: validatedData.NODEMAILER_USERNAME,
+			transportOptions: identity<SMTPTransport.Options>({
 				host: validatedData.NODEMAILER_HOST,
 				port: validatedData.NODEMAILER_PORT,
 				auth: {
 					user: validatedData.NODEMAILER_USERNAME,
 					pass: validatedData.NODEMAILER_PASSWORD,
 				},
-		  }
-		: undefined,
-};
+			}),
+	  }
+	: {};

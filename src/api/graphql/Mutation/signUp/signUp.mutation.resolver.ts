@@ -54,7 +54,6 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 
 	transporter
 		?.sendMail({
-			from: '"Santiago González" <santiago.g.19@hotmail.com>',
 			to: user.email, // list of receivers
 			subject: "Registro de usuario OpenFING", // Subject line
 			text: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita ${validationUrl}`,
