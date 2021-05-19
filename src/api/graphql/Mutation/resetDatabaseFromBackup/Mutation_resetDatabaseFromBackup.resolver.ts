@@ -1,8 +1,8 @@
+import { _fs } from "@sangonz193/utils/node/fs";
 import path from "path";
 import { Pool } from "pg";
 import { from as copyFrom } from "pg-copy-streams";
 
-import { _fs } from "@sangonz193/utils/node/fs";
 import { databaseConfig } from "../../../../database/database.config";
 import { entities } from "../../../../database/entities";
 import { backupConfig } from "../../../../modules/backup-db/backupDb.config";

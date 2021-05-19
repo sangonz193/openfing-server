@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { UserRow } from "./User.entity.types";
 
 export type UserFindOneOptions =

@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { CourseClassChapterCueRow } from "../../../database/CourseClassChapterCue/CourseClassChapterCue.entity.types";
 import { CourseClassChapterCue } from "../schemas.types";
 

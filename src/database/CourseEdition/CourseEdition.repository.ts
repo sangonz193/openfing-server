@@ -1,7 +1,7 @@
+import { getUuid } from "@sangonz193/utils/getUuid";
 import identity from "lodash/identity";
 import { Connection } from "typeorm";
 
-import { getUuid } from "@sangonz193/utils/getUuid";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { courseEditionColumns, courseEditionEntitySchema } from "./CourseEdition.entity";
 import { CourseEditionRow } from "./CourseEdition.entity.types";

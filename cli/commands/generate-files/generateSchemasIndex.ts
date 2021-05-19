@@ -1,6 +1,6 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import path from "path";
 
-import { fs } from "@sangonz193/utils/node/fs";
 import { projectPath } from "../../../src/_utils/projectPath";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
