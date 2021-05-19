@@ -1,0 +1,30 @@
+import path from "path";
+import urlJoin from "url-join";
+import * as yup from "yup";
+
+import { validateEnv } from "../_utils/validateEnv";
+
+const validatedEnv = validateEnv({
+	HOST: yup.string().default("localhost").required(),
+	PORT: yup.number().required().integer(),
+	FILES_PATH: yup.string().required().min(1),
+	FILES_URL: yup.string().required().min(1),
+});
+
+const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets");
+const ASSETS_URL = urlJoin(validatedEnv.FILES_URL, "assets");
+
+const COURSE_ICONS_PATH = path.join(ASSETS_PATH, "course-icons");
+const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons");
+
+export const appConfig = {
+	host: validatedEnv.HOST,
+	port: validatedEnv.PORT,
+
+	assets: {
+		defaultCourseIcon: {
+			path: path.join(COURSE_ICONS_PATH, "default-icon.svg"),
+			url: urlJoin(COURSE_ICONS_URL, "default-icon.svg"),
+		},
+	},
+};

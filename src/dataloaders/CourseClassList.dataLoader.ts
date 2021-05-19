@@ -1,10 +1,10 @@
 import DataLoader from "dataloader";
 
-import { CourseClassListRow } from "../entities/CourseClassList/CourseClassList.entity.types";
+import { CourseClassListRow } from "../database/CourseClassList/CourseClassList.entity.types";
 import {
 	CourseClassListFindOneOptions,
 	CourseClassListRepository,
-} from "../repositories/CourseClassList/CourseClassList.repository.types";
+} from "../database/CourseClassList/CourseClassList.repository.types";
 
 export type CourseClassListDataLoader = DataLoader<CourseClassListFindOneOptions, CourseClassListRow | null>;
 

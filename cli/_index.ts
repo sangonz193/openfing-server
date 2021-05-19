@@ -1,20 +1,32 @@
+import { fs } from "@sangonz193/utils/node/fs";
+import { fsExists } from "@sangonz193/utils/node/fsExists";
+import chalk from "chalk";
+import dotenv from "dotenv";
 import path from "path";
-import { spawn } from "promisify-child-process";
+import semver from "semver";
 
-import { parseEnv } from "./_utils/parseEnv";
 import { projectPath } from "./_utils/projectPath";
 
-(async () => {
-	spawn(
-		path.resolve(projectPath, "node_modules", "node", "bin", "node"),
-		[
-			...["-r", path.resolve(projectPath, "cli", "_utils", "registerBabel.js")],
-			path.resolve(projectPath, "cli", "cli.ts"),
-			...process.argv.slice(2),
-		],
-		{
-			stdio: "inherit",
-			env: { ...process.env, ...(await parseEnv().catch(() => ({}))) },
-		}
-	).catch(() => null);
-})();
+const run = async () => {
+	const expectedNodeVersion = await fs.readFile(path.resolve(projectPath, ".nvmrc"), "utf-8");
+
+	if (!semver.satisfies(process.version, expectedNodeVersion)) {
+		throw new Error(
+			`The current node version does not satisfy the expected node version: "${expectedNodeVersion}". Current node version: ${process.version}`
+		);
+	}
+
+	const envFilePath = path.resolve(projectPath, ".env");
+
+	if (await fsExists(envFilePath)) {
+		dotenv.config({
+			path: envFilePath,
+		});
+	} else {
+		console.log(chalk.yellow(`Env file not found: .env\nSkipping env config.`));
+	}
+
+	require("./cli");
+};
+
+run();

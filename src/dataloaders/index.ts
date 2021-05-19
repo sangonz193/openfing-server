@@ -1,9 +1,10 @@
-import DataLoader from "dataloader";
 import { Connection } from "typeorm";
 
-import { CourseClassLiveStateRow } from "../entities/CourseClassLiveState/CourseClassLiveState.entity.types";
-import { findCourseClassLiveStateByCourseClassIdBatch } from "../entities/CourseClassLiveState/findCourseClassLiveStateByCourseClassId";
-import { Repositories } from "../repositories";
+import {
+	CourseClassLiveStateDataLoader,
+	getCourseClassLiveStateDataLoader,
+} from "../database/CourseClassLiveState/CourseClassLiveState.dataLoader";
+import { Repositories } from "../database/repositories";
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
 import {
@@ -27,26 +28,24 @@ export type DataLoaders = {
 	course: CourseDataLoader;
 	courseClass: CourseClassDataLoader;
 	courseClassChapterCue: CourseClassChapterCueDataLoader;
+	courseClassList: CourseClassListDataLoader;
+	courseClassLiveState: CourseClassLiveStateDataLoader;
 	courseClassVideo: CourseClassVideoDataLoader;
 	courseClassVideoFormat: CourseClassVideoFormatDataLoader;
 	courseClassVideoQuality: CourseClassVideoQualityDataLoader;
-	courseClassList: CourseClassListDataLoader;
 	courseEdition: CourseEditionDataLoader;
 	user: UserDataLoader;
-	courseClassLiveStateByCourseClassId: DataLoader<string, CourseClassLiveStateRow | null>;
 };
 
 export const getDataLoaders = (repositories: Repositories, connection: Connection): DataLoaders => ({
 	course: getCourseDataLoader(repositories.course),
 	courseClass: getCourseClassDataLoader(repositories.courseClass),
 	courseClassChapterCue: getCourseClassChapterCueDataLoader(repositories.courseClassChapterCue),
+	courseClassList: getCourseClassListDataLoader(repositories.courseClassList),
+	courseClassLiveState: getCourseClassLiveStateDataLoader(connection),
 	courseClassVideo: getCourseClassVideoDataLoader(repositories.courseClassVideo),
 	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(repositories.courseClassVideoFormat),
 	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(repositories.courseClassVideoQuality),
-	courseClassList: getCourseClassListDataLoader(repositories.courseClassList),
 	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
 	user: getUserDataLoader(repositories.user),
-	courseClassLiveStateByCourseClassId: new DataLoader((courseClassIds) =>
-		findCourseClassLiveStateByCourseClassIdBatch(connection, [...courseClassIds])
-	),
 });

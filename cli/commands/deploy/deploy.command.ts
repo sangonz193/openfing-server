@@ -1,10 +1,10 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import { ChildProcessWithoutNullStreams } from "child_process";
 import path from "path";
 import SSH2Promise from "ssh2-promise";
 import { CommandModule } from "yargs";
 import * as yup from "yup";
 
-import { fs } from "../../_utils/fs";
 import { projectPath } from "../../_utils/projectPath";
 import { uploadRecursive } from "../../_utils/uploadRecursive";
 
@@ -43,8 +43,9 @@ const command: CommandModule<{}, {}> = {
 				{
 					name: deployConfig.PM2_PROCESS_NAME,
 					script: "dist",
-					instances: "max",
-					exec_mode: "cluster",
+					// TODO: fix node version mismatch on production.
+					// instances: "max",
+					// exec_mode: "cluster",
 					interpreter: path.resolve(deployConfig.DESTINATION_PATH, "node_modules", ".bin", "node"),
 					max_restarts: 3,
 					min_uptime: "1m",
@@ -57,16 +58,30 @@ const command: CommandModule<{}, {}> = {
 		const pm2ConfigFilename = "pm2config.json";
 		const pm2ConfigPath = path.resolve(projectPath, pm2ConfigFilename);
 		await fs.writeFile(pm2ConfigPath, JSON.stringify(pm2Config, undefined, 2));
+		const projectItemsToUpload = (await fs.readdir(projectPath)).filter((projectItem) => {
+			if (projectItem.startsWith(".")) {
+				return [
+					".github",
+					".eslintignore",
+					".eslintrc.js",
+					".gitattributes",
+					".gitignore",
+					".nvmrc",
+					".prettierignore",
+					".prettierrc.js",
+				].includes(projectItem);
+			}
 
+			return !["node_modules", pm2ConfigFilename, ".vscode", "docker"].includes(projectItem);
+		});
 		const nodesToUpload: Array<string | { from: string; to: string }> = [
-			"dist",
-			"package.json",
-			"package-lock.json",
-			{ from: pm2ConfigPath, to: path.posix.resolve(deployConfig.DESTINATION_PATH, pm2ConfigFilename) },
+			...projectItemsToUpload.map((projectItem) => path.resolve(projectPath, projectItem)),
 		];
 
-		await ssh.exec(`rm -rfv ${path.posix.resolve(deployConfig.DESTINATION_PATH, "dist")}`);
-
+		await Promise.all([
+			ssh.exec(`rm -rfv ${path.posix.resolve(deployConfig.DESTINATION_PATH, "dist")}`),
+			ssh.exec(`rm -rfv ${path.posix.resolve(deployConfig.DESTINATION_PATH, "src")}`),
+		]);
 		await Promise.all(
 			nodesToUpload.map(async (nodeToUpload) => {
 				const pathToUpload = path.resolve(
@@ -94,9 +109,10 @@ const command: CommandModule<{}, {}> = {
 				command: `pm2 stop ${deployConfig.PM2_PROCESS_NAME} && pm2 delete ${deployConfig.PM2_PROCESS_NAME}`,
 				ignore: true,
 			},
+			`npm i node@15`,
 			`npx pm2 start ${pm2ConfigFilename}`,
-			`npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
-		])
+			// `npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
+		]) {
 			try {
 				console.log(`running`, command);
 				const commandSpawn: ChildProcessWithoutNullStreams = await ssh.spawn(
@@ -117,8 +133,11 @@ const command: CommandModule<{}, {}> = {
 			} catch (e) {
 				console.log(e.toString("utf8"));
 
-				if (typeof command === "string" || !command.ignore) throw e;
+				if (typeof command === "string" || !command.ignore) {
+					throw e;
+				}
 			}
+		}
 
 		console.log("- done");
 		ssh.close();

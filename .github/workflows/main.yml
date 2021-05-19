@@ -1,29 +1,34 @@
 name: CI
 
-on:
-  pull_request:
-    branches: [ master, develop ]
+on: push
 
 jobs:
-  code-analysis:
-    runs-on: ubuntu-latest
+    code-analysis:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
+        steps:
+            - uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm i
+            - name: Use Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "15.x"
 
-      - name: Generate files
-        run: node cli generate-files
+            - name: Install dependencies
+              run: |
+                  npm i -g npm@6
+                  npm i
 
-      - name: TypeScript check
-        run: npx tsc
+            - name: Generate files
+              run: node cli generate-files
 
-      - name: ESLint check
-        run: npx eslint . --max-warnings=0
+            - name: No changes to commit
+              run: |
+                  git status --porcelain
+                  [[ $(git status --porcelain) ]] && exit 1 || exit 0
+
+            - name: TypeScript check
+              run: npx tsc
+
+            - name: ESLint check
+              run: npx eslint . --max-warnings=0
