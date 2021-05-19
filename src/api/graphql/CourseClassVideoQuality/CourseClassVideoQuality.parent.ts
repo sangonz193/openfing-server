@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { CourseClassVideoQualityRow } from "../../../database/CourseClassVideoQuality/CourseClassVideoQuality.entity.types";
 import { CourseClassVideoQuality } from "../schemas.types";
 
