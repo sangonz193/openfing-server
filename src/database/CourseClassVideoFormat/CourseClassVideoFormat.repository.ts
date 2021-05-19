@@ -1,8 +1,8 @@
+import { getUuid } from "@sangonz193/utils/getUuid";
 import identity from "lodash/identity";
 import omitBy from "lodash/omitBy";
 import { Connection } from "typeorm";
 
-import { getUuid } from "@sangonz193/utils/getUuid";
 import { createUpdate } from "../_utils/createUpdate";
 import { getTypedRepository } from "../_utils/getTypedRepository";
 import { courseClassVideoFormatColumns, courseClassVideoFormatEntitySchema } from "./CourseClassVideoFormat.entity";

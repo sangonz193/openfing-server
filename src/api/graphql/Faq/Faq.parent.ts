@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { FaqRow } from "../../../database/Faq/Faq.entity.types";
 import { Faq } from "../schemas.types";
 

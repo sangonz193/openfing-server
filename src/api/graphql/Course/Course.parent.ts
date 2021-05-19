@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { CourseRow } from "../../../database/Course/Course.entity.types";
 import { Course } from "../schemas.types";
 

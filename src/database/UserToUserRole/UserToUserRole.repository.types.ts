@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { UserToUserRoleRow } from "../../database/UserToUserRole/UserToUserRole.entity.types";
 
 export type SaveUserToUserRoleData = UserToUserRoleRow;

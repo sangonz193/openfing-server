@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { TypedRepository } from "../_utils/TypedRepository";
 import { CourseClassChapterCueEntitySchema, CourseClassChapterCueRow } from "./CourseClassChapterCue.entity.types";
 

@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+
 import { UserRow } from "../User/User.entity.types";
 import { UserRoleRow } from "./UserRole.entity.types";
 
