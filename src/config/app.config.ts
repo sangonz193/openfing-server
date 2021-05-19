@@ -10,7 +10,7 @@ const validatedEnv = validateEnv({
 	PORT: yup.number().required().integer(),
 	FILES_PATH: yup.string().required().min(1),
 	FILES_URL: yup.string().required().min(1),
-	FRONTEND_URL: yup.string().required().min(1),
+	PUBLIC_URL: yup.string().required().min(1),
 });
 
 const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets");
@@ -32,5 +32,5 @@ export const appConfig = {
 
 	isProduction: isProduction,
 
-	frontEndUrl: validatedEnv.FRONTEND_URL.replace(/\/$/, ""),
+	publicUrl: validatedEnv.PUBLIC_URL.replace(/\/$/, ""),
 };

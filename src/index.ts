@@ -8,6 +8,7 @@ import cors from "cors";
 import express from "express";
 
 import { registerApolloServer } from "./api/graphql/registerApolloServer";
+import { registerRestEndpoints } from "./api/rest/registerRestEndpoints";
 import { appConfig } from "./config/app.config";
 import { getOrmConnection } from "./database/getOrmConnection";
 import { getRepositories } from "./database/repositories";
@@ -28,7 +29,14 @@ const run = async () => {
 	const repositories = getRepositories(ormConnection);
 
 	expressApp.use(cors());
-	await registerApolloServer({
+	registerApolloServer({
+		expressApp,
+		keycloakAdminClient,
+		ormConnection,
+		repositories,
+		keycloakConnect,
+	});
+	registerRestEndpoints({
 		expressApp,
 		keycloakAdminClient,
 		ormConnection,

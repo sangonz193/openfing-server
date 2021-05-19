@@ -47,15 +47,22 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 		return getGenericErrorParent();
 	}
 
+	const emailValidation = await context.repositories.emailValidation.insert({
+		data: {
+			user_id: user.id,
+			issued_at: new Date(),
+		},
+	});
+
 	const transporter = getNodemailerTransporter();
-	const validationUrl = `${appConfig.frontEndUrl}/validate-email?t=${encodeURIComponent(
-		createEmailValidationToken(user.id)
+	const validationUrl = `${appConfig.publicUrl}/rest/validate-email?t=${encodeURIComponent(
+		createEmailValidationToken(emailValidation.id)
 	)}`;
 
 	transporter
 		?.sendMail({
-			to: user.email, // list of receivers
-			subject: "Registro de usuario OpenFING", // Subject line
+			to: user.email,
+			subject: "Registro de usuario OpenFING",
 			text: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita ${validationUrl}`,
 			html: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita <a href="${validationUrl}">${validationUrl}</a>`,
 		})
