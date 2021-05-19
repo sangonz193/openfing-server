@@ -5,6 +5,8 @@ import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import { RelationsOptions } from "../_utils/RelationsOptions";
 import { UserRoleColumns, UserRoleEntitySchema, UserRoleRelations } from "./UserRole.entity.types";
 
+// TODO: delete
+
 export const UserRoleCode = identityMap<"admin" | "user">({
 	admin: 0,
 	user: 0,

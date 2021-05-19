@@ -1,4 +1,5 @@
 import { getCourseEditionParent } from "../../CourseEdition/CourseEdition.parent";
+import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent";
 import { Resolvers } from "../../schemas.types";
 
 const resolver: Resolvers["Query"]["courseEditionById"] = async (_, args, { dataLoaders }) => {
@@ -6,10 +7,7 @@ const resolver: Resolvers["Query"]["courseEditionById"] = async (_, args, { data
 
 	const courseEdition = await dataLoaders.courseEdition.load({ id });
 
-	return courseEdition ? getCourseEditionParent(courseEdition) : getNotFoundError();
+	return courseEdition ? getCourseEditionParent(courseEdition) : getNotFoundErrorParent();
 };
 
 export default resolver;
-function getNotFoundError(): any {
-	throw new Error("Function not implemented.");
-}

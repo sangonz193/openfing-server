@@ -7,6 +7,8 @@ import {
 	UserToUserRoleRelations,
 } from "./UserToUserRole.entity.types";
 
+// TODO: Delete
+
 export const userToUserRoleColumns: ColumnsOptions<UserToUserRoleColumns> = {
 	id: {
 		name: "id",
