@@ -72,22 +72,19 @@ const resolver: ResolverFn<
 		});
 	}
 
-	let courseClassLiveState: CourseClassLiveStateRow | null = null;
-
 	if (validatedData) {
-		courseClassLiveState = await createCourseClassLiveState(
+		const courseClassLiveState = await createCourseClassLiveState(
 			repositories,
 			courseClass,
 			validatedData,
 			prevCourseClassLiveState
 		);
+		await backupDb(context.ormConnection);
+
+		return getSetCourseClassLiveStatePayloadParent(courseClassLiveState);
 	}
 
-	await backupDb(context.ormConnection);
-
-	return getSetCourseClassLiveStatePayloadParent({
-		courseClassLiveState,
-	});
+	return getGenericErrorParent();
 };
 
 export default withUserFromSecret(resolver);
