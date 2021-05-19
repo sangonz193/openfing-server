@@ -4,6 +4,8 @@ import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
 import { RelationsOptions } from "../_utils/RelationsOptions";
 import { UserColumns, UserEntitySchema, UserRelations } from "./User.entity.types";
 
+// TODO: delete
+
 export const userColumns: ColumnsOptions<UserColumns> = {
 	id: {
 		name: "id",
