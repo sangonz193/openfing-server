@@ -1,7 +1,7 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import { fsExists } from "@sangonz193/utils/node/fsExists";
 import path from "path";
 
-import { fs } from "@sangonz193/utils/node/fs";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
 import { getImportPath } from "./_utils/getImportPath";

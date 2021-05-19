@@ -1,11 +1,11 @@
 import { executeCodegen } from "@graphql-codegen/cli";
 import * as typescriptPlugin from "@graphql-codegen/typescript";
 import * as typescriptResolversPlugin from "@graphql-codegen/typescript-resolvers";
+import { fs } from "@sangonz193/utils/node/fs";
 import { GraphQLSchema, printSchema } from "graphql";
 import identity from "lodash/identity";
 import path from "path";
 
-import { fs } from "@sangonz193/utils/node/fs";
 import { projectPath } from "../../_utils/projectPath";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
