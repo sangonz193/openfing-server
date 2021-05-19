@@ -15,6 +15,8 @@ import { getOrmConnection } from "../../../src/database/getOrmConnection";
 import { getUserRepository } from "../../../src/database/User";
 import { valueToCSV } from "./valueToCSV";
 
+// TODO: add keycloak seed data.
+
 const command: CommandModule<{}, {}> = {
 	command: "seed",
 

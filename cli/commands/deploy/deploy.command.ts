@@ -43,6 +43,7 @@ const command: CommandModule<{}, {}> = {
 				{
 					name: deployConfig.PM2_PROCESS_NAME,
 					script: "dist",
+					// TODO: fix node version mismatch on production.
 					// instances: "max",
 					// exec_mode: "cluster",
 					interpreter: path.resolve(deployConfig.DESTINATION_PATH, "node_modules", ".bin", "node"),
