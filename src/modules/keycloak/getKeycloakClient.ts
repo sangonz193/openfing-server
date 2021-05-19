@@ -24,8 +24,9 @@ export const getKeycloakClient = async (): Promise<KeycloakAdminClient> => {
 		});
 	}
 
-	return new KeycloakAdminClient({
-		baseUrl,
+	adminClient.setConfig({
 		realmName: keycloakConfig.realm,
 	});
+
+	return adminClient;
 };
