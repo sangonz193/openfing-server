@@ -1,6 +1,6 @@
+import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import * as yup from "yup";
 
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
 import { backupDb } from "../../../../modules/backup-db/backupDb";
 import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl";
 import { RequestContext } from "../../../RequestContext";
@@ -82,7 +82,7 @@ const resolver: ResolverFn<
 	// TODO: necessary?
 	dataLoaders.courseClass.clearAll();
 
-	await backupDb(context.ormConnection);
+	await backupDb();
 
 	const baseVideoUrl = courseClassList.code
 		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${

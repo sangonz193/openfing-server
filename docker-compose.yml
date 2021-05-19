@@ -23,7 +23,7 @@ services:
       DB_ADDR: db
       DB_USER: "${DB_USERNAME}"
       DB_PORT: 5432
-      DB_DATABASE: keycloak
+      DB_DATABASE: "${KEYCLOAK_DB_NAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
     networks:
       - server
