@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import KeycloakAdminClient from "keycloak-admin";
+import KeycloakConnect from "keycloak-connect";
 import { Connection } from "typeorm";
 
 import { Repositories } from "../database/repositories";
@@ -15,5 +16,6 @@ export type RequestContext = {
 
 	dataLoaders: DataLoaders;
 	repositories: Repositories;
-	keycloak: KeycloakAdminClient;
+	keycloakAdminClient: KeycloakAdminClient;
+	keycloakConnect: KeycloakConnect.Keycloak;
 };

@@ -3,12 +3,14 @@ import urlJoin from "url-join";
 import * as yup from "yup";
 
 import { validateEnv } from "../_utils/validateEnv";
+import { isProduction } from "./isProduction.config";
 
 const validatedEnv = validateEnv({
 	HOST: yup.string().default("localhost").required(),
 	PORT: yup.number().required().integer(),
 	FILES_PATH: yup.string().required().min(1),
 	FILES_URL: yup.string().required().min(1),
+	FRONTEND_URL: yup.string().required().min(1),
 });
 
 const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets");
@@ -27,4 +29,8 @@ export const appConfig = {
 			url: urlJoin(COURSE_ICONS_URL, "default-icon.svg"),
 		},
 	},
+
+	isProduction: isProduction,
+
+	frontEndUrl: validatedEnv.FRONTEND_URL.replace(/\/$/, ""),
 };

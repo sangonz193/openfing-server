@@ -11,15 +11,17 @@ import { registerApolloServer } from "./api/graphql/registerApolloServer";
 import { appConfig } from "./config/app.config";
 import { getOrmConnection } from "./database/getOrmConnection";
 import { getRepositories } from "./database/repositories";
-import { getKeycloakClient } from "./modules/keycloak/getKeycloakClient";
+import { getKeycloakAdminClient } from "./modules/keycloak/getKeycloakAdminClient";
+import { getKeycloakConnect } from "./modules/keycloak/getKeycloakConnect";
 
 const run = async () => {
-	const [ormConnection, keycloakAdminClient] = await Promise.all([
+	const [ormConnection, keycloakAdminClient, keycloakConnect] = await Promise.all([
 		getOrmConnection().then(async (connection) => {
 			await connection.runMigrations();
 			return connection;
 		}),
-		getKeycloakClient(),
+		getKeycloakAdminClient(),
+		getKeycloakConnect(),
 	]);
 
 	const expressApp = express();
@@ -31,6 +33,7 @@ const run = async () => {
 		keycloakAdminClient,
 		ormConnection,
 		repositories,
+		keycloakConnect,
 	});
 
 	const server = expressApp.listen(

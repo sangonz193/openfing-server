@@ -2,17 +2,16 @@ import KeycloakAdminClient from "keycloak-admin";
 
 import { keycloakConfig } from "./keycloak.config";
 
-export const getKeycloakClient = async (): Promise<KeycloakAdminClient> => {
-	const baseUrl = `http://localhost:${keycloakConfig.port}/auth`;
+export const getKeycloakAdminClient = async (): Promise<KeycloakAdminClient> => {
 	const adminClient = new KeycloakAdminClient({
-		baseUrl,
+		baseUrl: keycloakConfig.serverUrl,
 	});
 
 	await adminClient.auth({
 		username: keycloakConfig.username,
 		password: keycloakConfig.password,
 		grantType: "password",
-		clientId: "admin-cli",
+		clientId: keycloakConfig.clientId,
 	});
 
 	const allRealms = await adminClient.realms.find();
@@ -24,8 +23,9 @@ export const getKeycloakClient = async (): Promise<KeycloakAdminClient> => {
 		});
 	}
 
-	return new KeycloakAdminClient({
-		baseUrl,
+	adminClient.setConfig({
 		realmName: keycloakConfig.realm,
 	});
+
+	return adminClient;
 };

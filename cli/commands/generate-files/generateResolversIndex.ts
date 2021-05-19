@@ -1,3 +1,4 @@
+import { fs } from "@sangonz193/utils/node/fs";
 import { fsExists } from "@sangonz193/utils/node/fsExists";
 import {
 	GraphQLEnumType,
@@ -9,7 +10,6 @@ import {
 } from "graphql";
 import path from "path";
 
-import { fs } from "@sangonz193/utils/node/fs";
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
 import { getFormattedCode } from "./_utils/getFormatCode";
 import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths";
@@ -134,15 +134,25 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 												};
 											}
 
-											const resolverFilePath = (
-												await getMatchingFilePaths(
-													path.resolve(
-														objectResolversDirPath,
-														"**",
-														`${type.name}_${field.name}.resolver.ts`
+											const resolverFilePath =
+												(
+													await getMatchingFilePaths(
+														path.resolve(
+															objectResolversDirPath,
+															"**",
+															`${type.name}_${field.name}.resolver.ts`
+														)
 													)
-												)
-											)[0];
+												)[0] ??
+												(
+													await getMatchingFilePaths(
+														path.resolve(
+															objectResolversDirPath,
+															"**",
+															`${field.name}.*.resolver.ts`
+														)
+													)
+												)[0];
 
 											if (!resolverFilePath || !(await fsExists(resolverFilePath))) {
 												return undefined;
@@ -154,7 +164,7 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 												name: field.name,
 												symbolName: `${path
 													.relative(resolversFolderPath, resolverFilePath)
-													.replace(".resolver.ts", "")
+													.replace(/\..+/, "")
 													.replace(/.+\//g, "")}Resolver`,
 											};
 										})
