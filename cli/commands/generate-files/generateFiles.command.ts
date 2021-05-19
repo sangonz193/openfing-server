@@ -12,6 +12,8 @@ import { generateResolversIndex } from "./generateResolversIndex";
 import { generateSchemasIndex } from "./generateSchemasIndex";
 import { generateSchemasTypesIndex } from "./generateSchemasTypesIndex";
 
+// TODO: Rename generate* files.
+
 const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 	command: "generate-files",
 
