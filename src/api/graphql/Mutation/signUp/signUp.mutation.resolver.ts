@@ -4,7 +4,6 @@ import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNode
 import { getUserFromSecret } from "../../_utils/getUserFromSecret";
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
 import { Resolvers } from "../../schemas.types";
-import { getSignUpPayloadParent } from "./SignUpPayload.parent";
 import { validateSignUpInput } from "./validateSignUpInput";
 
 const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
@@ -65,16 +64,7 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 			console.log(error);
 		});
 
-	return getSignUpPayloadParent({
-		id: user.id,
-		email: user.email,
-		password: "null",
-		name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
-		created_at: user.createdTimestamp ? new Date(user.createdTimestamp) : null,
-		deleted_at: null,
-		uid: "",
-		updated_at: null,
-	});
+	return null;
 };
 
 export default resolver;
