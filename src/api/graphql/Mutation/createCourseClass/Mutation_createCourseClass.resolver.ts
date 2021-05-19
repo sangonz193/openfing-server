@@ -82,7 +82,7 @@ const resolver: ResolverFn<
 	// TODO: necessary?
 	dataLoaders.courseClass.clearAll();
 
-	await backupDb(context.ormConnection);
+	await backupDb();
 
 	const baseVideoUrl = courseClassList.code
 		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${

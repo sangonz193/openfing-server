@@ -1,66 +1,23 @@
-import { _fs } from "@sangonz193/utils/node/fs";
+import { fs } from "@sangonz193/utils/node/fs";
+import { fsExists } from "@sangonz193/utils/node/fsExists";
 import path from "path";
-import { Pool } from "pg";
-import { to as copyTo } from "pg-copy-streams";
+import { spawn } from "promisify-child-process";
 import simpleGit from "simple-git";
-import { Connection } from "typeorm";
 
 import { databaseConfig } from "../../database/database.config";
-import { entities } from "../../database/entities";
+import { keycloakConfig } from "../keycloak/keycloak.config";
 import { backupConfig } from "./backupDb.config";
 
-export const backupDb = async (connection: Connection) => {
+export const backupDb = async () => {
 	const { backupRepoPath } = backupConfig;
-	const { typeormConfig } = databaseConfig;
 
 	if (!backupRepoPath || !backupConfig.enabled) {
 		console.log("skipping backup");
 		return;
 	}
 
-	const tableNames = entities.map((entity) => connection.getRepository(entity).metadata.tableName);
-
-	const pool = new Pool({
-		database: typeormConfig.database,
-		password: typeormConfig.password,
-		port: typeormConfig.port,
-		user: typeormConfig.username,
-		host: typeormConfig.host,
-	});
-
-	await new Promise<void>((resolve, reject) => {
-		pool.connect(async (err, client, done) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-
-			const { schema } = typeormConfig;
-			await Promise.all(
-				tableNames.map(async (tableName) => {
-					const backupFilePath = `${path.resolve(backupRepoPath, tableName + ".csv")}`;
-					const stream = client.query(
-						copyTo(`COPY "${schema}"."${tableName}" TO STDOUT DELIMITER ',' CSV HEADER`)
-					);
-
-					const fileStream = _fs.createWriteStream(backupFilePath);
-
-					setTimeout(() => stream.pipe(fileStream), 0);
-					await Promise.all([
-						new Promise((resolve, reject) => {
-							stream.on("end", resolve);
-							stream.on("error", reject);
-						}),
-						new Promise((resolve) => {
-							fileStream.on("close", resolve);
-						}),
-					]);
-				})
-			);
-			done();
-			resolve();
-		});
-	});
+	await dumpDatabase(databaseConfig.typeormConfig, backupRepoPath);
+	await dumpDatabase(keycloakConfig.typeormConfig, backupRepoPath);
 
 	const git = simpleGit({
 		baseDir: backupRepoPath,
@@ -76,3 +33,43 @@ export const backupDb = async (connection: Connection) => {
 		console.log("No changes detected, won't backup");
 	}
 };
+
+async function dumpDatabase(config: typeof databaseConfig.typeormConfig, backupRepoPath: string) {
+	const { database } = config;
+
+	if (!database) {
+		return;
+	}
+
+	const backupFolderPath = path.resolve(backupRepoPath, database);
+	if (await fsExists(backupFolderPath)) {
+		await fs.rmdir(backupFolderPath, { recursive: true });
+	}
+
+	if (!(await fsExists(backupRepoPath))) {
+		console.log("Folder does not exist:", backupRepoPath);
+		return;
+	}
+
+	await spawn(
+		"pg_dump",
+		[
+			...(config.host ? ["-h", config.host] : []),
+			...(config.port ? ["--port", config.port.toString()] : []),
+			...(config.username ? ["-U", config.username.toString()] : []),
+			...["-Fd", "-f", database],
+			database,
+		],
+		{
+			cwd: backupRepoPath,
+			encoding: "utf8",
+			env: {
+				...process.env,
+				PGPASSWORD: config.password,
+			},
+		}
+	).catch((e) => {
+		console.log(e);
+		throw e;
+	});
+}

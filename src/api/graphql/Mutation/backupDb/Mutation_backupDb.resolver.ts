@@ -8,7 +8,7 @@ const resolver: Resolvers["Mutation"]["backupDb"] = async (_, args, context) => 
 		throw new Error("Unauthenticated");
 	}
 
-	await backupDb(context.ormConnection);
+	await backupDb();
 };
 
 export default resolver;

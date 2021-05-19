@@ -93,7 +93,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 		// TODO: necessary?
 		dataLoaders.courseClassList.clearAll();
 
-		await backupDb(context.ormConnection);
+		await backupDb();
 
 		return getCreateCourseClassListPayloadParent({
 			courseClassList: courseClassListWithSameCode,

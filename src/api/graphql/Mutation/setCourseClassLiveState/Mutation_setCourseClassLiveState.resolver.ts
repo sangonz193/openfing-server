@@ -79,7 +79,7 @@ const resolver: ResolverFn<
 			validatedData,
 			prevCourseClassLiveState
 		);
-		await backupDb(context.ormConnection);
+		await backupDb();
 
 		return getSetCourseClassLiveStatePayloadParent(courseClassLiveState);
 	}
