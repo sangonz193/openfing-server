@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 export default gql`
 	extend type Mutation {
-		signUp(input: SignUpInput!, secret: String!): SignUpResult!
+		signUp(input: SignUpInput!, secret: String!): SignUpResult
 	}
 
 	input SignUpInput {
@@ -10,10 +10,6 @@ export default gql`
 		lastName: String
 		email: String!
 		password: String!
-	}
-
-	type SignUpPayload {
-		user: User!
 	}
 
 	union SignUpEmailError = RequiredFieldError | InvalidEmailDomainError | InvalidFormatError | MaxLengthError
@@ -28,5 +24,5 @@ export default gql`
 		password: [SignUpPasswordError!]
 	}
 
-	union SignUpResult = SignUpPayload | GenericError | AuthenticationError | SignUpValidationErrors
+	union SignUpResult = GenericError | AuthenticationError | SignUpValidationErrors
 `;

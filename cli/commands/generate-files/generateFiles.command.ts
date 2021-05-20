@@ -9,8 +9,11 @@ import { generatedFilesGlobs } from "./generatedFilesGlobs";
 import { generateEntitiesIndex } from "./generateEntitiesIndex";
 import { generateRepositoriesIndex } from "./generateRepositoriesIndex";
 import { generateResolversIndex } from "./generateResolversIndex";
+import { generateRestEndpointsMap } from "./generateRestEndpointsMap";
 import { generateSchemasIndex } from "./generateSchemasIndex";
 import { generateSchemasTypesIndex } from "./generateSchemasTypesIndex";
+
+// TODO: Rename generate* files.
 
 const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 	command: "generate-files",
@@ -60,6 +63,7 @@ const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 				loadSchemaPromise.then(generateResolversIndex),
 				loadSchemaPromise.then(generateSchemasTypesIndex),
 				generateSchemasIndex(),
+				generateRestEndpointsMap(),
 			]);
 		}
 	},

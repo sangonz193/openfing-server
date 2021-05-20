@@ -4,6 +4,10 @@ import {
 	CourseClassLiveStateDataLoader,
 	getCourseClassLiveStateDataLoader,
 } from "../database/CourseClassLiveState/CourseClassLiveState.dataLoader";
+import {
+	EmailValidationDataLoader,
+	getEmailValidationDataLoader,
+} from "../database/EmailValidation/EmailValidation.dataLoader";
 import { Repositories } from "../database/repositories";
 import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
 import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
@@ -34,6 +38,7 @@ export type DataLoaders = {
 	courseClassVideoFormat: CourseClassVideoFormatDataLoader;
 	courseClassVideoQuality: CourseClassVideoQualityDataLoader;
 	courseEdition: CourseEditionDataLoader;
+	emailValidation: EmailValidationDataLoader;
 	user: UserDataLoader;
 };
 
@@ -47,5 +52,6 @@ export const getDataLoaders = (repositories: Repositories, connection: Connectio
 	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(repositories.courseClassVideoFormat),
 	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(repositories.courseClassVideoQuality),
 	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
+	emailValidation: getEmailValidationDataLoader(connection),
 	user: getUserDataLoader(repositories.user),
 });

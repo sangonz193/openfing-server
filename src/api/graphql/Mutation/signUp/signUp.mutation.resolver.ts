@@ -4,7 +4,6 @@ import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNode
 import { getUserFromSecret } from "../../_utils/getUserFromSecret";
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
 import { Resolvers } from "../../schemas.types";
-import { getSignUpPayloadParent } from "./SignUpPayload.parent";
 import { validateSignUpInput } from "./validateSignUpInput";
 
 const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
@@ -21,8 +20,9 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 	}
 
 	const { input } = validationResult;
-	const userWithId = await context.keycloakAdminClient.users
-		.create({
+	let userWithId: { id: string } | undefined;
+	try {
+		userWithId = await context.keycloakAdminClientRef.current.users.create({
 			firstName: input.firstName,
 			lastName: input.lastName ?? undefined,
 			email: input.email,
@@ -34,13 +34,13 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 					value: args.input.password,
 				},
 			],
-		})
-		.catch((error) => {
-			console.log(error);
-			throw error;
 		});
+	} catch (error) {
+		console.log(error);
+		return getGenericErrorParent();
+	}
 
-	const user = await context.keycloakAdminClient.users.findOne({
+	const user = await context.keycloakAdminClientRef.current.users.findOne({
 		id: userWithId.id,
 	});
 
@@ -48,16 +48,22 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 		return getGenericErrorParent();
 	}
 
+	const emailValidation = await context.repositories.emailValidation.insert({
+		data: {
+			user_id: user.id,
+			issued_at: new Date(),
+		},
+	});
+
 	const transporter = getNodemailerTransporter();
-	const validationUrl = `${appConfig.frontEndUrl}/validate-email?t=${encodeURIComponent(
-		createEmailValidationToken(user.id)
+	const validationUrl = `${appConfig.publicUrl}/rest/validate-email?t=${encodeURIComponent(
+		createEmailValidationToken(emailValidation.id)
 	)}`;
 
 	transporter
 		?.sendMail({
-			from: '"Santiago González" <santiago.g.19@hotmail.com>',
-			to: user.email, // list of receivers
-			subject: "Registro de usuario OpenFING", // Subject line
+			to: user.email,
+			subject: "Registro de usuario OpenFING",
 			text: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita ${validationUrl}`,
 			html: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita <a href="${validationUrl}">${validationUrl}</a>`,
 		})
@@ -65,16 +71,7 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 			console.log(error);
 		});
 
-	return getSignUpPayloadParent({
-		id: user.id,
-		email: user.email,
-		password: "null",
-		name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
-		created_at: user.createdTimestamp ? new Date(user.createdTimestamp) : null,
-		deleted_at: null,
-		uid: "",
-		updated_at: null,
-	});
+	return null;
 };
 
 export default resolver;

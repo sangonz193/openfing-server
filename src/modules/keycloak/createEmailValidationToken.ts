@@ -1,3 +1,3 @@
-export function createEmailValidationToken(userId: string) {
-	return Buffer.from(userId).toString("base64");
+export function createEmailValidationToken(emailValidationId: string) {
+	return Buffer.from(emailValidationId).toString("base64");
 }

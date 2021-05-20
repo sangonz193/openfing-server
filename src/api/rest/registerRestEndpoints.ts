@@ -1,8 +1,7 @@
-import { formatError } from "apollo-errors";
+import { dangerousKeysOf } from "@sangonz193/utils/dangerousKeysOf";
 import { ContextFunction } from "apollo-server-core";
-import { ApolloServer, ExpressContext } from "apollo-server-express";
+import { ExpressContext } from "apollo-server-express";
 import type express from "express";
-import { GraphQLFormattedError } from "graphql";
 import KeycloakAdminClient from "keycloak-admin";
 import KeycloakConnect from "keycloak-connect";
 import { Connection } from "typeorm";
@@ -10,11 +9,9 @@ import { Connection } from "typeorm";
 import { Repositories } from "../../database/repositories";
 import { getDataLoaders } from "../../dataloaders";
 import { RequestContext } from "../RequestContext";
-import { graphqlConfig } from "./graphql.config";
-import { resolvers } from "./resolvers";
-import { typeDefs } from "./schemas";
+import { endpointsMap } from "./endpoints";
 
-type RegisterApolloServerOptions = {
+type RegisterRestEndpointsOptions = {
 	ormConnection: Connection;
 	repositories: Repositories;
 	keycloakAdminClientRef: { current: KeycloakAdminClient };
@@ -22,7 +19,7 @@ type RegisterApolloServerOptions = {
 	expressApp: express.Application;
 };
 
-export const registerApolloServer = (options: RegisterApolloServerOptions) => {
+export const registerRestEndpoints = (options: RegisterRestEndpointsOptions) => {
 	const { ormConnection, repositories, keycloakAdminClientRef, keycloakConnect, expressApp } = options;
 
 	const context: ContextFunction<ExpressContext, RequestContext> = async ({ req, res }) => {
@@ -37,17 +34,11 @@ export const registerApolloServer = (options: RegisterApolloServerOptions) => {
 		};
 	};
 
-	const apolloServer = new ApolloServer({
-		typeDefs: typeDefs,
-		resolvers: resolvers,
-		playground: true,
-		formatError: (e) => {
-			console.error(e);
+	dangerousKeysOf(endpointsMap).forEach((endpointUrl) => {
+		const endpoint = endpointsMap[endpointUrl];
 
-			return formatError(e) as GraphQLFormattedError;
-		},
-		context,
+		expressApp[endpoint.httpMethod](`/rest/${endpointUrl}`, async (req, res) => {
+			return endpoint.handler(await context({ req, res }));
+		});
 	});
-
-	apolloServer.applyMiddleware({ app: expressApp, path: graphqlConfig.path });
 };

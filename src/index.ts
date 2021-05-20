@@ -8,19 +8,21 @@ import cors from "cors";
 import express from "express";
 
 import { registerApolloServer } from "./api/graphql/registerApolloServer";
+import { registerRestEndpoints } from "./api/rest/registerRestEndpoints";
+import { testPublicUrl } from "./api/rest/testPublicUrl";
 import { appConfig } from "./config/app.config";
 import { getOrmConnection } from "./database/getOrmConnection";
 import { getRepositories } from "./database/repositories";
-import { getKeycloakAdminClient } from "./modules/keycloak/getKeycloakAdminClient";
+import { getKeycloakAdminClientRef } from "./modules/keycloak/getKeycloakAdminClientRef";
 import { getKeycloakConnect } from "./modules/keycloak/getKeycloakConnect";
 
 const run = async () => {
-	const [ormConnection, keycloakAdminClient, keycloakConnect] = await Promise.all([
+	const [ormConnection, keycloakAdminClientRef, keycloakConnect] = await Promise.all([
 		getOrmConnection().then(async (connection) => {
 			await connection.runMigrations();
 			return connection;
 		}),
-		getKeycloakAdminClient(),
+		getKeycloakAdminClientRef(),
 		getKeycloakConnect(),
 	]);
 
@@ -28,9 +30,16 @@ const run = async () => {
 	const repositories = getRepositories(ormConnection);
 
 	expressApp.use(cors());
-	await registerApolloServer({
+	registerApolloServer({
 		expressApp,
-		keycloakAdminClient,
+		keycloakAdminClientRef,
+		ormConnection,
+		repositories,
+		keycloakConnect,
+	});
+	registerRestEndpoints({
+		expressApp,
+		keycloakAdminClientRef,
 		ormConnection,
 		repositories,
 		keycloakConnect,
@@ -43,6 +52,7 @@ const run = async () => {
 		},
 		async () => {
 			console.log(`Listening on port ${appConfig.port.toString()} with cors enabled`);
+			testPublicUrl();
 		}
 	);
 
