@@ -14,13 +14,13 @@ import { endpointsMap } from "./endpoints";
 type RegisterRestEndpointsOptions = {
 	ormConnection: Connection;
 	repositories: Repositories;
-	keycloakAdminClient: KeycloakAdminClient;
+	keycloakAdminClientRef: { current: KeycloakAdminClient };
 	keycloakConnect: KeycloakConnect.Keycloak;
 	expressApp: express.Application;
 };
 
 export const registerRestEndpoints = (options: RegisterRestEndpointsOptions) => {
-	const { ormConnection, repositories, keycloakAdminClient, keycloakConnect, expressApp } = options;
+	const { ormConnection, repositories, keycloakAdminClientRef, keycloakConnect, expressApp } = options;
 
 	const context: ContextFunction<ExpressContext, RequestContext> = async ({ req, res }) => {
 		return {
@@ -29,7 +29,7 @@ export const registerRestEndpoints = (options: RegisterRestEndpointsOptions) => 
 			res,
 			dataLoaders: getDataLoaders(repositories, ormConnection),
 			repositories,
-			keycloakAdminClient: keycloakAdminClient,
+			keycloakAdminClientRef,
 			keycloakConnect: keycloakConnect,
 		};
 	};

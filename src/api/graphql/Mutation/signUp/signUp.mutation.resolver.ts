@@ -20,8 +20,9 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 	}
 
 	const { input } = validationResult;
-	const userWithId = await context.keycloakAdminClient.users
-		.create({
+	let userWithId: { id: string } | undefined;
+	try {
+		userWithId = await context.keycloakAdminClientRef.current.users.create({
 			firstName: input.firstName,
 			lastName: input.lastName ?? undefined,
 			email: input.email,
@@ -33,13 +34,13 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 					value: args.input.password,
 				},
 			],
-		})
-		.catch((error) => {
-			console.log(error);
-			throw error;
 		});
+	} catch (error) {
+		console.log(error);
+		return getGenericErrorParent();
+	}
 
-	const user = await context.keycloakAdminClient.users.findOne({
+	const user = await context.keycloakAdminClientRef.current.users.findOne({
 		id: userWithId.id,
 	});
 

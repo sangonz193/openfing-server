@@ -16,6 +16,6 @@ export type RequestContext = {
 
 	dataLoaders: DataLoaders;
 	repositories: Repositories;
-	keycloakAdminClient: KeycloakAdminClient;
+	keycloakAdminClientRef: { current: KeycloakAdminClient };
 	keycloakConnect: KeycloakConnect.Keycloak;
 };

@@ -2,7 +2,19 @@ import KeycloakAdminClient from "keycloak-admin";
 
 import { keycloakConfig } from "./keycloak.config";
 
-export const getKeycloakAdminClient = async (): Promise<KeycloakAdminClient> => {
+export const getKeycloakAdminClientRef = async (): Promise<{ current: KeycloakAdminClient }> => {
+	const ref = {
+		current: await createAdminClient(),
+	};
+
+	setInterval(async () => {
+		ref.current = await createAdminClient();
+	}, 1000 * 60 * 1);
+
+	return ref;
+};
+
+async function createAdminClient() {
 	const adminClient = new KeycloakAdminClient({
 		baseUrl: keycloakConfig.serverUrl,
 	});
@@ -28,4 +40,4 @@ export const getKeycloakAdminClient = async (): Promise<KeycloakAdminClient> => 
 	});
 
 	return adminClient;
-};
+}

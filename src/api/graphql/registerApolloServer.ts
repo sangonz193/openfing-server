@@ -17,13 +17,13 @@ import { typeDefs } from "./schemas";
 type RegisterApolloServerOptions = {
 	ormConnection: Connection;
 	repositories: Repositories;
-	keycloakAdminClient: KeycloakAdminClient;
+	keycloakAdminClientRef: { current: KeycloakAdminClient };
 	keycloakConnect: KeycloakConnect.Keycloak;
 	expressApp: express.Application;
 };
 
 export const registerApolloServer = (options: RegisterApolloServerOptions) => {
-	const { ormConnection, repositories, keycloakAdminClient, keycloakConnect, expressApp } = options;
+	const { ormConnection, repositories, keycloakAdminClientRef, keycloakConnect, expressApp } = options;
 
 	const context: ContextFunction<ExpressContext, RequestContext> = async ({ req, res }) => {
 		return {
@@ -32,7 +32,7 @@ export const registerApolloServer = (options: RegisterApolloServerOptions) => {
 			res,
 			dataLoaders: getDataLoaders(repositories, ormConnection),
 			repositories,
-			keycloakAdminClient: keycloakAdminClient,
+			keycloakAdminClientRef,
 			keycloakConnect: keycloakConnect,
 		};
 	};

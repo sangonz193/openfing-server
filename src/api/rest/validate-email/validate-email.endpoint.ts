@@ -25,7 +25,7 @@ const handler: RestEndpoint["handler"] = async (context) => {
 	}
 
 	try {
-		await context.keycloakAdminClient.users.update(
+		await context.keycloakAdminClientRef.current.users.update(
 			{
 				id: emailValidation.user_id,
 			},
@@ -34,6 +34,7 @@ const handler: RestEndpoint["handler"] = async (context) => {
 			}
 		);
 		sendResponse(true);
+		context.repositories.emailValidation.delete({ userId: emailValidation.user_id });
 	} catch (error) {
 		sendResponse(false);
 		console.log(error);
