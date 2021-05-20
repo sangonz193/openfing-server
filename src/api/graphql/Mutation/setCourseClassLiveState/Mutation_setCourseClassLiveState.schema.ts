@@ -17,7 +17,7 @@ export default gql`
 	}
 
 	type SetCourseClassLiveStatePayload {
-		courseClassLiveState: CourseClassLiveState
+		courseClassLiveState: CourseClassLiveState!
 	}
 
 	union SetCourseClassLiveStateResult = SetCourseClassLiveStatePayload | GenericError | AuthenticationError
