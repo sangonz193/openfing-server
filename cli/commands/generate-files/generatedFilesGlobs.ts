@@ -10,4 +10,5 @@ export const generatedFilesGlobs = {
 	resolversIndex: path.resolve(projectPath, "src", "api", "graphql", "resolvers.ts"),
 	schemasIndex: path.resolve(projectPath, "src", "api", "graphql", "schemas.ts"),
 	schemasTypeIndex: path.resolve(projectPath, "src", "api", "graphql", "schemas.types.ts"),
+	restEndpoints: path.resolve(projectPath, "src", "api", "rest", "endpoints.ts"),
 };

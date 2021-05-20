@@ -14,7 +14,7 @@ export const generateSchemasIndex = async () => {
 	const files = (await getMatchingFilePaths(schemaFilesGlob)).sort();
 
 	const getSymbolFromFilePath = (filePath: string) =>
-		`${path.basename(filePath).replace(".schema.ts", "").replace(/\w+?_/, "")}Doc`;
+		`${path.basename(filePath).replace(/\..+/, "").replace(/\w+?_/, "")}Doc`;
 
 	const imports = [
 		`import { DocumentNode } from "graphql";\n`,

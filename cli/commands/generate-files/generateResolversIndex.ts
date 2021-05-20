@@ -134,15 +134,25 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 												};
 											}
 
-											const resolverFilePath = (
-												await getMatchingFilePaths(
-													path.resolve(
-														objectResolversDirPath,
-														"**",
-														`${type.name}_${field.name}.resolver.ts`
+											const resolverFilePath =
+												(
+													await getMatchingFilePaths(
+														path.resolve(
+															objectResolversDirPath,
+															"**",
+															`${type.name}_${field.name}.resolver.ts`
+														)
 													)
-												)
-											)[0];
+												)[0] ??
+												(
+													await getMatchingFilePaths(
+														path.resolve(
+															objectResolversDirPath,
+															"**",
+															`${field.name}.*.resolver.ts`
+														)
+													)
+												)[0];
 
 											if (!resolverFilePath || !(await fsExists(resolverFilePath))) {
 												return undefined;
@@ -154,7 +164,7 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 												name: field.name,
 												symbolName: `${path
 													.relative(resolversFolderPath, resolverFilePath)
-													.replace(".resolver.ts", "")
+													.replace(/\..+/, "")
 													.replace(/.+\//g, "")}Resolver`,
 											};
 										})
