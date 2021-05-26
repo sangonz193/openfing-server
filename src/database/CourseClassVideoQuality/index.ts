@@ -1,1 +1,1 @@
-export * from "./CourseClassVideoQuality.entity";
+export * from "./CourseClassVideoQuality.entity"

@@ -1,5 +1,5 @@
-import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent";
-import { Resolvers } from "../schemas.types";
+import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent"
+import { Resolvers } from "../schemas.types"
 
 const resolver: Resolvers["CourseEdition"]["courseClassLists"] = async (parent, _, { repositories, includeHidden }) => {
 	return (
@@ -7,7 +7,7 @@ const resolver: Resolvers["CourseEdition"]["courseClassLists"] = async (parent, 
 			courseEditionId: parent.id,
 			includeHidden,
 		})
-	).map((courseClassList) => getCourseClassListParent(courseClassList));
-};
+	).map((courseClassList) => getCourseClassListParent(courseClassList))
+}
 
-export default resolver;
+export default resolver

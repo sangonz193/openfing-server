@@ -1,1 +1,1 @@
-export * from "./UserToUserRole.entity";
+export * from "./UserToUserRole.entity"

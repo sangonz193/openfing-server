@@ -1,5 +1,5 @@
-import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent";
-import { Resolvers } from "../schemas.types";
+import { getCourseClassListParent } from "../CourseClassList/CourseClassList.parent"
+import { Resolvers } from "../schemas.types"
 
 const resolver: Resolvers["CourseClass"]["courseClassList"] = async (parent, _, context) => {
 	const courseClassList =
@@ -8,9 +8,9 @@ const resolver: Resolvers["CourseClass"]["courseClassList"] = async (parent, _, 
 					id: parent.course_class_list_id,
 					includeHidden: true,
 			  })
-			: null;
+			: null
 
-	return courseClassList && getCourseClassListParent(courseClassList);
-};
+	return courseClassList && getCourseClassListParent(courseClassList)
+}
 
-export default resolver;
+export default resolver

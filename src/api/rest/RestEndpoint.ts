@@ -1,6 +1,6 @@
-import { RequestContext } from "../RequestContext";
+import { RequestContext } from "../RequestContext"
 
 export type RestEndpoint = {
-	httpMethod: "get";
-	handler: (context: RequestContext) => void;
-};
+	httpMethod: "get"
+	handler: (context: RequestContext) => void
+}

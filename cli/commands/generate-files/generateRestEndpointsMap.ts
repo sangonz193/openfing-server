@@ -1,35 +1,35 @@
-import { dangerousKeysOf } from "@sangonz193/utils/dangerousKeysOf";
-import { fs } from "@sangonz193/utils/node/fs";
-import path from "path";
+import { dangerousKeysOf } from "@sangonz193/utils/dangerousKeysOf"
+import { fs } from "@sangonz193/utils/node/fs"
+import path from "path"
 
-import { projectPath } from "../../../src/_utils/projectPath";
-import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
-import { getFormattedCode } from "./_utils/getFormatCode";
-import { getImportPath } from "./_utils/getImportPath";
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths";
-import { generatedFilesGlobs } from "./generatedFilesGlobs";
+import { projectPath } from "../../../src/_utils/projectPath"
+import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
+import { getFormattedCode } from "./_utils/getFormatCode"
+import { getImportPath } from "./_utils/getImportPath"
+import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
+import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
 export const generateRestEndpointsMap = async () => {
-	const restFolderPath = path.resolve(projectPath, "src", "api", "rest");
-	const endpointsMapPath = path.resolve(generatedFilesGlobs.restEndpoints);
+	const restFolderPath = path.resolve(projectPath, "src", "api", "rest")
+	const endpointsMapPath = path.resolve(generatedFilesGlobs.restEndpoints)
 
-	const imports: string[] = [];
+	const imports: string[] = []
 
-	const endpointsMap: Record<string, string> = {};
+	const endpointsMap: Record<string, string> = {}
 
-	const endpointFilesPaths = await getMatchingFilePaths(path.resolve(restFolderPath, "**", "*.endpoint.ts"));
+	const endpointFilesPaths = await getMatchingFilePaths(path.resolve(restFolderPath, "**", "*.endpoint.ts"))
 	endpointFilesPaths.forEach((endpointFilePath) => {
-		const endpointFileRelativePath = path.relative(restFolderPath, endpointFilePath);
-		const endpointUrl = path.join(endpointFileRelativePath, "..");
+		const endpointFileRelativePath = path.relative(restFolderPath, endpointFilePath)
+		const endpointUrl = path.join(endpointFileRelativePath, "..")
 
 		const symbolName = endpointUrl
 			.replace(path.sep, "_")
 			.replace(/[:\-.]/g, "_")
-			.replace(/\.endpoint.+/, "");
+			.replace(/\.endpoint.+/, "")
 
-		imports.push(`import ${symbolName} from "${getImportPath(endpointsMapPath, endpointFilePath)}"`);
-		endpointsMap[endpointUrl] = symbolName;
-	});
+		imports.push(`import ${symbolName} from "${getImportPath(endpointsMapPath, endpointFilePath)}"`)
+		endpointsMap[endpointUrl] = symbolName
+	})
 
 	const endpointsMapFileContent =
 		generatedFileHeaderContent +
@@ -37,10 +37,10 @@ export const generateRestEndpointsMap = async () => {
 		`export const endpointsMap = {\n` +
 		dangerousKeysOf(endpointsMap)
 			.map((key) => {
-				return `"${key}": ${endpointsMap[key]}`;
+				return `"${key}": ${endpointsMap[key]}`
 			})
 			.join(",\n") +
-		`}\n`;
+		`}\n`
 
-	await fs.writeFile(endpointsMapPath, getFormattedCode(endpointsMapFileContent));
-};
+	await fs.writeFile(endpointsMapPath, getFormattedCode(endpointsMapFileContent))
+}

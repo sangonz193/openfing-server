@@ -1,10 +1,10 @@
-import { fs } from "@sangonz193/utils/node/fs";
-import { fsExists } from "@sangonz193/utils/node/fsExists";
-import path from "path";
-import { spawn } from "promisify-child-process";
-import { CommandModule } from "yargs";
+import { fs } from "@sangonz193/utils/node/fs"
+import { fsExists } from "@sangonz193/utils/node/fsExists"
+import path from "path"
+import { spawn } from "promisify-child-process"
+import { CommandModule } from "yargs"
 
-import { projectPath } from "../../_utils/projectPath";
+import { projectPath } from "../../_utils/projectPath"
 
 const command: CommandModule<{}, {}> = {
 	command: "build",
@@ -12,10 +12,10 @@ const command: CommandModule<{}, {}> = {
 	describe: "Generates the dist folder with JavaScript code.",
 
 	handler: async () => {
-		const distPath = path.resolve(projectPath, "dist");
+		const distPath = path.resolve(projectPath, "dist")
 
 		if (await fsExists(distPath)) {
-			await fs.rmdir(distPath, { recursive: true });
+			await fs.rmdir(distPath, { recursive: true })
 		}
 
 		await spawn(
@@ -25,8 +25,8 @@ const command: CommandModule<{}, {}> = {
 				stdio: "inherit",
 				cwd: projectPath,
 			}
-		);
+		)
 	},
-};
+}
 
-export default command;
+export default command

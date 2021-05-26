@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	union CourseClassListByIdResult = CourseClassList | NotFoundError
@@ -6,4 +6,4 @@ export default gql`
 	extend type Query {
 		courseClassListById(id: ID!): CourseClassListByIdResult!
 	}
-`;
+`

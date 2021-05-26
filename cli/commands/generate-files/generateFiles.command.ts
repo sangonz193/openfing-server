@@ -1,17 +1,17 @@
-import { CodeFileLoader } from "@graphql-tools/code-file-loader";
-import { loadSchema } from "@graphql-tools/load";
-import path from "path";
-import { spawn } from "promisify-child-process";
-import { CommandModule } from "yargs";
+import { CodeFileLoader } from "@graphql-tools/code-file-loader"
+import { loadSchema } from "@graphql-tools/load"
+import path from "path"
+import { spawn } from "promisify-child-process"
+import { CommandModule } from "yargs"
 
-import { projectPath } from "../../_utils/projectPath";
-import { generatedFilesGlobs } from "./generatedFilesGlobs";
-import { generateEntitiesIndex } from "./generateEntitiesIndex";
-import { generateRepositoriesIndex } from "./generateRepositoriesIndex";
-import { generateResolversIndex } from "./generateResolversIndex";
-import { generateRestEndpointsMap } from "./generateRestEndpointsMap";
-import { generateSchemasIndex } from "./generateSchemasIndex";
-import { generateSchemasTypesIndex } from "./generateSchemasTypesIndex";
+import { projectPath } from "../../_utils/projectPath"
+import { generatedFilesGlobs } from "./generatedFilesGlobs"
+import { generateEntitiesIndex } from "./generateEntitiesIndex"
+import { generateRepositoriesIndex } from "./generateRepositoriesIndex"
+import { generateResolversIndex } from "./generateResolversIndex"
+import { generateRestEndpointsMap } from "./generateRestEndpointsMap"
+import { generateSchemasIndex } from "./generateSchemasIndex"
+import { generateSchemasTypesIndex } from "./generateSchemasTypesIndex"
 
 // TODO: Rename generate* files.
 
@@ -52,10 +52,10 @@ const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 					cwd: projectPath,
 					stdio: "inherit",
 				}
-			);
+			)
 		} else {
-			const schemaFilesGlob = path.resolve(projectPath, "src", "api", "graphql", "**", "*.schema.ts");
-			const loadSchemaPromise = loadSchema(schemaFilesGlob, { loaders: [new CodeFileLoader()] });
+			const schemaFilesGlob = path.resolve(projectPath, "src", "api", "graphql", "**", "*.schema.ts")
+			const loadSchemaPromise = loadSchema(schemaFilesGlob, { loaders: [new CodeFileLoader()] })
 
 			await Promise.all([
 				generateEntitiesIndex(),
@@ -64,9 +64,9 @@ const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 				loadSchemaPromise.then(generateSchemasTypesIndex),
 				generateSchemasIndex(),
 				generateRestEndpointsMap(),
-			]);
+			])
 		}
 	},
-};
+}
 
-export default command;
+export default command

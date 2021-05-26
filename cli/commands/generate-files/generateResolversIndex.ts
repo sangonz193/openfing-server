@@ -1,5 +1,5 @@
-import { fs } from "@sangonz193/utils/node/fs";
-import { fsExists } from "@sangonz193/utils/node/fsExists";
+import { fs } from "@sangonz193/utils/node/fs"
+import { fsExists } from "@sangonz193/utils/node/fsExists"
 import {
 	GraphQLEnumType,
 	GraphQLInputObjectType,
@@ -7,54 +7,54 @@ import {
 	GraphQLScalarType,
 	GraphQLSchema,
 	GraphQLUnionType,
-} from "graphql";
-import path from "path";
+} from "graphql"
+import path from "path"
 
-import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent";
-import { getFormattedCode } from "./_utils/getFormatCode";
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths";
-import { generatedFilesGlobs } from "./generatedFilesGlobs";
+import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
+import { getFormattedCode } from "./_utils/getFormatCode"
+import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
+import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
-const ignoredScalars = ["ID", "Int", "Float", "Boolean", "String"];
+const ignoredScalars = ["ID", "Int", "Float", "Boolean", "String"]
 
 type DefaultFieldResolverMetadata = {
-	type: "default-field-resolver";
-	name: string;
-	value: string;
-};
+	type: "default-field-resolver"
+	name: string
+	value: string
+}
 
 type FieldResolverMetadata = {
-	type: "field-resolver";
-	filePath: string;
-	symbolName: string;
-	name: string;
-};
+	type: "field-resolver"
+	filePath: string
+	symbolName: string
+	name: string
+}
 
 type ObjectResolverMetadata = {
-	type: "object-resolver";
-	dirPath: string;
-	name: string;
-	fields: Array<FieldResolverMetadata | DefaultFieldResolverMetadata>;
-};
+	type: "object-resolver"
+	dirPath: string
+	name: string
+	fields: Array<FieldResolverMetadata | DefaultFieldResolverMetadata>
+}
 
 type ScalarResolverMetadata = {
-	type: "scalar-resolver";
-	filePath: string;
-	symbolName: string;
-	name: string;
-};
+	type: "scalar-resolver"
+	filePath: string
+	symbolName: string
+	name: string
+}
 
 type UnionResolverMetadata = {
-	type: "union-resolver";
-	name: string;
-};
+	type: "union-resolver"
+	name: string
+}
 
 export const generateResolversIndex = async (schema: GraphQLSchema) => {
-	const resolversFolderPath = path.resolve(generatedFilesGlobs.resolversIndex, "..");
-	const resolversFilePath = generatedFilesGlobs.resolversIndex;
-	const generatedTypesFilePath = generatedFilesGlobs.schemasTypeIndex;
+	const resolversFolderPath = path.resolve(generatedFilesGlobs.resolversIndex, "..")
+	const resolversFilePath = generatedFilesGlobs.resolversIndex
+	const generatedTypesFilePath = generatedFilesGlobs.schemasTypeIndex
 
-	const typeMap = schema.getTypeMap();
+	const typeMap = schema.getTypeMap()
 
 	const resolverMetadatas = (
 		await Promise.all(
@@ -74,7 +74,7 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 				)
 				.map<Promise<ObjectResolverMetadata | ScalarResolverMetadata | UnionResolverMetadata | undefined>>(
 					async (typeMapKey) => {
-						const type = typeMap[typeMapKey];
+						const type = typeMap[typeMapKey]
 
 						if (type instanceof GraphQLScalarType) {
 							const posibleResolverPath =
@@ -82,14 +82,14 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 									await getMatchingFilePaths(
 										path.resolve(resolversFolderPath, "**", `*${type.name}.resolver.ts`)
 									)
-								)[0] || undefined;
+								)[0] || undefined
 
 							if (
 								!posibleResolverPath ||
 								ignoredScalars.includes(type.name) ||
 								!(await fsExists(posibleResolverPath))
 							) {
-								return undefined;
+								return undefined
 							}
 
 							return {
@@ -100,7 +100,7 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 									.replace(".resolver.ts", "")
 									.replace(/\w+?\//, "")}Resolver`,
 								name: type.name,
-							};
+							}
 						}
 
 						if (type instanceof GraphQLUnionType) {
@@ -108,12 +108,12 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 								type: "union-resolver",
 								name: type.name,
 								value: ``,
-							};
+							}
 						}
 
 						if (type instanceof GraphQLObjectType) {
-							const fields = type.getFields();
-							const objectResolversDirPath = path.resolve(resolversFolderPath, type.name);
+							const fields = type.getFields()
+							const objectResolversDirPath = path.resolve(resolversFolderPath, type.name)
 
 							return {
 								type: "object-resolver",
@@ -124,14 +124,14 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 										Object.keys(fields).map<
 											Promise<DefaultFieldResolverMetadata | FieldResolverMetadata | undefined>
 										>(async (fieldKey) => {
-											const field = fields[fieldKey];
+											const field = fields[fieldKey]
 
 											if ("_" === field.name) {
 												return {
 													type: "default-field-resolver",
 													name: field.name,
 													value: `_`,
-												};
+												}
 											}
 
 											const resolverFilePath =
@@ -152,10 +152,10 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 															`${field.name}.*.resolver.ts`
 														)
 													)
-												)[0];
+												)[0]
 
 											if (!resolverFilePath || !(await fsExists(resolverFilePath))) {
-												return undefined;
+												return undefined
 											}
 
 											return {
@@ -166,35 +166,34 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 													.relative(resolversFolderPath, resolverFilePath)
 													.replace(/\..+/, "")
 													.replace(/.+\//g, "")}Resolver`,
-											};
+											}
 										})
 									)
 								)
 									.filter((metadata): metadata is Exclude<typeof metadata, undefined> => !!metadata)
 									.sort((f1, f2) => f1.name.localeCompare(f2.name)),
-							};
+							}
 						} else if (type instanceof GraphQLEnumType || type instanceof GraphQLInputObjectType) {
 							// ignore
-							return undefined;
+							return undefined
 						}
 
-						console.log(`Unhandled type`, type);
-						return undefined;
+						console.log(`Unhandled type`, type)
+						return undefined
 					}
 				)
 		)
 	)
 		.filter((metadata): metadata is Exclude<typeof metadata, undefined> => !!metadata)
-		.sort((m1, m2) => m1.name.localeCompare(m2.name));
+		.sort((m1, m2) => m1.name.localeCompare(m2.name))
 
-	const relativeImport = (relativePath: string) =>
-		relativePath.startsWith(".") ? relativePath : "./" + relativePath;
+	const relativeImport = (relativePath: string) => (relativePath.startsWith(".") ? relativePath : "./" + relativePath)
 
 	const imports: string[] = [
 		`import { Resolvers } from "${relativeImport(
 			path.relative(path.resolve(resolversFilePath, ".."), generatedTypesFilePath.replace(/\.[^.]+$/, ""))
 		)}";`,
-	];
+	]
 
 	resolverMetadatas.forEach((metadata) => {
 		switch (metadata.type) {
@@ -203,8 +202,8 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 					`import ${metadata.symbolName} from "${relativeImport(
 						path.relative(path.resolve(resolversFilePath, ".."), metadata.filePath.replace(/\.[^.]+$/, ""))
 					)}";`
-				);
-				break;
+				)
+				break
 			case "object-resolver":
 				metadata.fields.forEach((field) => {
 					switch (field.type) {
@@ -216,18 +215,18 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 										field.filePath.replace(/\.[^.]+$/, "")
 									)
 								)}";`
-							);
-							break;
+							)
+							break
 						}
 						case "default-field-resolver": {
-							break;
+							break
 						}
 					}
-				});
-				break;
+				})
+				break
 			case "union-resolver":
 		}
-	});
+	})
 
 	const resolversFileContent =
 		generatedFileHeaderContent +
@@ -241,11 +240,11 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 		resolverMetadatas
 			.map((resolverMetadata) => {
 				if (resolverMetadata.type === "union-resolver") {
-					return `${resolverMetadata.name}: {\n__resolveType}`;
+					return `${resolverMetadata.name}: {\n__resolveType}`
 				}
 
 				if (resolverMetadata.type === "scalar-resolver") {
-					return `${resolverMetadata.name}: ${resolverMetadata.symbolName}`;
+					return `${resolverMetadata.name}: ${resolverMetadata.symbolName}`
 				}
 
 				return (
@@ -254,17 +253,17 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 						.map((field) => {
 							switch (field.type) {
 								case "default-field-resolver":
-									return field.name === field.value ? field.name : `${field.name}: ${field.value}\n`;
+									return field.name === field.value ? field.name : `${field.name}: ${field.value}\n`
 								case "field-resolver":
-									return `${field.name}: ${field.symbolName}`;
+									return `${field.name}: ${field.symbolName}`
 							}
 						})
 						.join(",") +
 					`}`
-				);
+				)
 			})
 			.join(",") +
-		`\n};`;
+		`\n};`
 
-	await fs.writeFile(resolversFilePath, getFormattedCode(resolversFileContent));
-};
+	await fs.writeFile(resolversFilePath, getFormattedCode(resolversFileContent))
+}

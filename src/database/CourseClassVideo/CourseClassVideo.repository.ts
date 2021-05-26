@@ -1,14 +1,14 @@
-import { getUuid } from "@sangonz193/utils/getUuid";
-import identity from "lodash/identity";
-import { Connection } from "typeorm";
+import { getUuid } from "@sangonz193/utils/getUuid"
+import identity from "lodash/identity"
+import { Connection } from "typeorm"
 
-import { getTypedRepository } from "../_utils/getTypedRepository";
-import { courseClassVideoColumns, courseClassVideoEntitySchema } from "./CourseClassVideo.entity";
-import { CourseClassVideoRow } from "./CourseClassVideo.entity.types";
-import { CourseClassVideoRepository, SaveCourseClassVideoData } from "./CourseClassVideo.repository.types";
+import { getTypedRepository } from "../_utils/getTypedRepository"
+import { courseClassVideoColumns, courseClassVideoEntitySchema } from "./CourseClassVideo.entity"
+import { CourseClassVideoRow } from "./CourseClassVideo.entity.types"
+import { CourseClassVideoRepository, SaveCourseClassVideoData } from "./CourseClassVideo.repository.types"
 
 export const getCourseClassVideoRepository = (connection: Connection): CourseClassVideoRepository => {
-	const repo = getTypedRepository(courseClassVideoEntitySchema, connection);
+	const repo = getTypedRepository(courseClassVideoEntitySchema, connection)
 
 	const is: CourseClassVideoRepository["is"] = (courseClassVideo, options) => {
 		return (
@@ -18,14 +18,14 @@ export const getCourseClassVideoRepository = (connection: Connection): CourseCla
 				courseClassVideo.visibility === "public" ||
 				options.includeDisabled ||
 				courseClassVideo.visibility === "disabled")
-		);
-	};
+		)
+	}
 
 	return {
 		_typedRepository: repo,
 
 		findAll: (options) => {
-			const queryBuilder = repo.createQueryBuilder("ce");
+			const queryBuilder = repo.createQueryBuilder("ce")
 
 			queryBuilder
 				.andWhere(
@@ -34,7 +34,7 @@ export const getCourseClassVideoRepository = (connection: Connection): CourseCla
 						courseClassId: options.courseClassId,
 					})
 				)
-				.andWhere(`ce.${courseClassVideoColumns.deleted_at.name} is null`);
+				.andWhere(`ce.${courseClassVideoColumns.deleted_at.name} is null`)
 
 			if (!options.includeDisabled) {
 				queryBuilder.andWhere(
@@ -42,7 +42,7 @@ export const getCourseClassVideoRepository = (connection: Connection): CourseCla
 					identity<{ v1: CourseClassVideoRow["visibility"] }>({
 						v1: "disabled",
 					})
-				);
+				)
 			}
 
 			if (!options.includeHidden) {
@@ -51,22 +51,22 @@ export const getCourseClassVideoRepository = (connection: Connection): CourseCla
 					identity<{ v2: CourseClassVideoRow["visibility"] }>({
 						v2: "hidden",
 					})
-				);
+				)
 			}
 
-			return queryBuilder.getMany();
+			return queryBuilder.getMany()
 		},
 
 		findBatch: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("ce");
+			const queryBuilder = repo.createQueryBuilder("ce")
 
 			queryBuilder
 				.andWhere(`ce.${courseClassVideoColumns.deleted_at.name} is null`)
-				.andWhereInIds(identity<Array<CourseClassVideoRow["id"]>>(options.map((options) => options.id)));
+				.andWhereInIds(identity<Array<CourseClassVideoRow["id"]>>(options.map((options) => options.id)))
 
-			const courseClassVideos = await queryBuilder.getMany();
+			const courseClassVideos = await queryBuilder.getMany()
 
-			return options.map((options) => courseClassVideos.find((ce) => is(ce, options)) || null);
+			return options.map((options) => courseClassVideos.find((ce) => is(ce, options)) || null)
 		},
 
 		is,
@@ -80,11 +80,11 @@ export const getCourseClassVideoRepository = (connection: Connection): CourseCla
 				deleted_at: data.deleted_at || null,
 				updated_by_id: data.updated_by_id || null,
 				deleted_by_id: data.deleted_by_id || null,
-			};
+			}
 
-			return entity;
+			return entity
 		},
 
 		save: (data) => repo.save(data),
-	};
-};
+	}
+}

@@ -1,26 +1,26 @@
-import { appConfig } from "../../../../config/app.config";
-import { createEmailValidationToken } from "../../../../modules/keycloak/createEmailValidationToken";
-import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNodemailerTransporter";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { Resolvers } from "../../schemas.types";
-import { validateSignUpInput } from "./validateSignUpInput";
+import { appConfig } from "../../../../config/app.config"
+import { createEmailValidationToken } from "../../../../modules/keycloak/createEmailValidationToken"
+import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNodemailerTransporter"
+import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
+import { Resolvers } from "../../schemas.types"
+import { validateSignUpInput } from "./validateSignUpInput"
 
 const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
-	const userFromSecret = await getUserFromSecret(args.secret, context);
+	const userFromSecret = await getUserFromSecret(args.secret, context)
 
 	if (!userFromSecret) {
-		return getGenericErrorParent();
+		return getGenericErrorParent()
 	}
 
-	const validationResult = await validateSignUpInput(args);
+	const validationResult = await validateSignUpInput(args)
 
 	if (!validationResult.success) {
-		return validationResult.errors;
+		return validationResult.errors
 	}
 
-	const { input } = validationResult;
-	let userWithId: { id: string } | undefined;
+	const { input } = validationResult
+	let userWithId: { id: string } | undefined
 	try {
 		userWithId = await context.keycloakAdminClientRef.current.users.create({
 			firstName: input.firstName,
@@ -34,18 +34,18 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 					value: args.input.password,
 				},
 			],
-		});
+		})
 	} catch (error) {
-		console.log(error);
-		return getGenericErrorParent();
+		console.log(error)
+		return getGenericErrorParent()
 	}
 
 	const user = await context.keycloakAdminClientRef.current.users.findOne({
 		id: userWithId.id,
-	});
+	})
 
 	if (!user.id || !user.email) {
-		return getGenericErrorParent();
+		return getGenericErrorParent()
 	}
 
 	const emailValidation = await context.repositories.emailValidation.insert({
@@ -53,12 +53,12 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 			user_id: user.id,
 			issued_at: new Date(),
 		},
-	});
+	})
 
-	const transporter = getNodemailerTransporter();
+	const transporter = getNodemailerTransporter()
 	const validationUrl = `${appConfig.publicUrl}/rest/validate-email?t=${encodeURIComponent(
 		createEmailValidationToken(emailValidation.id)
-	)}`;
+	)}`
 
 	transporter
 		?.sendMail({
@@ -68,10 +68,10 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 			html: `Te mandamos este correo porque te has registrado en OpenFING. Para completar el registro, por favor visita <a href="${validationUrl}">${validationUrl}</a>`,
 		})
 		.catch((error) => {
-			console.log(error);
-		});
+			console.log(error)
+		})
 
-	return null;
-};
+	return null
+}
 
-export default resolver;
+export default resolver

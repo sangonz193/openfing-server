@@ -1,27 +1,27 @@
-import { getEmailValidationIdFromEmailValidationToken } from "../../../modules/keycloak/getUserIdFromEmailValidationToken";
-import { RestEndpoint } from "../RestEndpoint";
+import { getEmailValidationIdFromEmailValidationToken } from "../../../modules/keycloak/getUserIdFromEmailValidationToken"
+import { RestEndpoint } from "../RestEndpoint"
 
 const handler: RestEndpoint["handler"] = async (context) => {
 	const sendResponse = (success: boolean) => {
-		context.res.send(success ? "El email ha quedado validado." : "No se pudo validar el email.");
-	};
+		context.res.send(success ? "El email ha quedado validado." : "No se pudo validar el email.")
+	}
 
-	const token = context.req.query.t;
+	const token = context.req.query.t
 	if (typeof token !== "string") {
-		sendResponse(false);
-		return;
+		sendResponse(false)
+		return
 	}
 
-	const emailValidationId = getEmailValidationIdFromEmailValidationToken(token);
+	const emailValidationId = getEmailValidationIdFromEmailValidationToken(token)
 	if (!emailValidationId) {
-		sendResponse(false);
-		return;
+		sendResponse(false)
+		return
 	}
 
-	const emailValidation = await context.dataLoaders.emailValidation.find.load(emailValidationId);
+	const emailValidation = await context.dataLoaders.emailValidation.find.load(emailValidationId)
 	if (!emailValidation) {
-		sendResponse(false);
-		return;
+		sendResponse(false)
+		return
 	}
 
 	try {
@@ -32,18 +32,18 @@ const handler: RestEndpoint["handler"] = async (context) => {
 			{
 				emailVerified: true,
 			}
-		);
-		sendResponse(true);
-		context.repositories.emailValidation.delete({ userId: emailValidation.user_id });
+		)
+		sendResponse(true)
+		context.repositories.emailValidation.delete({ userId: emailValidation.user_id })
 	} catch (error) {
-		sendResponse(false);
-		console.log(error);
+		sendResponse(false)
+		console.log(error)
 	}
-};
+}
 
 const endpoint: RestEndpoint = {
 	httpMethod: "get",
 	handler,
-};
+}
 
-export default endpoint;
+export default endpoint

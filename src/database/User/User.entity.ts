@@ -1,8 +1,8 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
-import { UserColumns, UserEntitySchema, UserRelations } from "./User.entity.types";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
+import { UserColumns, UserEntitySchema, UserRelations } from "./User.entity.types"
 
 // TODO: delete
 
@@ -35,7 +35,7 @@ export const userColumns: ColumnsOptions<UserColumns> = {
 	created_at: commonManagedColumnsOptions.created_at,
 	updated_at: commonManagedColumnsOptions.updated_at,
 	deleted_at: commonManagedColumnsOptions.deleted_at,
-};
+}
 
 export const userRelations: RelationsOptions<UserRelations> = {
 	createdCourses: {
@@ -196,10 +196,10 @@ export const userRelations: RelationsOptions<UserRelations> = {
 		inverseSide: "user",
 		target: "user_to_user_role",
 	},
-};
+}
 
 export const userEntitySchema = createTypedEntitySchema<UserEntitySchema>({
 	name: "user",
 	columns: userColumns,
 	relations: userRelations,
-});
+})

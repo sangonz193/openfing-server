@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	type CourseEdition {
@@ -19,4 +19,4 @@ export default gql`
 		updatedBy: User
 		deletedBy: User
 	}
-`;
+`

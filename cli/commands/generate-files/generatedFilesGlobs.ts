@@ -1,6 +1,6 @@
-import path from "path";
+import path from "path"
 
-import { projectPath } from "../../_utils/projectPath";
+import { projectPath } from "../../_utils/projectPath"
 
 // TODO: Either delete or update const name.
 
@@ -11,4 +11,4 @@ export const generatedFilesGlobs = {
 	schemasIndex: path.resolve(projectPath, "src", "api", "graphql", "schemas.ts"),
 	schemasTypeIndex: path.resolve(projectPath, "src", "api", "graphql", "schemas.types.ts"),
 	restEndpoints: path.resolve(projectPath, "src", "api", "rest", "endpoints.ts"),
-};
+}

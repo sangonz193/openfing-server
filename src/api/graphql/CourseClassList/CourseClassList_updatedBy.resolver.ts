@@ -1,6 +1,6 @@
-import { updatedByResolver } from "../_utils/updatedByResolver";
-import { Resolvers } from "../schemas.types";
+import { updatedByResolver } from "../_utils/updatedByResolver"
+import { Resolvers } from "../schemas.types"
 
-const resolver: Resolvers["CourseClassList"]["updatedBy"] = updatedByResolver;
+const resolver: Resolvers["CourseClassList"]["updatedBy"] = updatedByResolver
 
-export default resolver;
+export default resolver

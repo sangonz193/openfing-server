@@ -1,17 +1,17 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
-import { Connection } from "typeorm";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
+import { Connection } from "typeorm"
 
 import {
 	deleteCourseClassLiveStateByCourseClassId,
 	DeleteCourseClassLiveStateByCourseClassIdOptions,
-} from "./deleteCourseClassLiveStateByCourseClassId";
+} from "./deleteCourseClassLiveStateByCourseClassId"
 import {
 	findCourseClassLiveStateByCourseClassIdBatch,
 	FindCourseClassLiveStateByCourseClassIdBatchOptions,
-} from "./findCourseClassLiveStateByCourseClassId";
-import { insertCourseClassLiveState, InsertCourseClassLiveStateOptions } from "./insertCourseClassLiveState";
+} from "./findCourseClassLiveStateByCourseClassId"
+import { insertCourseClassLiveState, InsertCourseClassLiveStateOptions } from "./insertCourseClassLiveState"
 
-export type CourseClassLiveStateRepository = ReturnType<typeof getCourseClassLiveStateRepository>;
+export type CourseClassLiveStateRepository = ReturnType<typeof getCourseClassLiveStateRepository>
 
 export function getCourseClassLiveStateRepository(connection: Connection) {
 	return {
@@ -28,5 +28,5 @@ export function getCourseClassLiveStateRepository(connection: Connection) {
 		deleteCourseClassLiveStateByCourseClassId: (
 			options: SafeOmit<DeleteCourseClassLiveStateByCourseClassIdOptions, "connection">
 		) => deleteCourseClassLiveStateByCourseClassId({ connection, ...options }),
-	};
+	}
 }

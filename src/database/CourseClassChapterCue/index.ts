@@ -1,1 +1,1 @@
-export * from "./CourseClassChapterCue.entity";
+export * from "./CourseClassChapterCue.entity"

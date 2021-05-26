@@ -1,11 +1,11 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { CommonVisibility } from "../_utils/CommonVisibility";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
-import { CourseClassColumns, CourseClassEntitySchema, CourseClassRelations } from "./CourseClass.entity.types";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { CommonVisibility } from "../_utils/CommonVisibility"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
+import { CourseClassColumns, CourseClassEntitySchema, CourseClassRelations } from "./CourseClass.entity.types"
 
-export type CourseClassVisibility = CommonVisibility;
+export type CourseClassVisibility = CommonVisibility
 
 export const courseClassColumns: ColumnsOptions<CourseClassColumns> = {
 	id: {
@@ -48,7 +48,7 @@ export const courseClassColumns: ColumnsOptions<CourseClassColumns> = {
 	created_by_id: commonManagedColumnsOptions.created_by_id,
 	updated_by_id: commonManagedColumnsOptions.updated_by_id,
 	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
-};
+}
 
 export const courseClassRelations: RelationsOptions<CourseClassRelations> = {
 	courseClassList: {
@@ -98,10 +98,10 @@ export const courseClassRelations: RelationsOptions<CourseClassRelations> = {
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseClassEntitySchema = createTypedEntitySchema<CourseClassEntitySchema>({
 	name: "course_class",
 	columns: courseClassColumns,
 	relations: courseClassRelations,
-});
+})

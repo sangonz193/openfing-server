@@ -1,5 +1,5 @@
-import { Resolvers } from "../schemas.types";
+import { Resolvers } from "../schemas.types"
 
-const resolver: Resolvers["UserRole"]["id"] = (parent) => parent.id.toString();
+const resolver: Resolvers["UserRole"]["id"] = (parent) => parent.id.toString()
 
-export default resolver;
+export default resolver

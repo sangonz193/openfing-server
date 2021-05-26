@@ -1,1 +1,1 @@
-export type CommonVisibility = "public" | "hidden" | "disabled";
+export type CommonVisibility = "public" | "hidden" | "disabled"

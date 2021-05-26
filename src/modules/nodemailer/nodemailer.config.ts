@@ -1,17 +1,17 @@
-import identity from "lodash/identity";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import * as yup from "yup";
+import identity from "lodash/identity"
+import SMTPTransport from "nodemailer/lib/smtp-transport"
+import * as yup from "yup"
 
-import { validateEnv } from "../../_utils/validateEnv";
+import { validateEnv } from "../../_utils/validateEnv"
 
 let validatedData:
 	| {
-			NODEMAILER_HOST: string;
-			NODEMAILER_PORT: number;
-			NODEMAILER_USERNAME: string;
-			NODEMAILER_PASSWORD: string;
+			NODEMAILER_HOST: string
+			NODEMAILER_PORT: number
+			NODEMAILER_USERNAME: string
+			NODEMAILER_PASSWORD: string
 	  }
-	| undefined;
+	| undefined
 
 try {
 	validatedData = validateEnv({
@@ -19,7 +19,7 @@ try {
 		NODEMAILER_PORT: yup.number().required(),
 		NODEMAILER_USERNAME: yup.string().required(),
 		NODEMAILER_PASSWORD: yup.string().required(),
-	});
+	})
 } catch {}
 
 export const nodemailerConfig = validatedData
@@ -34,4 +34,4 @@ export const nodemailerConfig = validatedData
 				},
 			}),
 	  }
-	: {};
+	: {}

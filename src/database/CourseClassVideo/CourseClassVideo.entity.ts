@@ -1,15 +1,15 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { CommonVisibility } from "../_utils/CommonVisibility";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { CommonVisibility } from "../_utils/CommonVisibility"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
 import {
 	CourseClassVideoColumns,
 	CourseClassVideoEntitySchema,
 	CourseClassVideoRelations,
-} from "./CourseClassVideo.entity.types";
+} from "./CourseClassVideo.entity.types"
 
-export type CourseClassVideoVisibility = CommonVisibility;
+export type CourseClassVideoVisibility = CommonVisibility
 
 export const courseClassVideoColumns: ColumnsOptions<CourseClassVideoColumns> = {
 	id: {
@@ -47,7 +47,7 @@ export const courseClassVideoColumns: ColumnsOptions<CourseClassVideoColumns> = 
 	created_by_id: commonManagedColumnsOptions.created_by_id,
 	updated_by_id: commonManagedColumnsOptions.updated_by_id,
 	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
-};
+}
 
 export const courseClassVideoRelations: RelationsOptions<CourseClassVideoRelations> = {
 	courseClass: {
@@ -97,10 +97,10 @@ export const courseClassVideoRelations: RelationsOptions<CourseClassVideoRelatio
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseClassVideoEntitySchema = createTypedEntitySchema<CourseClassVideoEntitySchema>({
 	name: "course_class_video",
 	columns: courseClassVideoColumns,
 	relations: courseClassVideoRelations,
-});
+})

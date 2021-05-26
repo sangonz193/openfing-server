@@ -1,6 +1,6 @@
-import { createdByResolver } from "../_utils/createdByResolver";
-import { Resolvers } from "../schemas.types";
+import { createdByResolver } from "../_utils/createdByResolver"
+import { Resolvers } from "../schemas.types"
 
-const resolver: Resolvers["CourseClassVideoQuality"]["createdBy"] = createdByResolver;
+const resolver: Resolvers["CourseClassVideoQuality"]["createdBy"] = createdByResolver
 
-export default resolver;
+export default resolver

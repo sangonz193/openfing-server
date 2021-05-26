@@ -1,11 +1,11 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
 import {
 	EmailValidationColumns,
 	EmailValidationEntitySchema,
 	EmailValidationRelations,
-} from "./EmailValidation.entity.types";
+} from "./EmailValidation.entity.types"
 
 export const emailValidationColumns: ColumnsOptions<EmailValidationColumns> = {
 	id: {
@@ -23,12 +23,12 @@ export const emailValidationColumns: ColumnsOptions<EmailValidationColumns> = {
 		name: "issued_at",
 		type: "timestamp with time zone",
 	},
-};
+}
 
-export const emailValidationRelations: RelationsOptions<EmailValidationRelations> = {};
+export const emailValidationRelations: RelationsOptions<EmailValidationRelations> = {}
 
 export const emailValidationEntitySchema = createTypedEntitySchema<EmailValidationEntitySchema>({
 	name: "email_validation",
 	columns: emailValidationColumns,
 	relations: emailValidationRelations,
-});
+})

@@ -1,16 +1,16 @@
-import { identityMap } from "@sangonz193/utils/identityMap";
+import { identityMap } from "@sangonz193/utils/identityMap"
 
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
-import { UserRoleColumns, UserRoleEntitySchema, UserRoleRelations } from "./UserRole.entity.types";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
+import { UserRoleColumns, UserRoleEntitySchema, UserRoleRelations } from "./UserRole.entity.types"
 
 // TODO: delete
 
 export const UserRoleCode = identityMap<"admin" | "user">({
 	admin: 0,
 	user: 0,
-});
+})
 
 export const userRoleColumns: ColumnsOptions<UserRoleColumns> = {
 	id: {
@@ -22,7 +22,7 @@ export const userRoleColumns: ColumnsOptions<UserRoleColumns> = {
 		name: "code",
 		type: "varchar",
 	},
-};
+}
 
 export const userRoleRelations: RelationsOptions<UserRoleRelations> = {
 	userToUserRoles: {
@@ -31,10 +31,10 @@ export const userRoleRelations: RelationsOptions<UserRoleRelations> = {
 		inverseSide: "userRole",
 		target: "user_to_user_role",
 	},
-};
+}
 
 export const userRoleEntitySchema = createTypedEntitySchema<UserRoleEntitySchema>({
 	name: "user_role",
 	columns: userRoleColumns,
 	relations: userRoleRelations,
-});
+})

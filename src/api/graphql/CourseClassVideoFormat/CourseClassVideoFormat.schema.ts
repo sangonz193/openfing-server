@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	type CourseClassVideoFormat {
@@ -18,4 +18,4 @@ export default gql`
 		deletedBy: User
 		updatedBy: User
 	}
-`;
+`
