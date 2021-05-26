@@ -1,12 +1,12 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 
-import { FaqRow } from "../../../database/Faq/Faq.entity.types";
-import { Faq } from "../schemas.types";
+import { FaqRow } from "../../../database/Faq/Faq.entity.types"
+import { Faq } from "../schemas.types"
 
 export type FaqParent = Required<
 	SafeOmit<FaqRow, "id" | "title" | "content" | "is_html" | "created_at" | "updated_at" | "deleted_at">
 > &
-	Pick<Required<Faq>, "__typename" | "id" | "title" | "content" | "isHtml" | "createdAt" | "updatedAt" | "deletedAt">;
+	Pick<Required<Faq>, "__typename" | "id" | "title" | "content" | "isHtml" | "createdAt" | "updatedAt" | "deletedAt">
 
 export const getFaqParent = (faqRow: FaqRow): FaqParent => ({
 	__typename: "Faq",
@@ -18,4 +18,4 @@ export const getFaqParent = (faqRow: FaqRow): FaqParent => ({
 	createdAt: faqRow.created_at?.toISOString() || null,
 	updatedAt: faqRow.updated_at?.toISOString() || null,
 	deletedAt: faqRow.deleted_at?.toISOString() || null,
-});
+})

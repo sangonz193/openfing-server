@@ -1,27 +1,27 @@
-import { isValid, parse, set } from "date-fns";
-import path from "path";
-import SFTP from "ssh2-promise/dist/sftp";
-import * as yup from "yup";
+import { isValid, parse, set } from "date-fns"
+import path from "path"
+import SFTP from "ssh2-promise/dist/sftp"
+import * as yup from "yup"
 
-import { CourseClassVideoRow } from "../../../../database/CourseClassVideo/CourseClassVideo.entity.types";
-import { CourseClassVideoFormatRow } from "../../../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types";
-import { getCourseClassVideoFileName } from "../../../../modules/miscellaneous/getCourseClassVideoFileName";
-import { getOpenFingVideoSftpConnection } from "../../../../modules/openfing-video-connection/getOpenFingVideoSftpConnection";
-import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef";
-import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
-import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent";
-import { MutationUpdateCourseClassArgs, Resolvers } from "../../schemas.types";
-import { getUpdateCourseClassPayload } from "./UpdateCourseClassPayload.parent";
+import { CourseClassVideoRow } from "../../../../database/CourseClassVideo/CourseClassVideo.entity.types"
+import { CourseClassVideoFormatRow } from "../../../../database/CourseClassVideoFormat/CourseClassVideoFormat.entity.types"
+import { getCourseClassVideoFileName } from "../../../../modules/miscellaneous/getCourseClassVideoFileName"
+import { getOpenFingVideoSftpConnection } from "../../../../modules/openfing-video-connection/getOpenFingVideoSftpConnection"
+import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef"
+import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
+import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
+import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
+import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent"
+import { MutationUpdateCourseClassArgs, Resolvers } from "../../schemas.types"
+import { getUpdateCourseClassPayload } from "./UpdateCourseClassPayload.parent"
 
 const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, context) => {
-	const { repositories, dataLoaders } = context;
+	const { repositories, dataLoaders } = context
 
-	const user = await getUserFromSecret(args.secret, context);
+	const user = await getUserFromSecret(args.secret, context)
 	if (!user) {
-		return getAuthenticationErrorParent();
+		return getAuthenticationErrorParent()
 	}
 
 	const courseClass = await getCourseClassFromRef(
@@ -31,9 +31,9 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 			includeDisabled: true,
 		},
 		context
-	);
+	)
 	if (!courseClass) {
-		return getNotFoundErrorParent();
+		return getNotFoundErrorParent()
 	}
 
 	const validatedData = await yup
@@ -43,7 +43,7 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 					[K in keyof MutationUpdateCourseClassArgs["input"]]: Exclude<
 						MutationUpdateCourseClassArgs["input"][K],
 						null
-					>;
+					>
 				}
 			>["fields"]
 		>({
@@ -53,11 +53,11 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 			publishedAt: yup.string().nullable(false).notRequired(),
 		})
 		.required()
-		.validate(args.input);
+		.validate(args.input)
 
-	let newPublishedAt: Date | undefined;
+	let newPublishedAt: Date | undefined
 	if (typeof validatedData.publishedAt === "string") {
-		newPublishedAt = parse(validatedData.publishedAt, "uuuu-MM-dd", new Date());
+		newPublishedAt = parse(validatedData.publishedAt, "uuuu-MM-dd", new Date())
 
 		if (courseClass.published_at) {
 			newPublishedAt = set(newPublishedAt, {
@@ -65,11 +65,11 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 				minutes: courseClass.published_at.getMinutes(),
 				seconds: courseClass.published_at.getSeconds(),
 				milliseconds: courseClass.published_at.getMilliseconds(),
-			});
+			})
 		}
 
 		if (!isValid(newPublishedAt)) {
-			return getGenericErrorParent();
+			return getGenericErrorParent()
 		}
 	}
 
@@ -77,10 +77,10 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 		const courseClassWithSameNumber = await dataLoaders.courseClass.load({
 			courseClassListId: courseClass.course_class_list_id,
 			number: validatedData.number,
-		});
+		})
 
 		if (courseClassWithSameNumber) {
-			return getGenericErrorParent();
+			return getGenericErrorParent()
 		}
 	}
 
@@ -90,15 +90,15 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 		number: validatedData.number,
 		visibility: validatedData.visibility && getDbCommonVisibilityValue(validatedData.visibility),
 		published_at: newPublishedAt,
-	});
+	})
 
-	const openFingVideoServerUrl = "https://openfing-video.fing.edu.uy";
+	const openFingVideoServerUrl = "https://openfing-video.fing.edu.uy"
 
 	const renameVideoFile = async (options: {
-		from: string;
-		to: string;
-		courseClassVideoFormatId: CourseClassVideoFormatRow["id"];
-		sftp: SFTP;
+		from: string
+		to: string
+		courseClassVideoFormatId: CourseClassVideoFormatRow["id"]
+		sftp: SFTP
 	}) => {
 		await Promise.all([
 			await repositories.courseClassVideoFormat.update(options.courseClassVideoFormatId, {
@@ -106,12 +106,12 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 				updated_by_id: user.id,
 			}),
 			options.sftp.rename(options.from, options.to),
-		]);
+		])
 
-		const torrentFromPath = `${options.from}.torrent`;
-		const torrentToPath = `${options.to}.torrent`;
-		await options.sftp.rename(torrentFromPath, torrentToPath).catch(() => null);
-	};
+		const torrentFromPath = `${options.from}.torrent`
+		const torrentToPath = `${options.to}.torrent`
+		await options.sftp.rename(torrentFromPath, torrentToPath).catch(() => null)
+	}
 
 	const getVideosData = async () => {
 		const getQualities = async (id: CourseClassVideoRow["id"]) => {
@@ -126,10 +126,10 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 						formats: await repositories.courseClassVideoFormat.findAll({
 							courseClassVideoQualityId: quality.id,
 						}),
-					};
+					}
 				})
-			);
-		};
+			)
+		}
 
 		return await Promise.all(
 			(
@@ -142,15 +142,15 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 				return {
 					...video,
 					qualities: await getQualities(video.id),
-				};
+				}
 			})
-		);
-	};
+		)
+	}
 
 	const getCourseClassListCode = async () => {
-		const { course_class_list_id } = updatedCourseClass;
+		const { course_class_list_id } = updatedCourseClass
 		if (!course_class_list_id) {
-			return null;
+			return null
 		}
 
 		return (
@@ -159,14 +159,14 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 				includeDisabled: true,
 				includeHidden: true,
 			})
-		)?.code;
-	};
+		)?.code
+	}
 
 	const [videos, openFingVideoSftp, courseClassListCode] = await Promise.all([
 		getVideosData(),
 		getOpenFingVideoSftpConnection(),
 		getCourseClassListCode(),
-	]);
+	])
 
 	if (openFingVideoSftp && courseClassListCode) {
 		await Promise.all(
@@ -175,15 +175,15 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 					video.qualities.map(async (quality, qualityIndex) => {
 						await Promise.all(
 							quality.formats.map(async (format) => {
-								const videoFilePath = format.url?.split(openFingVideoServerUrl.substr(-10))[1];
+								const videoFilePath = format.url?.split(openFingVideoServerUrl.substr(-10))[1]
 								if (!videoFilePath) {
-									return;
+									return
 								}
 
-								const fileExists = !!(await openFingVideoSftp?.lstat(videoFilePath).catch(() => false));
+								const fileExists = !!(await openFingVideoSftp?.lstat(videoFilePath).catch(() => false))
 								if (!fileExists) {
-									console.log(`Won't rename: File does not exist: ${videoFilePath}`);
-									return;
+									console.log(`Won't rename: File does not exist: ${videoFilePath}`)
+									return
 								}
 
 								const newVideoFileName = await getCourseClassVideoFileName({
@@ -194,14 +194,14 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 									video,
 									qualityIndex,
 									videoIndex,
-								});
+								})
 
 								if (!newVideoFileName) {
-									console.log(`Could not get new name for courseClass ${courseClass.id}`);
-									return;
+									console.log(`Could not get new name for courseClass ${courseClass.id}`)
+									return
 								}
 
-								const newVideoFilePath = path.posix.resolve(videoFilePath, "..", newVideoFileName);
+								const newVideoFilePath = path.posix.resolve(videoFilePath, "..", newVideoFileName)
 
 								if (newVideoFilePath !== videoFilePath) {
 									await renameVideoFile({
@@ -209,19 +209,19 @@ const resolver: Resolvers["Mutation"]["updateCourseClass"] = async (_, args, con
 										to: newVideoFilePath,
 										courseClassVideoFormatId: format.id,
 										sftp: openFingVideoSftp,
-									});
+									})
 								}
 							})
-						);
+						)
 					})
-				);
+				)
 			})
-		);
+		)
 	}
 
 	return getUpdateCourseClassPayload({
 		courseClass: updatedCourseClass,
-	});
-};
+	})
+}
 
-export default resolver;
+export default resolver

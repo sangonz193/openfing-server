@@ -1,22 +1,22 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
-import * as yup from "yup";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
+import * as yup from "yup"
 
-import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types";
-import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types";
-import { Repositories } from "../../../../database/repositories";
-import { backupDb } from "../../../../modules/backup-db/backupDb";
-import { RequestContext } from "../../../RequestContext";
-import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef";
-import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { withUserFromSecret } from "../../middlewares/withUserFromSecret";
+import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types"
+import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types"
+import { Repositories } from "../../../../database/repositories"
+import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { RequestContext } from "../../../RequestContext"
+import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef"
+import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
+import { withUserFromSecret } from "../../middlewares/withUserFromSecret"
 import {
 	MutationSetCourseClassLiveStateArgs,
 	RequireFields,
 	ResolverFn,
 	ResolversParentTypes,
 	ResolversTypes,
-} from "../../schemas.types";
-import { getSetCourseClassLiveStatePayloadParent } from "./SetCourseClassLiveStatePayload.parent";
+} from "../../schemas.types"
+import { getSetCourseClassLiveStatePayloadParent } from "./SetCourseClassLiveStatePayload.parent"
 
 const resolver: ResolverFn<
 	ResolversTypes["SetCourseClassLiveStateResult"],
@@ -24,13 +24,13 @@ const resolver: ResolverFn<
 	RequestContext & Required<Pick<RequestContext, "user">>,
 	RequireFields<MutationSetCourseClassLiveStateArgs, "input" | "secret">
 > = async (_, args, context) => {
-	const { repositories, dataLoaders } = context;
+	const { repositories, dataLoaders } = context
 
 	const validatedDataPromise = yup
 		.object<
 			yup.SchemaOf<
 				SafeOmit<Extract<typeof args["input"]["data"], {}>, "startDate"> & {
-					startDate: Date | null | undefined;
+					startDate: Date | null | undefined
 				}
 			>["fields"]
 		>({
@@ -39,14 +39,14 @@ const resolver: ResolverFn<
 			startDate: yup.date().nullable(),
 		})
 		.nullable(true)
-		.validate(args.input.data);
+		.validate(args.input.data)
 
-	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
+	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
-		validatedData = await validatedDataPromise;
+		validatedData = await validatedDataPromise
 	} catch (e) {
-		console.log(e);
-		return getGenericErrorParent();
+		console.log(e)
+		return getGenericErrorParent()
 	}
 
 	const courseClass = await getCourseClassFromRef(
@@ -56,20 +56,20 @@ const resolver: ResolverFn<
 			includeHidden: true,
 		},
 		context
-	);
+	)
 
 	if (!courseClass) {
-		console.log("course class not found");
-		return getGenericErrorParent();
+		console.log("course class not found")
+		return getGenericErrorParent()
 	}
 
 	const prevCourseClassLiveState = await dataLoaders.courseClassLiveState.findCourseClassLiveStateByCourseClassId.load(
 		courseClass.id
-	);
+	)
 	if (prevCourseClassLiveState?.course_class_id) {
 		repositories.courseClassLiveState.deleteCourseClassLiveStateByCourseClassId({
 			courseClassId: prevCourseClassLiveState.course_class_id,
-		});
+		})
 	}
 
 	if (validatedData) {
@@ -78,22 +78,22 @@ const resolver: ResolverFn<
 			courseClass,
 			validatedData,
 			prevCourseClassLiveState
-		);
-		await backupDb();
+		)
+		await backupDb()
 
-		return getSetCourseClassLiveStatePayloadParent(courseClassLiveState);
+		return getSetCourseClassLiveStatePayloadParent(courseClassLiveState)
 	}
 
-	return getGenericErrorParent();
-};
+	return getGenericErrorParent()
+}
 
-export default withUserFromSecret(resolver);
+export default withUserFromSecret(resolver)
 
 async function createCourseClassLiveState(
 	repositories: Repositories,
 	courseClass: CourseClassRow,
 	validatedData: SafeOmit<Extract<MutationSetCourseClassLiveStateArgs["input"]["data"], {}>, "startDate"> & {
-		startDate: Date | null | undefined;
+		startDate: Date | null | undefined
 	},
 	prevCourseClassLiveState: CourseClassLiveStateRow | null
 ) {
@@ -112,5 +112,5 @@ async function createCourseClassLiveState(
 					  prevCourseClassLiveState?.start_date ??
 					  null,
 		},
-	});
+	})
 }

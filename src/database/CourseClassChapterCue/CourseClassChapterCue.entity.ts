@@ -1,12 +1,12 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
 import {
 	CourseClassChapterCueColumns,
 	CourseClassChapterCueEntitySchema,
 	CourseClassChapterCueRelations,
-} from "./CourseClassChapterCue.entity.types";
+} from "./CourseClassChapterCue.entity.types"
 
 export const courseClassChapterCueColumns: ColumnsOptions<CourseClassChapterCueColumns> = {
 	id: {
@@ -40,7 +40,7 @@ export const courseClassChapterCueColumns: ColumnsOptions<CourseClassChapterCueC
 	created_by_id: commonManagedColumnsOptions.created_by_id,
 	updated_by_id: commonManagedColumnsOptions.updated_by_id,
 	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
-};
+}
 
 export const courseClassChapterCueRelations: RelationsOptions<CourseClassChapterCueRelations> = {
 	courseClass: {
@@ -84,10 +84,10 @@ export const courseClassChapterCueRelations: RelationsOptions<CourseClassChapter
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseClassChapterCueEntitySchema = createTypedEntitySchema<CourseClassChapterCueEntitySchema>({
 	name: "course_class_chapter_cue",
 	columns: courseClassChapterCueColumns,
 	relations: courseClassChapterCueRelations,
-});
+})

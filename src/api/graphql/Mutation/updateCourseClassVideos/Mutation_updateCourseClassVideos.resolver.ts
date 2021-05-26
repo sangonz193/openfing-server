@@ -1,8 +1,8 @@
-import { Resolvers } from "../../schemas.types";
+import { Resolvers } from "../../schemas.types"
 
 const resolver: Resolvers["Mutation"]["updateCourseClassVideos"] = () => {
 	// TODO: implement
-	throw new Error("Not implemented");
-};
+	throw new Error("Not implemented")
+}
 
-export default resolver;
+export default resolver

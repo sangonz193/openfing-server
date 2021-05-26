@@ -1,24 +1,24 @@
-import { getUuid } from "@sangonz193/utils/getUuid";
-import identity from "lodash/identity";
-import { Connection } from "typeorm";
+import { getUuid } from "@sangonz193/utils/getUuid"
+import identity from "lodash/identity"
+import { Connection } from "typeorm"
 
-import { getTypedRepository } from "../_utils/getTypedRepository";
-import { courseClassChapterCueColumns, courseClassChapterCueEntitySchema } from "./CourseClassChapterCue.entity";
-import { CourseClassChapterCueRow } from "./CourseClassChapterCue.entity.types";
-import { CourseClassChapterCueRepository } from "./CourseClassChapterCue.repository.types";
+import { getTypedRepository } from "../_utils/getTypedRepository"
+import { courseClassChapterCueColumns, courseClassChapterCueEntitySchema } from "./CourseClassChapterCue.entity"
+import { CourseClassChapterCueRow } from "./CourseClassChapterCue.entity.types"
+import { CourseClassChapterCueRepository } from "./CourseClassChapterCue.repository.types"
 
 export const getCourseClassChapterCueRepository = (connection: Connection): CourseClassChapterCueRepository => {
-	const repo = getTypedRepository(courseClassChapterCueEntitySchema, connection);
+	const repo = getTypedRepository(courseClassChapterCueEntitySchema, connection)
 
 	const is: CourseClassChapterCueRepository["is"] = (courseClassChapterCue, options) => {
-		return courseClassChapterCue.id === options.id && courseClassChapterCue.deleted_at === null;
-	};
+		return courseClassChapterCue.id === options.id && courseClassChapterCue.deleted_at === null
+	}
 
 	return {
 		_typedRepository: repo,
 
 		findAll: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("cccc");
+			const queryBuilder = repo.createQueryBuilder("cccc")
 
 			queryBuilder
 				.andWhere(
@@ -27,23 +27,23 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 						courseClassId: options.courseClassId,
 					})
 				)
-				.andWhere(`cccc.${courseClassChapterCueColumns.deleted_at.name} is null`);
+				.andWhere(`cccc.${courseClassChapterCueColumns.deleted_at.name} is null`)
 
-			queryBuilder.orderBy(courseClassChapterCueColumns.start_seconds.name, "ASC");
+			queryBuilder.orderBy(courseClassChapterCueColumns.start_seconds.name, "ASC")
 
-			return queryBuilder.getMany();
+			return queryBuilder.getMany()
 		},
 
 		findBatch: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("cccc");
+			const queryBuilder = repo.createQueryBuilder("cccc")
 
 			queryBuilder
 				.andWhere(`cccc.${courseClassChapterCueColumns.deleted_at.name} is null`)
-				.andWhereInIds(identity<Array<CourseClassChapterCueRow["id"]>>(options.map((options) => options.id)));
+				.andWhereInIds(identity<Array<CourseClassChapterCueRow["id"]>>(options.map((options) => options.id)))
 
-			const courseClassChapterCues = await queryBuilder.getMany();
+			const courseClassChapterCues = await queryBuilder.getMany()
 
-			return options.map((options) => courseClassChapterCues.find((cccc) => is(cccc, options)) || null);
+			return options.map((options) => courseClassChapterCues.find((cccc) => is(cccc, options)) || null)
 		},
 
 		is,
@@ -59,5 +59,5 @@ export const getCourseClassChapterCueRepository = (connection: Connection): Cour
 		}),
 
 		save: (data) => repo.save(data),
-	};
-};
+	}
+}

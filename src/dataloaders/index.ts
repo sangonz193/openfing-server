@@ -1,46 +1,43 @@
-import { Connection } from "typeorm";
+import { Connection } from "typeorm"
 
 import {
 	CourseClassLiveStateDataLoader,
 	getCourseClassLiveStateDataLoader,
-} from "../database/CourseClassLiveState/CourseClassLiveState.dataLoader";
+} from "../database/CourseClassLiveState/CourseClassLiveState.dataLoader"
 import {
 	EmailValidationDataLoader,
 	getEmailValidationDataLoader,
-} from "../database/EmailValidation/EmailValidation.dataLoader";
-import { Repositories } from "../database/repositories";
-import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader";
-import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader";
-import {
-	CourseClassChapterCueDataLoader,
-	getCourseClassChapterCueDataLoader,
-} from "./CourseClassChapterCue.dataLoader";
-import { CourseClassListDataLoader, getCourseClassListDataLoader } from "./CourseClassList.dataLoader";
-import { CourseClassVideoDataLoader, getCourseClassVideoDataLoader } from "./CourseClassVideo.dataLoader";
+} from "../database/EmailValidation/EmailValidation.dataLoader"
+import { Repositories } from "../database/repositories"
+import { CourseDataLoader, getCourseDataLoader } from "./Course.dataLoader"
+import { CourseClassDataLoader, getCourseClassDataLoader } from "./CourseClass.dataLoader"
+import { CourseClassChapterCueDataLoader, getCourseClassChapterCueDataLoader } from "./CourseClassChapterCue.dataLoader"
+import { CourseClassListDataLoader, getCourseClassListDataLoader } from "./CourseClassList.dataLoader"
+import { CourseClassVideoDataLoader, getCourseClassVideoDataLoader } from "./CourseClassVideo.dataLoader"
 import {
 	CourseClassVideoFormatDataLoader,
 	getCourseClassVideoFormatDataLoader,
-} from "./CourseClassVideoFormat.dataLoader";
+} from "./CourseClassVideoFormat.dataLoader"
 import {
 	CourseClassVideoQualityDataLoader,
 	getCourseClassVideoQualityDataLoader,
-} from "./CourseClassVideoQuality.dataLoader";
-import { CourseEditionDataLoader, getCourseEditionDataLoader } from "./CourseEdition.dataLoader";
-import { getUserDataLoader, UserDataLoader } from "./User.dataLoader";
+} from "./CourseClassVideoQuality.dataLoader"
+import { CourseEditionDataLoader, getCourseEditionDataLoader } from "./CourseEdition.dataLoader"
+import { getUserDataLoader, UserDataLoader } from "./User.dataLoader"
 
 export type DataLoaders = {
-	course: CourseDataLoader;
-	courseClass: CourseClassDataLoader;
-	courseClassChapterCue: CourseClassChapterCueDataLoader;
-	courseClassList: CourseClassListDataLoader;
-	courseClassLiveState: CourseClassLiveStateDataLoader;
-	courseClassVideo: CourseClassVideoDataLoader;
-	courseClassVideoFormat: CourseClassVideoFormatDataLoader;
-	courseClassVideoQuality: CourseClassVideoQualityDataLoader;
-	courseEdition: CourseEditionDataLoader;
-	emailValidation: EmailValidationDataLoader;
-	user: UserDataLoader;
-};
+	course: CourseDataLoader
+	courseClass: CourseClassDataLoader
+	courseClassChapterCue: CourseClassChapterCueDataLoader
+	courseClassList: CourseClassListDataLoader
+	courseClassLiveState: CourseClassLiveStateDataLoader
+	courseClassVideo: CourseClassVideoDataLoader
+	courseClassVideoFormat: CourseClassVideoFormatDataLoader
+	courseClassVideoQuality: CourseClassVideoQualityDataLoader
+	courseEdition: CourseEditionDataLoader
+	emailValidation: EmailValidationDataLoader
+	user: UserDataLoader
+}
 
 export const getDataLoaders = (repositories: Repositories, connection: Connection): DataLoaders => ({
 	course: getCourseDataLoader(repositories.course),
@@ -54,4 +51,4 @@ export const getDataLoaders = (repositories: Repositories, connection: Connectio
 	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
 	emailValidation: getEmailValidationDataLoader(connection),
 	user: getUserDataLoader(repositories.user),
-});
+})

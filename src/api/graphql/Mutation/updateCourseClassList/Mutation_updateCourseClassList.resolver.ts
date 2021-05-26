@@ -1,19 +1,19 @@
-import * as yup from "yup";
+import * as yup from "yup"
 
-import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef";
-import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
-import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent";
-import { MutationUpdateCourseClassListArgs, Resolvers } from "../../schemas.types";
-import { getUpdateCourseClassListPayload } from "./UpdateCourseClassListPayload.parent";
+import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef"
+import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
+import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
+import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent"
+import { MutationUpdateCourseClassListArgs, Resolvers } from "../../schemas.types"
+import { getUpdateCourseClassListPayload } from "./UpdateCourseClassListPayload.parent"
 
 const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args, context) => {
-	const { repositories } = context;
+	const { repositories } = context
 
-	const user = await getUserFromSecret(args.secret, context);
+	const user = await getUserFromSecret(args.secret, context)
 	if (!user) {
-		return getAuthenticationErrorParent();
+		return getAuthenticationErrorParent()
 	}
 
 	const courseClassList = await getCourseClassListFromRef(
@@ -23,9 +23,9 @@ const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args,
 			includeDisabled: true,
 		},
 		context
-	);
+	)
 	if (!courseClassList) {
-		return getNotFoundErrorParent();
+		return getNotFoundErrorParent()
 	}
 
 	const validatedData = await yup
@@ -35,7 +35,7 @@ const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args,
 					[K in keyof MutationUpdateCourseClassListArgs["input"]]: Exclude<
 						MutationUpdateCourseClassListArgs["input"][K],
 						null
-					>;
+					>
 				}
 			>["fields"]
 		>({
@@ -43,14 +43,14 @@ const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args,
 			visibility: yup.mixed().nullable(),
 		})
 		.required()
-		.validate(args);
+		.validate(args)
 
 	return getUpdateCourseClassListPayload({
 		courseClassList: await repositories.courseClassList.update(courseClassList.id, {
 			name: validatedData.name,
 			visibility: validatedData.visibility && getDbCommonVisibilityValue(validatedData.visibility),
 		}),
-	});
-};
+	})
+}
 
-export default resolver;
+export default resolver

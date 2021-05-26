@@ -1,15 +1,15 @@
-import { spawn } from "promisify-child-process";
+import { spawn } from "promisify-child-process"
 
-import { courseClassVideoNameEncryption } from "./courseClassVideoNameEncryption.config";
+import { courseClassVideoNameEncryption } from "./courseClassVideoNameEncryption.config"
 
 export const encryptCourseClassVideoName = async (name: string): Promise<string | null> => {
-	const { disabledCourseClassVideoEncryptionKey } = courseClassVideoNameEncryption;
+	const { disabledCourseClassVideoEncryptionKey } = courseClassVideoNameEncryption
 	if (!disabledCourseClassVideoEncryptionKey) {
-		return null;
+		return null
 	}
 
 	const getResult = async () => {
-		const echo = spawn("echo", [name]);
+		const echo = spawn("echo", [name])
 
 		return (
 			await spawn(
@@ -20,28 +20,28 @@ export const encryptCourseClassVideoName = async (name: string): Promise<string 
 					encoding: "utf8",
 				}
 			)
-		).stdout;
-	};
+		).stdout
+	}
 
 	try {
-		let result = await getResult();
+		let result = await getResult()
 
 		while (typeof result === "string" && result[10] === "+") {
-			result = await getResult();
+			result = await getResult()
 		}
 
 		if (typeof result === "string") {
-			result = result.substr(10);
-			result = result.replace(/\n/g, "");
-			result = result.replace(/\+/g, "-");
-			result = result.replace(/\//g, "_");
-			result = result.replace(/=/g, "");
+			result = result.substr(10)
+			result = result.replace(/\n/g, "")
+			result = result.replace(/\+/g, "-")
+			result = result.replace(/\//g, "_")
+			result = result.replace(/=/g, "")
 
-			return result;
+			return result
 		}
 	} catch (e) {
-		console.log(e);
+		console.log(e)
 	}
 
-	return null;
-};
+	return null
+}

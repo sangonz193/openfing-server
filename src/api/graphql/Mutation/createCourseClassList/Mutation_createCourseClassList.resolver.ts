@@ -1,21 +1,21 @@
-import * as yup from "yup";
+import * as yup from "yup"
 
-import { backupDb } from "../../../../modules/backup-db/backupDb";
-import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue";
-import { getUserFromSecret } from "../../_utils/getUserFromSecret";
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent";
-import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { MutationCreateCourseClassListArgs, Resolvers } from "../../schemas.types";
-import { getCreateCourseClassListPayloadParent } from "./CreateCourseClassListPayload.parent";
+import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
+import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
+import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
+import { MutationCreateCourseClassListArgs, Resolvers } from "../../schemas.types"
+import { getCreateCourseClassListPayloadParent } from "./CreateCourseClassListPayload.parent"
 
 const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args, context) => {
-	const user = await getUserFromSecret(args.secret, context);
+	const user = await getUserFromSecret(args.secret, context)
 
 	if (!user) {
-		return getAuthenticationErrorParent();
+		return getAuthenticationErrorParent()
 	}
 
-	const { dataLoaders, repositories } = context;
+	const { dataLoaders, repositories } = context
 
 	const validatedDataPromise = yup
 		.object<yup.SchemaOf<MutationCreateCourseClassListArgs["input"]>["fields"]>({
@@ -27,37 +27,37 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 			visibility: yup.mixed().nullable(),
 		})
 		.required()
-		.validate(args.input);
+		.validate(args.input)
 
-	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
+	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
-		validatedData = await validatedDataPromise;
+		validatedData = await validatedDataPromise
 	} catch (e) {
-		console.log(e);
-		return getGenericErrorParent();
+		console.log(e)
+		return getGenericErrorParent()
 	}
 
 	const course = await context.dataLoaders.course.load({
 		code: validatedData.courseCode,
 		includeDisabled: true,
 		includeHidden: true,
-	});
+	})
 
 	if (!course) {
-		console.log("no course found");
-		return getGenericErrorParent();
+		console.log("no course found")
+		return getGenericErrorParent()
 	}
 
 	const courseEditions = await repositories.courseEdition.findAll({
 		courseId: course.id,
 		includeDisabled: true,
 		includeHidden: true,
-	});
+	})
 
 	let courseEdition = courseEditions.find(
 		(courseEdition) =>
 			courseEdition.semester === validatedData.semester && courseEdition.year === validatedData.year
-	);
+	)
 
 	if (!courseEdition) {
 		courseEdition = await repositories.courseEdition.save(
@@ -71,16 +71,16 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 				semester: validatedData.semester,
 				visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
 			})
-		);
+		)
 		// TODO: necessary?
-		dataLoaders.courseEdition.clearAll();
+		dataLoaders.courseEdition.clearAll()
 	}
 
 	let courseClassListWithSameCode = await dataLoaders.courseClassList.load({
 		code: validatedData.code,
 		includeDisabled: true,
 		includeHidden: true,
-	});
+	})
 
 	if (!courseClassListWithSameCode) {
 		courseClassListWithSameCode = await repositories.courseClassList.createAndInsert({
@@ -89,19 +89,19 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 			course_edition_id: courseEdition.id,
 			name: validatedData.name,
 			visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
-		});
+		})
 		// TODO: necessary?
-		dataLoaders.courseClassList.clearAll();
+		dataLoaders.courseClassList.clearAll()
 
-		await backupDb();
+		await backupDb()
 
 		return getCreateCourseClassListPayloadParent({
 			courseClassList: courseClassListWithSameCode,
-		});
+		})
 	}
 
-	console.log("courseClassList with same code found");
-	return getGenericErrorParent();
-};
+	console.log("courseClassList with same code found")
+	return getGenericErrorParent()
+}
 
-export default resolver;
+export default resolver

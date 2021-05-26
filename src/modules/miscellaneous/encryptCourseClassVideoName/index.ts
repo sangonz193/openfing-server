@@ -1,1 +1,1 @@
-export * from "./encryptCourseClassVideoName";
+export * from "./encryptCourseClassVideoName"

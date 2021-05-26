@@ -1,11 +1,11 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
 import {
 	CourseClassLiveStateColumns,
 	CourseClassLiveStateEntitySchema,
 	CourseClassLiveStateRelations,
-} from "./CourseClassLiveState.entity.types";
+} from "./CourseClassLiveState.entity.types"
 
 export const courseClassLiveStateColumns: ColumnsOptions<CourseClassLiveStateColumns> = {
 	id: {
@@ -33,7 +33,7 @@ export const courseClassLiveStateColumns: ColumnsOptions<CourseClassLiveStateCol
 		name: "course_class_id",
 		type: "uuid",
 	},
-};
+}
 
 export const courseClassLiveStateRelations: RelationsOptions<CourseClassLiveStateRelations> = {
 	courseClass: {
@@ -46,10 +46,10 @@ export const courseClassLiveStateRelations: RelationsOptions<CourseClassLiveStat
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseClassLiveStateEntitySchema = createTypedEntitySchema<CourseClassLiveStateEntitySchema>({
 	name: "course_class_live_state",
 	columns: courseClassLiveStateColumns,
 	relations: courseClassLiveStateRelations,
-});
+})

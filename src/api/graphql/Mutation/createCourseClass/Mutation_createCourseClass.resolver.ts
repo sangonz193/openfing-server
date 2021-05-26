@@ -1,21 +1,21 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
-import * as yup from "yup";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
+import * as yup from "yup"
 
-import { backupDb } from "../../../../modules/backup-db/backupDb";
-import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl";
-import { RequestContext } from "../../../RequestContext";
-import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef";
-import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue";
-import { getGenericErrorParent } from "../../GenericError/GenericError.parent";
-import { withUserFromSecret } from "../../middlewares/withUserFromSecret";
+import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl"
+import { RequestContext } from "../../../RequestContext"
+import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef"
+import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
+import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
+import { withUserFromSecret } from "../../middlewares/withUserFromSecret"
 import {
 	MutationCreateCourseClassArgs,
 	RequireFields,
 	ResolverFn,
 	ResolversParentTypes,
 	ResolversTypes,
-} from "../../schemas.types";
-import { getCreateCourseClassPayloadParent } from "./CreateCourseClassPayload.parent";
+} from "../../schemas.types"
+import { getCreateCourseClassPayloadParent } from "./CreateCourseClassPayload.parent"
 
 const resolver: ResolverFn<
 	ResolversTypes["CreateCourseClassResult"],
@@ -23,7 +23,7 @@ const resolver: ResolverFn<
 	RequestContext & Required<Pick<RequestContext, "user">>,
 	RequireFields<MutationCreateCourseClassArgs, "input" | "secret">
 > = async (_, args, context) => {
-	const { dataLoaders, repositories, user } = context;
+	const { dataLoaders, repositories, user } = context
 
 	const validatedDataPromise = yup
 		.object<yup.SchemaOf<SafeOmit<MutationCreateCourseClassArgs["input"], "courseClassListRef">>["fields"]>({
@@ -32,14 +32,14 @@ const resolver: ResolverFn<
 			visibility: yup.mixed().nullable(),
 		})
 		.required()
-		.validate(args.input);
+		.validate(args.input)
 
-	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown;
+	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
-		validatedData = await validatedDataPromise;
+		validatedData = await validatedDataPromise
 	} catch (e) {
-		console.log(e);
-		return getGenericErrorParent();
+		console.log(e)
+		return getGenericErrorParent()
 	}
 
 	const courseClassList = await getCourseClassListFromRef(
@@ -49,24 +49,24 @@ const resolver: ResolverFn<
 			includeHidden: true,
 		},
 		context
-	);
+	)
 
 	if (!courseClassList) {
-		console.log("course class list not found");
-		return getGenericErrorParent();
+		console.log("course class list not found")
+		return getGenericErrorParent()
 	}
 
 	const courseClasses = await repositories.courseClass.findAll({
 		courseClassListId: courseClassList.id,
 		includeDisabled: true,
 		includeHidden: true,
-	});
+	})
 
-	const courseClassWithSameNumber = courseClasses.find((courseClass) => courseClass.number === validatedData.number);
+	const courseClassWithSameNumber = courseClasses.find((courseClass) => courseClass.number === validatedData.number)
 
 	if (courseClassWithSameNumber) {
-		console.log("course class with same number found");
-		return getGenericErrorParent();
+		console.log("course class with same number found")
+		return getGenericErrorParent()
 	}
 
 	const courseClass = await repositories.courseClass.insert(
@@ -78,53 +78,53 @@ const resolver: ResolverFn<
 			visibility: getDbCommonVisibilityValue(validatedData.visibility || "PUBLIC"),
 			number: validatedData.number,
 		})
-	);
+	)
 	// TODO: necessary?
-	dataLoaders.courseClass.clearAll();
+	dataLoaders.courseClass.clearAll()
 
-	await backupDb();
+	await backupDb()
 
 	const baseVideoUrl = courseClassList.code
 		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${
 				courseClassList.code
 		  }_${validatedData.number.toString().padStart(2, "0")}`
-		: undefined;
-	const possibleFormatNames = ["webm", "mp4"];
+		: undefined
+	const possibleFormatNames = ["webm", "mp4"]
 
 	const videoResolutions: Array<{
-		formats: Array<{ url: string; name: string }>;
-		height: number;
-		width: number;
-	}> = [];
+		formats: Array<{ url: string; name: string }>
+		height: number
+		width: number
+	}> = []
 
 	await Promise.all(
 		possibleFormatNames.map(async (formatName) => {
 			if (!baseVideoUrl) {
-				return;
+				return
 			}
 
-			const url = `${baseVideoUrl}.${formatName}`;
-			const resolution = await getResolutionFromVideoUrl(url);
+			const url = `${baseVideoUrl}.${formatName}`
+			const resolution = await getResolutionFromVideoUrl(url)
 
 			if (resolution) {
-				const quality = videoResolutions.find((q) => q.height === resolution.height);
+				const quality = videoResolutions.find((q) => q.height === resolution.height)
 				const format = {
 					url,
 					name: formatName,
-				};
+				}
 
 				if (quality) {
-					quality.formats.push(format);
+					quality.formats.push(format)
 				} else {
 					videoResolutions.push({
 						height: resolution.height,
 						width: resolution.width,
 						formats: [format],
-					});
+					})
 				}
 			}
 		})
-	);
+	)
 
 	if (videoResolutions.length > 0) {
 		const courseClassVideo = await repositories.courseClassVideo.save(
@@ -135,9 +135,9 @@ const resolver: ResolverFn<
 				position: 1,
 				visibility: "public",
 			})
-		);
+		)
 		// TODO: necessary?
-		dataLoaders.courseClassVideo.clearAll();
+		dataLoaders.courseClassVideo.clearAll()
 
 		const courseClassVideoQuality = await repositories.courseClassVideoQuality.save(
 			repositories.courseClassVideoQuality.create({
@@ -146,9 +146,9 @@ const resolver: ResolverFn<
 				height: null,
 				width: null,
 			})
-		);
+		)
 		// TODO: necessary?
-		dataLoaders.courseClassVideoQuality.clearAll();
+		dataLoaders.courseClassVideoQuality.clearAll()
 
 		await Promise.all(
 			videoResolutions.map(async (videoResolution) => {
@@ -159,18 +159,18 @@ const resolver: ResolverFn<
 							created_by_id: user.id,
 							name: videoFormat.name,
 							url: videoFormat.url,
-						});
+						})
 						// TODO: necessary?
-						dataLoaders.courseClassVideoFormat.clearAll();
+						dataLoaders.courseClassVideoFormat.clearAll()
 					})
-				);
+				)
 			})
-		);
+		)
 	}
 
 	return getCreateCourseClassPayloadParent({
 		courseClass,
-	});
-};
+	})
+}
 
-export default withUserFromSecret(resolver);
+export default withUserFromSecret(resolver)

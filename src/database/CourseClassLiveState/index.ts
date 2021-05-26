@@ -1,1 +1,1 @@
-export * from "./CourseClassLiveState.entity";
+export * from "./CourseClassLiveState.entity"

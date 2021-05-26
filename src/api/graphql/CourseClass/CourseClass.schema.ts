@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	type CourseClass {
@@ -33,4 +33,4 @@ export default gql`
 		byId: CourseClassRefById
 		byNumber: CourseClassRefByNumber
 	}
-`;
+`

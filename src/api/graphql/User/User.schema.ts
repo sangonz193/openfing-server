@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	type User {
@@ -14,4 +14,4 @@ export default gql`
 		updatedAt: String
 		deletedAt: String
 	}
-`;
+`
