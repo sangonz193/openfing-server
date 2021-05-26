@@ -1,6 +1,6 @@
-import { createTransport, Transporter } from "nodemailer";
+import { createTransport, Transporter } from "nodemailer"
 
-import { nodemailerConfig } from "./nodemailer.config";
+import { nodemailerConfig } from "./nodemailer.config"
 
 export function getNodemailerTransporter(): Transporter | undefined {
 	return (
@@ -8,5 +8,5 @@ export function getNodemailerTransporter(): Transporter | undefined {
 		createTransport(nodemailerConfig.transportOptions, {
 			from: `"OpenFING" <${nodemailerConfig.emailAddress}>`,
 		})
-	);
+	)
 }

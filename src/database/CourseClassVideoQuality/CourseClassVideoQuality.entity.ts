@@ -1,12 +1,12 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
 import {
 	CourseClassVideoQualityColumns,
 	CourseClassVideoQualityEntitySchema,
 	CourseClassVideoQualityRelations,
-} from "./CourseClassVideoQuality.entity.types";
+} from "./CourseClassVideoQuality.entity.types"
 
 export const courseClassVideoQualityColumns: ColumnsOptions<CourseClassVideoQualityColumns> = {
 	id: {
@@ -39,7 +39,7 @@ export const courseClassVideoQualityColumns: ColumnsOptions<CourseClassVideoQual
 	created_by_id: commonManagedColumnsOptions.created_by_id,
 	updated_by_id: commonManagedColumnsOptions.updated_by_id,
 	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
-};
+}
 
 export const courseClassVideoQualityRelations: RelationsOptions<CourseClassVideoQualityRelations> = {
 	courseClassVideo: {
@@ -89,10 +89,10 @@ export const courseClassVideoQualityRelations: RelationsOptions<CourseClassVideo
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseClassVideoQualityEntitySchema = createTypedEntitySchema<CourseClassVideoQualityEntitySchema>({
 	name: "course_class_video_quality",
 	columns: courseClassVideoQualityColumns,
 	relations: courseClassVideoQualityRelations,
-});
+})

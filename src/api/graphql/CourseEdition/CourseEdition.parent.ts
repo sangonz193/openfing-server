@@ -1,10 +1,10 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 
-import { CourseEditionRow } from "../../../database/CourseEdition/CourseEdition.entity.types";
-import { CourseEdition } from "../schemas.types";
+import { CourseEditionRow } from "../../../database/CourseEdition/CourseEdition.entity.types"
+import { CourseEdition } from "../schemas.types"
 
 export type CourseEditionParent = Required<SafeOmit<CourseEditionRow, "created_at" | "updated_at" | "deleted_at">> &
-	Pick<Required<CourseEdition>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">;
+	Pick<Required<CourseEdition>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">
 
 export const getCourseEditionParent = (courseEditionRow: CourseEditionRow): CourseEditionParent => ({
 	__typename: "CourseEdition",
@@ -12,4 +12,4 @@ export const getCourseEditionParent = (courseEditionRow: CourseEditionRow): Cour
 	createdAt: courseEditionRow.created_at?.toISOString() || null,
 	updatedAt: courseEditionRow.updated_at?.toISOString() || null,
 	deletedAt: courseEditionRow.deleted_at?.toISOString() || null,
-});
+})

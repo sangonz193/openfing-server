@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	extend type Mutation {
@@ -23,4 +23,4 @@ export default gql`
 	}
 
 	union CreateCourseClassResult = CreateCourseClassPayload | GenericError | AuthenticationError
-`;
+`

@@ -1,7 +1,7 @@
-import { GraphQLScalarType, GraphQLScalarTypeConfig } from "graphql";
-import identity from "lodash/identity";
+import { GraphQLScalarType, GraphQLScalarTypeConfig } from "graphql"
+import identity from "lodash/identity"
 
-import { Resolvers } from "../schemas.types";
+import { Resolvers } from "../schemas.types"
 
 const resolver: Resolvers["ISODate"] = new GraphQLScalarType(
 	identity<GraphQLScalarTypeConfig<Date, string>>({
@@ -9,6 +9,6 @@ const resolver: Resolvers["ISODate"] = new GraphQLScalarType(
 		serialize: (date) => date.toISOString(),
 		parseValue: (value) => new Date(Date.parse(value)),
 	})
-);
+)
 
-export default resolver;
+export default resolver

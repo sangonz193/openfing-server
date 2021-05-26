@@ -1,7 +1,7 @@
-import { getFaqParent } from "../../Faq/Faq.parent";
-import { Resolvers } from "../../schemas.types";
+import { getFaqParent } from "../../Faq/Faq.parent"
+import { Resolvers } from "../../schemas.types"
 
 const resolver: Resolvers["Query"]["faqs"] = async (_, __, { repositories }) =>
-	(await repositories.faq.findAll()).map(getFaqParent);
+	(await repositories.faq.findAll()).map(getFaqParent)
 
-export default resolver;
+export default resolver

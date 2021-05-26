@@ -1,6 +1,6 @@
-import KeycloakConnect from "keycloak-connect";
+import KeycloakConnect from "keycloak-connect"
 
-import { keycloakConfig } from "./keycloak.config";
+import { keycloakConfig } from "./keycloak.config"
 
 export const getKeycloakConnect = async (): Promise<KeycloakConnect.Keycloak> => {
 	const keycloakConnect = new KeycloakConnect(
@@ -12,7 +12,7 @@ export const getKeycloakConnect = async (): Promise<KeycloakConnect.Keycloak> =>
 			resource: keycloakConfig.clientId,
 			"confidential-port": "",
 		}
-	);
+	)
 
-	return keycloakConnect;
-};
+	return keycloakConnect
+}

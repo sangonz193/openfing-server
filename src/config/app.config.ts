@@ -1,9 +1,9 @@
-import path from "path";
-import urlJoin from "url-join";
-import * as yup from "yup";
+import path from "path"
+import urlJoin from "url-join"
+import * as yup from "yup"
 
-import { validateEnv } from "../_utils/validateEnv";
-import { isProduction } from "./isProduction.config";
+import { validateEnv } from "../_utils/validateEnv"
+import { isProduction } from "./isProduction.config"
 
 const validatedEnv = validateEnv({
 	HOST: yup.string().default("localhost").required(),
@@ -11,13 +11,13 @@ const validatedEnv = validateEnv({
 	FILES_PATH: yup.string().required().min(1),
 	FILES_URL: yup.string().required().min(1),
 	PUBLIC_URL: yup.string().required().min(1),
-});
+})
 
-const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets");
-const ASSETS_URL = urlJoin(validatedEnv.FILES_URL, "assets");
+const ASSETS_PATH = path.join(validatedEnv.FILES_PATH, "assets")
+const ASSETS_URL = urlJoin(validatedEnv.FILES_URL, "assets")
 
-const COURSE_ICONS_PATH = path.join(ASSETS_PATH, "course-icons");
-const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons");
+const COURSE_ICONS_PATH = path.join(ASSETS_PATH, "course-icons")
+const COURSE_ICONS_URL = urlJoin(ASSETS_URL, "course-icons")
 
 export const appConfig = {
 	host: validatedEnv.HOST,
@@ -33,4 +33,4 @@ export const appConfig = {
 	isProduction: isProduction,
 
 	publicUrl: validatedEnv.PUBLIC_URL.replace(/\/$/, ""),
-};
+}

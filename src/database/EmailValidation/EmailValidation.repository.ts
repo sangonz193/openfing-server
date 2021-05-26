@@ -1,11 +1,11 @@
-import { SafeOmit } from "@sangonz193/utils/SafeOmit";
-import { Connection } from "typeorm";
+import { SafeOmit } from "@sangonz193/utils/SafeOmit"
+import { Connection } from "typeorm"
 
-import { DeleteEmailValidationOptions, deleteEmailValidations } from "./deleteEmailValidation";
-import { findEmailValidationBatch, FindEmailValidationBatchOptions } from "./findEmailValidationBatch";
-import { insertEmailValidation, InsertEmailValidationOptions } from "./insertEmailValidation";
+import { DeleteEmailValidationOptions, deleteEmailValidations } from "./deleteEmailValidation"
+import { findEmailValidationBatch, FindEmailValidationBatchOptions } from "./findEmailValidationBatch"
+import { insertEmailValidation, InsertEmailValidationOptions } from "./insertEmailValidation"
 
-export type EmailValidationRepository = ReturnType<typeof getEmailValidationRepository>;
+export type EmailValidationRepository = ReturnType<typeof getEmailValidationRepository>
 
 export function getEmailValidationRepository(connection: Connection) {
 	return {
@@ -20,5 +20,5 @@ export function getEmailValidationRepository(connection: Connection) {
 
 		delete: (options: SafeOmit<DeleteEmailValidationOptions, "connection">) =>
 			deleteEmailValidations({ connection, ...options }),
-	};
+	}
 }

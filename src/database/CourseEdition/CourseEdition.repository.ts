@@ -1,14 +1,14 @@
-import { getUuid } from "@sangonz193/utils/getUuid";
-import identity from "lodash/identity";
-import { Connection } from "typeorm";
+import { getUuid } from "@sangonz193/utils/getUuid"
+import identity from "lodash/identity"
+import { Connection } from "typeorm"
 
-import { getTypedRepository } from "../_utils/getTypedRepository";
-import { courseEditionColumns, courseEditionEntitySchema } from "./CourseEdition.entity";
-import { CourseEditionRow } from "./CourseEdition.entity.types";
-import { CourseEditionRepository } from "./CourseEdition.repository.types";
+import { getTypedRepository } from "../_utils/getTypedRepository"
+import { courseEditionColumns, courseEditionEntitySchema } from "./CourseEdition.entity"
+import { CourseEditionRow } from "./CourseEdition.entity.types"
+import { CourseEditionRepository } from "./CourseEdition.repository.types"
 
 export const getCourseEditionRepository = (connection: Connection): CourseEditionRepository => {
-	const repo = getTypedRepository(courseEditionEntitySchema, connection);
+	const repo = getTypedRepository(courseEditionEntitySchema, connection)
 
 	const is: CourseEditionRepository["is"] = (courseEdition, options) => {
 		return (
@@ -18,14 +18,14 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 				courseEdition.visibility === "public" ||
 				options.includeDisabled ||
 				courseEdition.visibility === "disabled")
-		);
-	};
+		)
+	}
 
 	return {
 		_typedRepository: repo,
 
 		findAll: (options) => {
-			const queryBuilder = repo.createQueryBuilder("ce");
+			const queryBuilder = repo.createQueryBuilder("ce")
 
 			queryBuilder
 				.andWhere(
@@ -34,7 +34,7 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 						courseId: options.courseId,
 					})
 				)
-				.andWhere(`ce.${courseEditionColumns.deleted_at.name} is null`);
+				.andWhere(`ce.${courseEditionColumns.deleted_at.name} is null`)
 
 			if (!options.includeDisabled) {
 				queryBuilder.andWhere(
@@ -42,7 +42,7 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 					identity<{ v1: CourseEditionRow["visibility"] }>({
 						v1: "disabled",
 					})
-				);
+				)
 			}
 
 			if (!options.includeHidden) {
@@ -51,22 +51,22 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 					identity<{ v2: CourseEditionRow["visibility"] }>({
 						v2: "hidden",
 					})
-				);
+				)
 			}
 
-			return queryBuilder.getMany();
+			return queryBuilder.getMany()
 		},
 
 		findBatch: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("ce");
+			const queryBuilder = repo.createQueryBuilder("ce")
 
 			queryBuilder
 				.andWhere(`ce.${courseEditionColumns.deleted_at.name} is null`)
-				.whereInIds(identity<Array<CourseEditionRow["id"]>>(options.map((o) => o.id)));
+				.whereInIds(identity<Array<CourseEditionRow["id"]>>(options.map((o) => o.id)))
 
-			const courseEditions = await queryBuilder.getMany();
+			const courseEditions = await queryBuilder.getMany()
 
-			return options.map((options) => courseEditions.find((ce) => is(ce, options)) || null);
+			return options.map((options) => courseEditions.find((ce) => is(ce, options)) || null)
 		},
 
 		is,
@@ -82,5 +82,5 @@ export const getCourseEditionRepository = (connection: Connection): CourseEditio
 		}),
 
 		save: (data) => repo.save(data),
-	};
-};
+	}
+}

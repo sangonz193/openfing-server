@@ -1,1 +1,1 @@
-export * from "./EmailValidation.entity";
+export * from "./EmailValidation.entity"

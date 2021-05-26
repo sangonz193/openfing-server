@@ -1,8 +1,8 @@
-import { ColumnsOptions } from "../_utils/ColumnsOptions";
-import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions";
-import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema";
-import { RelationsOptions } from "../_utils/RelationsOptions";
-import { CourseEditionColumns, CourseEditionEntitySchema, CourseEditionRelations } from "./CourseEdition.entity.types";
+import { ColumnsOptions } from "../_utils/ColumnsOptions"
+import { commonManagedColumnsOptions } from "../_utils/commonManagedColumnsOptions"
+import { createTypedEntitySchema } from "../_utils/createTypedEntitySchema"
+import { RelationsOptions } from "../_utils/RelationsOptions"
+import { CourseEditionColumns, CourseEditionEntitySchema, CourseEditionRelations } from "./CourseEdition.entity.types"
 
 export const courseEditionColumns: ColumnsOptions<CourseEditionColumns> = {
 	id: {
@@ -44,7 +44,7 @@ export const courseEditionColumns: ColumnsOptions<CourseEditionColumns> = {
 	created_by_id: commonManagedColumnsOptions.created_by_id,
 	updated_by_id: commonManagedColumnsOptions.updated_by_id,
 	deleted_by_id: commonManagedColumnsOptions.deleted_by_id,
-};
+}
 
 export const courseEditionRelations: RelationsOptions<CourseEditionRelations> = {
 	course: {
@@ -94,10 +94,10 @@ export const courseEditionRelations: RelationsOptions<CourseEditionRelations> = 
 			referencedColumnName: "id",
 		},
 	},
-};
+}
 
 export const courseEditionEntitySchema = createTypedEntitySchema<CourseEditionEntitySchema>({
 	name: "course_edition",
 	columns: courseEditionColumns,
 	relations: courseEditionRelations,
-});
+})

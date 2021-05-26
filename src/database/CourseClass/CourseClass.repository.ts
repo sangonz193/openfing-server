@@ -1,24 +1,24 @@
-import { getUuid } from "@sangonz193/utils/getUuid";
-import { hasProperty } from "@sangonz193/utils/hasProperty";
-import identity from "lodash/identity";
-import omitBy from "lodash/omitBy";
-import { Brackets, Connection } from "typeorm";
+import { getUuid } from "@sangonz193/utils/getUuid"
+import { hasProperty } from "@sangonz193/utils/hasProperty"
+import identity from "lodash/identity"
+import omitBy from "lodash/omitBy"
+import { Brackets, Connection } from "typeorm"
 
-import { createUpdate } from "../_utils/createUpdate";
-import { getTypedRepository } from "../_utils/getTypedRepository";
-import { courseClassListColumns } from "../CourseClassList";
-import { CourseClassListRow } from "../CourseClassList/CourseClassList.entity.types";
-import { courseClassColumns, courseClassEntitySchema, courseClassRelations } from "./CourseClass.entity";
-import { CourseClassRow } from "./CourseClass.entity.types";
+import { createUpdate } from "../_utils/createUpdate"
+import { getTypedRepository } from "../_utils/getTypedRepository"
+import { courseClassListColumns } from "../CourseClassList"
+import { CourseClassListRow } from "../CourseClassList/CourseClassList.entity.types"
+import { courseClassColumns, courseClassEntitySchema, courseClassRelations } from "./CourseClass.entity"
+import { CourseClassRow } from "./CourseClass.entity.types"
 import {
 	CourseClassFindAllOptions,
 	CourseClassFindOneOptions,
 	CourseClassRepository,
-} from "./CourseClass.repository.types";
+} from "./CourseClass.repository.types"
 
 export const getCourseClassRepository = (connection: Connection): CourseClassRepository => {
-	const repo = getTypedRepository(courseClassEntitySchema, connection);
-	const update = createUpdate(repo);
+	const repo = getTypedRepository(courseClassEntitySchema, connection)
+	const update = createUpdate(repo)
 
 	const is: CourseClassRepository["is"] = (courseClass, options) => {
 		return (
@@ -31,13 +31,13 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				courseClass.visibility === null ||
 				(!!options.includeHidden && courseClass.visibility === "hidden") ||
 				(!!options.includeDisabled && courseClass.visibility === "disabled"))
-		);
-	};
+		)
+	}
 
 	const findAllFromCourseClassList = (
 		options: Extract<CourseClassFindAllOptions, { courseClassListId: CourseClassRow["course_class_list_id"] }>
 	) => {
-		const queryBuilder = repo.createQueryBuilder("courseClass");
+		const queryBuilder = repo.createQueryBuilder("courseClass")
 
 		queryBuilder
 			.andWhere(
@@ -46,7 +46,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 					courseClassListId: options.courseClassListId,
 				})
 			)
-			.andWhere(`courseClass.${courseClassColumns.deleted_at.name} is null`);
+			.andWhere(`courseClass.${courseClassColumns.deleted_at.name} is null`)
 
 		if (!options.includeDisabled) {
 			queryBuilder.andWhere(
@@ -54,7 +54,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				identity<{ v1: CourseClassRow["visibility"] }>({
 					v1: "disabled",
 				})
-			);
+			)
 		}
 
 		if (!options.includeHidden) {
@@ -63,13 +63,13 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				identity<{ v2: CourseClassRow["visibility"] }>({
 					v2: "hidden",
 				})
-			);
+			)
 		}
 
-		queryBuilder.orderBy(courseClassColumns.number.name, "ASC");
+		queryBuilder.orderBy(courseClassColumns.number.name, "ASC")
 
-		return queryBuilder.getMany();
-	};
+		return queryBuilder.getMany()
+	}
 
 	const findLatestCourseClasses = (options: Extract<CourseClassFindAllOptions, { latest: number }>) => {
 		return repo
@@ -99,34 +99,34 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 			)
 			.orderBy(`courseClass.${courseClassColumns.published_at.name}`, "DESC")
 			.take(options.latest)
-			.getMany();
-	};
+			.getMany()
+	}
 
 	return {
 		_typedRepository: repo,
 
 		async findOne(options) {
-			return (await this.findBatch([options]))[0];
+			return (await this.findBatch([options]))[0]
 		},
 
 		findBatch: async (options) => {
-			const queryBuilder = repo.createQueryBuilder("cc");
+			const queryBuilder = repo.createQueryBuilder("cc")
 
 			queryBuilder.andWhere(`cc.${courseClassColumns.deleted_at.name} is null`).andWhere(
 				new Brackets((qb) => {
-					const ids: Array<CourseClassRow["id"]> = [];
-					const byNumber: Array<Extract<CourseClassFindOneOptions, { number: number }>> = [];
+					const ids: Array<CourseClassRow["id"]> = []
+					const byNumber: Array<Extract<CourseClassFindOneOptions, { number: number }>> = []
 
 					options.forEach((options) => {
 						if (hasProperty(options, "id")) {
-							ids.push(options.id);
+							ids.push(options.id)
 						} else {
-							byNumber.push(options);
+							byNumber.push(options)
 						}
-					});
+					})
 
 					if (ids.length > 0) {
-						qb.whereInIds(ids);
+						qb.whereInIds(ids)
 					}
 
 					byNumber.forEach((byNumberOptions) => {
@@ -146,22 +146,22 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 										})
 									)
 							)
-						);
-					});
+						)
+					})
 				})
-			);
+			)
 
-			const courseClasses = await queryBuilder.getMany();
+			const courseClasses = await queryBuilder.getMany()
 
-			return options.map((options) => courseClasses.find((cc) => is(cc, options)) || null);
+			return options.map((options) => courseClasses.find((cc) => is(cc, options)) || null)
 		},
 
 		findAll: async (options) => {
 			if (hasProperty(options, "courseClassListId")) {
-				return findAllFromCourseClassList(options);
+				return findAllFromCourseClassList(options)
 			}
 
-			return findLatestCourseClasses(options);
+			return findLatestCourseClasses(options)
 		},
 
 		is,
@@ -179,7 +179,7 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 		insert: (data) => repo.save(data),
 
 		createAndInsert(...args) {
-			return this.insert(this.create(...args));
+			return this.insert(this.create(...args))
 		},
 
 		async update(id, newValues) {
@@ -194,21 +194,21 @@ export const getCourseClassRepository = (connection: Connection): CourseClassRep
 				published_at: true,
 				updated_by_id: true,
 				visibility: true,
-			});
+			})
 
 			return update(id, {
 				...omitBy(newValues, (_, key) => {
-					return !acceptedKeysMap[key as keyof typeof acceptedKeysMap];
+					return !acceptedKeysMap[key as keyof typeof acceptedKeysMap]
 				}),
 				updated_at: new Date(),
-			});
+			})
 		},
 
 		delete(id, data) {
 			return update(id, {
 				deleted_at: new Date(),
 				deleted_by_id: data.deleted_by_id,
-			});
+			})
 		},
-	};
-};
+	}
+}

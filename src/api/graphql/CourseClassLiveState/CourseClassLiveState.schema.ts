@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export default gql`
 	type CourseClassLiveState {
@@ -10,4 +10,4 @@ export default gql`
 
 		courseClass: CourseClass
 	}
-`;
+`
