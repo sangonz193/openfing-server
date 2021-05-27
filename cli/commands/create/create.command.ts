@@ -1,7 +1,7 @@
 import path from "path"
 import type { CommandModule } from "yargs"
 
-import { getSubCommandsSync } from "../../_utils/getSubCommands"
+import { getSubCommandsPaths } from "../../_utils/getSubCommandsPaths"
 import { runPlopInterface } from "../../_utils/runPlopInterface"
 import { createPlopFilePath } from "./plop/plopfile.path"
 
@@ -12,7 +12,7 @@ const command: CommandModule<{}, {}> = {
 
 	builder: (yargs) => {
 		const commandsFolderPath = path.resolve(__dirname, "commands")
-		getSubCommandsSync(commandsFolderPath).forEach((command) => yargs.command(command))
+		getSubCommandsPaths(commandsFolderPath).forEach((command) => yargs.command(require(command).default))
 
 		return yargs
 	},

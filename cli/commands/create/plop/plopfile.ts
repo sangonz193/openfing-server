@@ -4,8 +4,6 @@ import type { NodePlopAPI } from "plop"
 import { getMatchingFilePathsSync } from "../../../_utils/getMatchingFilePaths"
 
 export default (plop: NodePlopAPI) => {
-	plop.setWelcomeMessage("This utility is a helper to create converged React components")
-
 	const matchingFilePaths = getMatchingFilePathsSync(
 		path.resolve(__dirname, "..", "commands", "**", "*.plop-generator.ts")
 	)
@@ -13,7 +11,7 @@ export default (plop: NodePlopAPI) => {
 		const generatorName = matchingFilePath.match(/(\w+)\.plop-generator\.ts$/)?.[1]
 
 		if (!generatorName) {
-			console.log(`Could not generator name from "${matchingFilePath}"`)
+			console.log(`Could not get generator name from "${matchingFilePath}"`)
 			return
 		}
 
