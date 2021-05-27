@@ -2,6 +2,7 @@ import path from "path"
 import yargs, { CommandModule } from "yargs"
 
 import { getMatchingFilePathsSync } from "./_utils/getMatchingFilePaths"
+import { getSubCommandsPaths } from "./_utils/getSubCommandsPaths"
 
 const run = async () => {
 	const commandsDirPath = path.resolve(__dirname, "commands")
@@ -12,7 +13,7 @@ const run = async () => {
 	)
 
 	if (matchingFiles.length !== 1) {
-		matchingFiles = getMatchingFilePathsSync(path.resolve(commandsDirPath, "**", `*.command.ts`))
+		matchingFiles = getSubCommandsPaths(__dirname)
 	}
 
 	const commands = matchingFiles.map<CommandModule<unknown, unknown>>((matchingFilePath) => {
