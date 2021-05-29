@@ -110,9 +110,10 @@ dist
 # IDEs
 .vscode
 
-# 
+#
 # Auto-generated files
-# 
+#
+*.generated.*
 src/api/graphql/schemas.ts
 src/api/graphql/schemas.types.ts
 src/api/graphql/resolvers.ts

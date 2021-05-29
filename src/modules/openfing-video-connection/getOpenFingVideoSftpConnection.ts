@@ -14,7 +14,7 @@ export const getOpenFingVideoSftpConnection = async () => {
 		await ssh.connect()
 
 		return ssh.sftp()
-	} catch (e) {
+	} catch {
 		return null
 	}
 }

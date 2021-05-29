@@ -35,7 +35,7 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 				},
 			],
 		})
-	} catch (error) {
+	} catch (error: unknown) {
 		console.log(error)
 		return getGenericErrorParent()
 	}

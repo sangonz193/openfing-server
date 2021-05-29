@@ -114,7 +114,7 @@ export async function validateSignUpInput(args: MutationSignUpArgs): Promise<Val
 			success: true,
 			input: validatedInput,
 		}
-	} catch (error) {
+	} catch (error: unknown) {
 		const validationErrorParentOptions: Parameters<typeof getSignUpValidationErrorsParent>[0] = {
 			email: null,
 			firstName: null,

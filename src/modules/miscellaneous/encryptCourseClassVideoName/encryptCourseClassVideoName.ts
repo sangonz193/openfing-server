@@ -39,7 +39,7 @@ export const encryptCourseClassVideoName = async (name: string): Promise<string 
 
 			return result
 		}
-	} catch (e) {
+	} catch (e: unknown) {
 		console.log(e)
 	}
 

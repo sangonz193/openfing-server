@@ -130,8 +130,10 @@ const command: CommandModule<{}, {}> = {
 					commandSpawn.on("exit", resolve)
 				})
 				console.log(`finish`, command)
-			} catch (e) {
-				console.log(e.toString("utf8"))
+			} catch (e: unknown) {
+				if (e instanceof Buffer) {
+					console.log(e.toString("utf8"))
+				}
 
 				if (typeof command === "string" || !command.ignore) {
 					throw e

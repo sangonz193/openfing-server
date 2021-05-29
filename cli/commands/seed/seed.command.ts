@@ -136,7 +136,7 @@ const command: CommandModule<{}, {}> = {
 							`SELECT setval(pg_get_serial_sequence('${schema}.${tableName}', 'id'), max(id)) FROM ${schema}.${tableName}; `
 						)
 					}
-				} catch (e) {
+				} catch (e: unknown) {
 					console.log(e)
 					process.exit(1)
 				}

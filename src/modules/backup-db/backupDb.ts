@@ -1,12 +1,15 @@
+import { arrayMapLimit } from "@sangonz193/utils/arrayMapLimit"
 import { fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import path from "path"
+import { Client } from "pg"
 import { spawn } from "promisify-child-process"
 import simpleGit from "simple-git"
 
 import { databaseConfig } from "../../database/database.config"
 import { keycloakConfig } from "../keycloak/keycloak.config"
 import { backupConfig } from "./backupDb.config"
+import { findTableNamesPreparedQuery } from "./findTableNames.sql.generated"
 
 export const backupDb = async () => {
 	const { backupRepoPath } = backupConfig
@@ -51,13 +54,33 @@ async function dumpDatabase(config: typeof databaseConfig.typeormConfig, backupR
 		return
 	}
 
+	const dumpFolderPath = path.resolve(backupRepoPath, config.database)
+	if (!(await fsExists(dumpFolderPath))) {
+		fs.mkdir(dumpFolderPath, { recursive: true })
+	}
+
+	const client = new Client({
+		database: config.database,
+		host: config.host,
+		password: config.password,
+		port: config.port,
+		user: config.username,
+	})
+	await client.connect()
+	const tables = await findTableNamesPreparedQuery.run({ schema: config.schema }, client).catch((error) => {
+		console.log(error)
+		client.end()
+		throw error
+	})
+
 	await spawn(
 		"pg_dump",
 		[
 			...(config.host ? ["-h", config.host] : []),
 			...(config.port ? ["--port", config.port.toString()] : []),
 			...(config.username ? ["-U", config.username.toString()] : []),
-			...["-Fd", "-f", database],
+			"--schema-only",
+			...["-f", path.resolve(backupRepoPath, database, `${config.schema}.sql`)],
 			database,
 		],
 		{
@@ -68,8 +91,45 @@ async function dumpDatabase(config: typeof databaseConfig.typeormConfig, backupR
 				PGPASSWORD: config.password,
 			},
 		}
-	).catch((e) => {
-		console.log(e)
-		throw e
-	})
+	)
+
+	await arrayMapLimit(
+		async (index) => {
+			const { table_name } = tables[index]
+
+			if (!table_name) {
+				return
+			}
+
+			await spawn(
+				"pg_dump",
+				[
+					...(config.host ? ["-h", config.host] : []),
+					...(config.port ? ["--port", config.port.toString()] : []),
+					...(config.username ? ["-U", config.username.toString()] : []),
+					...["-t", `"${config.schema}"."${table_name}"`],
+					"--data-only",
+					...["-f", path.resolve(backupRepoPath, database, `${config.schema}.${table_name}.sql`)],
+					database,
+				],
+				{
+					cwd: backupRepoPath,
+					encoding: "utf8",
+					env: {
+						...process.env,
+						PGPASSWORD: config.password,
+					},
+				}
+			).catch((e) => {
+				console.log(e)
+				throw e
+			})
+		},
+		tables.length,
+		30
+	)
+
+	client.end()
 }
+
+process.on("warning", (e) => console.log(e.stack))

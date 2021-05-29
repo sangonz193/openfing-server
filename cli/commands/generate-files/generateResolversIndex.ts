@@ -149,6 +149,15 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 														path.resolve(
 															objectResolversDirPath,
 															"**",
+															`${type.name}.${field.name}.resolver.ts`
+														)
+													)
+												)[0] ??
+												(
+													await getMatchingFilePaths(
+														path.resolve(
+															objectResolversDirPath,
+															"**",
 															`${field.name}.*.resolver.ts`
 														)
 													)

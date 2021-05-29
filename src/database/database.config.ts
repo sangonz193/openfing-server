@@ -15,9 +15,10 @@ const validatedEnv = validateEnv({
 })
 
 export const databaseConfig: {
-	typeormConfig: SafeOmit<PostgresConnectionOptions, "password" | "schema"> & {
+	typeormConfig: SafeOmit<PostgresConnectionOptions, "password" | "schema" | "database"> & {
 		password: string
 		schema: string
+		database: string
 	}
 } = {
 	typeormConfig: {

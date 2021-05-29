@@ -32,7 +32,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
 		validatedData = await validatedDataPromise
-	} catch (e) {
+	} catch (e: unknown) {
 		console.log(e)
 		return getGenericErrorParent()
 	}
