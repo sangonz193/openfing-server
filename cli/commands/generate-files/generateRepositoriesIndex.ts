@@ -1,7 +1,9 @@
 import { fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import path from "path"
+import { Project, SyntaxKind } from "ts-morph"
 
+import { projectPath } from "../../_utils/projectPath"
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
 import { getFormattedCode } from "./_utils/getFormatCode"
 import { getImportPath } from "./_utils/getImportPath"
@@ -15,8 +17,12 @@ export const generateRepositoriesIndex = async () => {
 
 	const repositoryFilesPaths = (await getMatchingFilePaths(repositoryFilesGlob)).sort()
 
-	const imports: string[] = ['import { Connection } from "typeorm";']
-	const entitiesNames: string[] = []
+	const imports: string[] = ['import { Connection } from "typeorm"', 'import { Pool } from "pg"']
+	const entities: Array<{ name: string; usesPool: boolean }> = []
+	const project = new Project({
+		tsConfigFilePath: path.resolve(projectPath, "tsconfig.json"),
+		skipAddingFilesFromTsConfig: true,
+	})
 
 	await Promise.all(
 		repositoryFilesPaths.map(async (repositoryFilePath) => {
@@ -25,9 +31,23 @@ export const generateRepositoriesIndex = async () => {
 
 			if (entityNameMatch) {
 				const entityName = entityNameMatch[1]
-				entitiesNames.push(entityName)
+				const sourceFile = project.addSourceFileAtPath(repositoryFilePath)
 
 				const repositoryTypesFilePath = repositoryFilePath.replace(/\.ts$/, ".types.ts")
+				const usesPool = sourceFile
+					.getDescendantsOfKind(SyntaxKind.FunctionDeclaration)
+					.some((functionDeclaration) => {
+						const name = functionDeclaration.getName()
+						if (!name) {
+							return false
+						}
+						return (
+							name.startsWith("get") &&
+							name.endsWith("Repository") &&
+							functionDeclaration.getText().includes("(pool: Pool)")
+						)
+					})
+				entities.push({ name: entityName, usesPool: usesPool })
 
 				imports.push(
 					`import { get${entityName}Repository } from "${getImportPath(
@@ -54,23 +74,22 @@ export const generateRepositoriesIndex = async () => {
 		imports.join("\n") +
 		"\n\n" +
 		`export type Repositories = {\n` +
-		entitiesNames
+		entities
 			.map(
-				(entityName) =>
-					`${entityName.replace(/^(.)/, (match) => {
+				(entity) =>
+					`${entity.name.replace(/^(.)/, (match) => {
 						return match.toLowerCase()
-					})}: ${entityName}Repository;`
+					})}: ${entity.name}Repository;`
 			)
 			.join("\n") +
 		`}\n\n` +
-		`export const getRepositories = (connection: Connection): Repositories => ({\n` +
-		entitiesNames
-			.map(
-				(entityName) =>
-					`${entityName.replace(/^(.)/, (match) => {
-						return match.toLowerCase()
-					})}: get${entityName}Repository(connection),`
-			)
+		`export const getRepositories = (connection: Connection, pool: Pool): Repositories => ({\n` +
+		entities
+			.map((entity) => {
+				return `${entity.name.replace(/^(.)/, (match) => {
+					return match.toLowerCase()
+				})}: get${entity.name}Repository(${entity.usesPool ? "pool" : "connection"}),`
+			})
 			.join("\n") +
 		`\n});\n`
 

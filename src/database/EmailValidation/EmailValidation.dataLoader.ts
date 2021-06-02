@@ -1,11 +1,11 @@
-import { Connection } from "typeorm"
+import { Pool } from "pg"
 
 import { getFindEmailValidationDataLoader } from "./findEmailValidationBatch"
 
 export type EmailValidationDataLoader = ReturnType<typeof getEmailValidationDataLoader>
 
-export function getEmailValidationDataLoader(connection: Connection) {
+export function getEmailValidationDataLoader(pool: Pool) {
 	return {
-		find: getFindEmailValidationDataLoader(connection),
+		find: getFindEmailValidationDataLoader(pool),
 	}
 }

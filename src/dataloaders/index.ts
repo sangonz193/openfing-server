@@ -1,3 +1,4 @@
+import { Pool } from "pg"
 import { Connection } from "typeorm"
 
 import {
@@ -39,7 +40,7 @@ export type DataLoaders = {
 	user: UserDataLoader
 }
 
-export const getDataLoaders = (repositories: Repositories, connection: Connection): DataLoaders => ({
+export const getDataLoaders = (repositories: Repositories, connection: Connection, pool: Pool): DataLoaders => ({
 	course: getCourseDataLoader(repositories.course),
 	courseClass: getCourseClassDataLoader(repositories.courseClass),
 	courseClassChapterCue: getCourseClassChapterCueDataLoader(repositories.courseClassChapterCue),
@@ -49,6 +50,6 @@ export const getDataLoaders = (repositories: Repositories, connection: Connectio
 	courseClassVideoFormat: getCourseClassVideoFormatDataLoader(repositories.courseClassVideoFormat),
 	courseClassVideoQuality: getCourseClassVideoQualityDataLoader(repositories.courseClassVideoQuality),
 	courseEdition: getCourseEditionDataLoader(repositories.courseEdition),
-	emailValidation: getEmailValidationDataLoader(connection),
+	emailValidation: getEmailValidationDataLoader(pool),
 	user: getUserDataLoader(repositories.user),
 })

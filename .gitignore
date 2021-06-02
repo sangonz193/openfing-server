@@ -120,3 +120,4 @@ src/api/graphql/resolvers.ts
 src/api/rest/endpoints.ts
 src/database/entities.ts
 src/database/repositories.ts
+.tmp

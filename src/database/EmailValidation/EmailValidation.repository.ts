@@ -1,5 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
-import { Connection } from "typeorm"
+import { Pool } from "pg"
 
 import { DeleteEmailValidationOptions, deleteEmailValidations } from "./deleteEmailValidation"
 import { findEmailValidationBatch, FindEmailValidationBatchOptions } from "./findEmailValidationBatch"
@@ -7,18 +7,18 @@ import { insertEmailValidation, InsertEmailValidationOptions } from "./insertEma
 
 export type EmailValidationRepository = ReturnType<typeof getEmailValidationRepository>
 
-export function getEmailValidationRepository(connection: Connection) {
+export function getEmailValidationRepository(pool: Pool) {
 	return {
-		find: (options: SafeOmit<FindEmailValidationBatchOptions, "connection">) =>
-			findEmailValidationBatch({ connection, ...options }),
+		find: (options: SafeOmit<FindEmailValidationBatchOptions, "pool">) =>
+			findEmailValidationBatch({ pool, ...options }),
 
-		insert: (options: SafeOmit<InsertEmailValidationOptions, "connection">) =>
+		insert: (options: SafeOmit<InsertEmailValidationOptions, "pool">) =>
 			insertEmailValidation({
-				connection,
+				pool,
 				...options,
 			}),
 
-		delete: (options: SafeOmit<DeleteEmailValidationOptions, "connection">) =>
-			deleteEmailValidations({ connection, ...options }),
+		delete: (options: SafeOmit<DeleteEmailValidationOptions, "pool">) =>
+			deleteEmailValidations({ pool, ...options }),
 	}
 }

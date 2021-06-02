@@ -1,15 +1,18 @@
 import { arrayMapLimit } from "@sangonz193/utils/arrayMapLimit"
-import { fs } from "@sangonz193/utils/node/fs"
+import { getUuid } from "@sangonz193/utils/getUuid"
+import { _fs, fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import path from "path"
-import { Client } from "pg"
+import { Pool } from "pg"
 import { spawn } from "promisify-child-process"
 import simpleGit from "simple-git"
 
 import { databaseConfig } from "../../database/database.config"
+import { getTableNames } from "../../database/Tables/getTableNames"
+import { dockerConfig } from "../docker/docker.config"
+import { getDbDockerContainerName } from "../docker/getDbDockerContainerName"
 import { keycloakConfig } from "../keycloak/keycloak.config"
 import { backupConfig } from "./backupDb.config"
-import { findTableNamesPreparedQuery } from "./findTableNames.sql.generated"
 
 export const backupDb = async () => {
 	const { backupRepoPath } = backupConfig
@@ -38,13 +41,7 @@ export const backupDb = async () => {
 }
 
 async function dumpDatabase(config: typeof databaseConfig.typeormConfig, backupRepoPath: string) {
-	const { database } = config
-
-	if (!database) {
-		return
-	}
-
-	const backupFolderPath = path.resolve(backupRepoPath, database)
+	const backupFolderPath = path.resolve(backupRepoPath, config.database)
 	if (await fsExists(backupFolderPath)) {
 		await fs.rmdir(backupFolderPath, { recursive: true })
 	}
@@ -54,82 +51,118 @@ async function dumpDatabase(config: typeof databaseConfig.typeormConfig, backupR
 		return
 	}
 
-	const dumpFolderPath = path.resolve(backupRepoPath, config.database)
-	if (!(await fsExists(dumpFolderPath))) {
-		fs.mkdir(dumpFolderPath, { recursive: true })
+	if (!(await fsExists(backupFolderPath))) {
+		await fs.mkdir(backupFolderPath, { recursive: true })
 	}
 
-	const client = new Client({
+	const pool = new Pool({
 		database: config.database,
 		host: config.host,
 		password: config.password,
 		port: config.port,
 		user: config.username,
 	})
-	await client.connect()
-	const tables = await findTableNamesPreparedQuery.run({ schema: config.schema }, client).catch((error) => {
+	await pool.connect()
+	const tables = await getTableNames(pool, config.schema).catch((error) => {
 		console.log(error)
-		client.end()
+		pool.end()
 		throw error
 	})
 
-	await spawn(
-		"pg_dump",
+	const pgDumpAuthArgs = [
+		...(config.host ? ["-h", config.host] : []),
+		...(config.port ? ["--port", config.port.toString()] : []),
+		...(config.username ? ["-U", config.username.toString()] : []),
+	]
+
+	const dbContainerName = await getDbDockerContainerName()
+
+	if (!dbContainerName) {
+		const message = "Could not get db container name:"
+		console.log(message)
+		pool.end()
+		throw new Error(message)
+	}
+
+	const tmpEnvFilePath = path.resolve(__dirname, ".tmp", `backupDb-tmpEnvFile-${getUuid()}`)
+	const tmpEnvDirPath = path.resolve(tmpEnvFilePath, "..")
+
+	if (!(await fsExists(tmpEnvDirPath))) {
+		await fs.mkdir(tmpEnvDirPath, { recursive: true })
+	}
+
+	await fs.writeFile(
+		tmpEnvFilePath,
+		[["PGPASSWORD", config.password]].map(([key, value]) => `${key}="${value}"`).join("\n") + "\n"
+	)
+
+	const dockerCommands = ["docker"]
+	if (dockerConfig.useSudo) {
+		dockerCommands.unshift("sudo")
+	}
+
+	const dumpSpawnPromise = spawn(
+		dockerCommands[0],
 		[
-			...(config.host ? ["-h", config.host] : []),
-			...(config.port ? ["--port", config.port.toString()] : []),
-			...(config.username ? ["-U", config.username.toString()] : []),
+			...dockerCommands.slice(1),
+			"exec",
+			"-t",
+			...["--env-file", tmpEnvFilePath],
+			"--",
+			dbContainerName,
+			"pg_dump",
+			...pgDumpAuthArgs,
 			"--schema-only",
-			...["-f", path.resolve(backupRepoPath, database, `${config.schema}.sql`)],
-			database,
+			config.database,
 		],
 		{
-			cwd: backupRepoPath,
 			encoding: "utf8",
-			env: {
-				...process.env,
-				PGPASSWORD: config.password,
-			},
 		}
 	)
+	const dumpOutputStream = dumpSpawnPromise.stdout
+
+	const databaseSchemaSqlFilePath = path.resolve(backupFolderPath, `${config.schema}.sql`)
+	dumpOutputStream?.pipe(_fs.createWriteStream(databaseSchemaSqlFilePath))
+	await dumpSpawnPromise
 
 	await arrayMapLimit(
 		async (index) => {
-			const { table_name } = tables[index]
+			const tableName = tables[index]
 
-			if (!table_name) {
-				return
-			}
+			try {
+				const childProcessPromise = spawn(
+					dockerCommands[0],
+					[
+						...dockerCommands.slice(1),
+						"exec",
+						"-t",
+						...["--env-file", tmpEnvFilePath],
+						"--",
+						dbContainerName,
+						"pg_dump",
+						...pgDumpAuthArgs,
+						...["-t", `"${config.schema}"."${tableName}"`],
+						"--data-only",
+						config.database,
+					],
+					{
+						cwd: backupRepoPath,
+						encoding: "utf8",
+					}
+				)
 
-			await spawn(
-				"pg_dump",
-				[
-					...(config.host ? ["-h", config.host] : []),
-					...(config.port ? ["--port", config.port.toString()] : []),
-					...(config.username ? ["-U", config.username.toString()] : []),
-					...["-t", `"${config.schema}"."${table_name}"`],
-					"--data-only",
-					...["-f", path.resolve(backupRepoPath, database, `${config.schema}.${table_name}.sql`)],
-					database,
-				],
-				{
-					cwd: backupRepoPath,
-					encoding: "utf8",
-					env: {
-						...process.env,
-						PGPASSWORD: config.password,
-					},
-				}
-			).catch((e) => {
+				const content = (await childProcessPromise).stdout as string
+				await fs.writeFile(path.resolve(backupFolderPath, `${config.schema}.${tableName}.sql`), content)
+			} catch (e: unknown) {
 				console.log(e)
 				throw e
-			})
+			}
 		},
 		tables.length,
 		30
 	)
 
-	client.end()
-}
+	await fs.unlink(tmpEnvFilePath)
 
-process.on("warning", (e) => console.log(e.stack))
+	await pool.end()
+}

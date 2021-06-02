@@ -1,4 +1,5 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
+import { PoolConfig } from "pg"
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions"
 import * as yup from "yup"
 
@@ -20,6 +21,10 @@ export const databaseConfig: {
 		schema: string
 		database: string
 	}
+	poolConfig: SafeOmit<PoolConfig, "database" | "password"> & {
+		password: string
+		database: string
+	}
 } = {
 	typeormConfig: {
 		type: "postgres",
@@ -35,5 +40,12 @@ export const databaseConfig: {
 		cli: {
 			migrationsDir: "src/database/migrations",
 		},
+	},
+	poolConfig: {
+		database: validatedEnv.DB_NAME,
+		host: validatedEnv.DB_HOST,
+		port: validatedEnv.DB_PORT,
+		user: validatedEnv.DB_USERNAME,
+		password: validatedEnv.DB_PASSWORD,
 	},
 }

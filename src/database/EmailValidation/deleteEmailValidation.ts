@@ -1,25 +1,20 @@
-import identity from "lodash/identity"
-import { Connection } from "typeorm"
+import { Pool } from "pg"
 
-import { emailValidationColumns, emailValidationEntitySchema } from "./EmailValidation.entity"
-import { EmailValidationRow } from "./EmailValidation.entity.types"
+import { db } from "../zapatos/zapatos.db"
 
 export type DeleteEmailValidationOptions = {
-	connection: Connection
+	pool: Pool
 	userId: string
 }
 
 export async function deleteEmailValidations(options: DeleteEmailValidationOptions): Promise<boolean> {
-	const { connection, userId } = options
-	const rows = await connection
-		.createQueryBuilder(emailValidationEntitySchema, "emailValidation")
-		.delete()
-		.from(emailValidationEntitySchema)
-		.where(
-			`${emailValidationColumns.user_id.name} = :userId`,
-			identity<{ userId: EmailValidationRow["user_id"] }>({ userId: userId })
-		)
-		.execute()
+	const { pool, userId } = options
 
-	return (rows.affected ?? 0) > 0
+	const rows = await db
+		.deletes("email_validation", {
+			user_id: userId,
+		})
+		.run(pool)
+
+	return rows.length > 0
 }

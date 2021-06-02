@@ -5,18 +5,20 @@ import { getMatchingFilePaths } from "@sangonz193/utils/node/getMatchingFilePath
 import path from "path"
 import { spawn } from "promisify-child-process"
 
+import { projectPath } from "../../../../_utils/projectPath"
 import { databaseConfig } from "../../../../database/database.config"
 import { backupConfig } from "../../../../modules/backup-db/backupDb.config"
-import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { dockerConfig } from "../../../../modules/docker/docker.config"
+import { getDbDockerContainerName } from "../../../../modules/docker/getDbDockerContainerName"
 import { Resolvers } from "../../schemas.types"
 
 const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) => {
 	const { input } = args
-	const user = await getUserFromSecret(input.secret, context)
-	if (!user) {
-		console.log(1)
-		throw new Error("Unauthenticated")
-	}
+	// const user = await getUserFromSecret(input.secret, context)
+	// if (!user) {
+	// 	console.log(1)
+	// 	throw new Error("Unauthenticated")
+	// }
 
 	if (!input.includeData && !input.includeSchema) {
 		console.log(2)
@@ -37,11 +39,6 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 		throw new Error(uuid)
 	}
 
-	const tmpDirPath = path.resolve(__dirname, ".tmp")
-	if (!(await fsExists(tmpDirPath))) {
-		await fs.mkdir(tmpDirPath)
-	}
-
 	const databaseSchemaFilePath = path.resolve(backupRepoPath, typeormConfig.database, typeormConfig.schema + ".sql")
 
 	if (!(await fsExists(databaseSchemaFilePath))) {
@@ -55,49 +52,94 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 	)
 	matchingFilePaths.unshift(databaseSchemaFilePath)
 
-	const mergedBackupContentFilePath = path.resolve(tmpDirPath, `.${getUuid()}.sql`)
+	const mergedBackupContentFilePath = path.resolve(projectPath, "docker", "db-data-gitignore", `.${getUuid()}.sql`)
 	const backupFileContents = await Promise.all(
 		matchingFilePaths.map(async (matchingFilePath) => fs.readFile(matchingFilePath, "utf8"))
 	)
 	await fs.writeFile(mergedBackupContentFilePath, backupFileContents.join("\n\n"))
 
-	const psqlCommandAuthParams = [
+	const psqlCommandAuthArgs = [
 		...["--dbname", typeormConfig.database],
 		...(typeormConfig.host ? ["--host", typeormConfig.host] : []),
 		...(typeormConfig.port !== undefined ? ["--port", typeormConfig.port.toString()] : []),
 		...(typeormConfig.username ? ["--username", typeormConfig.username] : []),
 	]
-	const spawnEnvWithDbPassword = {
-		...process.env,
-		PGPASSWORD: typeormConfig.password,
+
+	const dbContainerName = await getDbDockerContainerName()
+
+	if (!dbContainerName) {
+		const message = "Could not get db container name:"
+		console.log(message)
+		throw new Error(message)
+	}
+
+	const tmpEnvFilePath = path.resolve(__dirname, ".tmp", `restoreDb-tmpEnvFile-${getUuid()}`)
+	const tmpEnvDirPath = path.resolve(tmpEnvFilePath, "..")
+
+	if (!(await fsExists(tmpEnvDirPath))) {
+		await fs.mkdir(tmpEnvDirPath, { recursive: true })
+	}
+
+	await fs.writeFile(
+		tmpEnvFilePath,
+		[["PGPASSWORD", typeormConfig.password]].map(([key, value]) => `${key}="${value}"`).join("\n") + "\n"
+	)
+
+	const commonDockerCommandArgs = ["exec", "-t", ...["--env-file", tmpEnvFilePath], "--", dbContainerName]
+	const dockerCommands = ["docker"]
+
+	if (dockerConfig.useSudo) {
+		dockerCommands.unshift("sudo")
 	}
 
 	if (input.dropSchema) {
 		await spawn(
-			"psql",
-			[...psqlCommandAuthParams, ...["-c", `drop schema if exists "${typeormConfig.schema}" cascade`]],
+			dockerCommands[0],
+			[
+				...dockerCommands.slice(1),
+				...commonDockerCommandArgs,
+				"psql",
+				...psqlCommandAuthArgs,
+				...["-c", `drop schema if exists "${typeormConfig.schema}" cascade`],
+			],
 			{
 				encoding: "utf8",
-				env: spawnEnvWithDbPassword,
 			}
 		)
-		await spawn("psql", [...psqlCommandAuthParams, ...["-c", `create schema "${typeormConfig.schema}"`]], {
-			encoding: "utf8",
-			env: spawnEnvWithDbPassword,
-		})
+		await spawn(
+			dockerCommands[0],
+			[
+				...dockerCommands.slice(1),
+				...commonDockerCommandArgs,
+				"psql",
+				...psqlCommandAuthArgs,
+				...["-c", `create schema "${typeormConfig.schema}"`],
+			],
+			{
+				encoding: "utf8",
+			}
+		)
 	}
 
 	await spawn(
-		"psql",
+		dockerCommands[0],
 		[
-			...psqlCommandAuthParams,
+			...dockerCommands.slice(1),
+			...commonDockerCommandArgs,
+			"psql",
+			...psqlCommandAuthArgs,
 			...(input.includeSchema && !input.includeData ? ["--schema-only"] : []),
 			...(input.includeData && !input.includeSchema ? ["--data-only"] : []),
-			...["-f", mergedBackupContentFilePath],
+			...[
+				"-f",
+				path.posix.resolve(
+					"/var/lib/postgresql/data",
+					path.relative(path.resolve(projectPath, "docker", "db-data-gitignore"), mergedBackupContentFilePath)
+				),
+			],
 		],
 		{
 			encoding: "utf8",
-			env: spawnEnvWithDbPassword,
 		}
 	)
 	await fs.unlink(mergedBackupContentFilePath)

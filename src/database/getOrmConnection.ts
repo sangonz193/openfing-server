@@ -4,13 +4,16 @@ import { Connection, createConnection } from "typeorm"
 import { databaseConfig } from "./database.config"
 
 export const getOrmConnection = async (): Promise<Connection> => {
-	const maxRetries = 5
+	const maxRetries = 15
 	let tries = 0
 	let connection: Connection | undefined = undefined
 
 	while (!connection && tries < maxRetries) {
 		tries++
-		connection = await createConnection(databaseConfig.typeormConfig).catch(() => undefined)
+		connection = await createConnection(databaseConfig.typeormConfig).catch((error) => {
+			console.log(error)
+			return undefined
+		})
 		await wait(5000)
 	}
 

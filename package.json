@@ -68,8 +68,6 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.12.18",
-		"@pgtyped/cli": "^0.10.4",
-		"@pgtyped/query": "^0.10.4",
 		"@sangonz193/utils": "^1.0.4",
 		"apollo-errors": "^1.9.0",
 		"apollo-server-core": "^2.21.0",
@@ -102,6 +100,7 @@
 		"typeorm": "^0.2.31",
 		"url-join": "^4.0.1",
 		"uuid": "^8.3.2",
-		"yup": "^0.32.9"
+		"yup": "^0.32.9",
+		"zapatos": "^4.0.1"
 	}
 }
