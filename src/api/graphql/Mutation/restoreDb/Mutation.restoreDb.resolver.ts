@@ -10,15 +10,15 @@ import { databaseConfig } from "../../../../database/database.config"
 import { backupConfig } from "../../../../modules/backup-db/backupDb.config"
 import { dockerConfig } from "../../../../modules/docker/docker.config"
 import { getDbDockerContainerName } from "../../../../modules/docker/getDbDockerContainerName"
+import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { Resolvers } from "../../schemas.types"
 
 const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) => {
 	const { input } = args
-	// const user = await getUserFromSecret(input.secret, context)
-	// if (!user) {
-	// 	console.log(1)
-	// 	throw new Error("Unauthenticated")
-	// }
+	const user = await getUserFromSecret(input.secret, context)
+	if (!user) {
+		throw new Error("Unauthenticated")
+	}
 
 	if (!input.includeData && !input.includeSchema) {
 		console.log(2)
