@@ -1,28 +1,24 @@
-import { fs } from "@sangonz193/utils/node/fs"
 import path from "path"
 import yargs, { CommandModule } from "yargs"
 
+import { getMatchingFilePathsSync } from "./_utils/getMatchingFilePaths"
+import { getSubCommandsPaths } from "./_utils/getSubCommandsPaths"
+
 const run = async () => {
-	const commands: Array<CommandModule<unknown, unknown>> = []
-
 	const commandsDirPath = path.resolve(__dirname, "commands")
-	const commandsDirItems =
-		process.argv[2] === "generate-files" ? ["generate-files"] : await fs.readdir(commandsDirPath)
-	await Promise.all(
-		commandsDirItems.map(async (commandsDirItem) => {
-			const commandsDirItemPath = path.resolve(commandsDirPath, commandsDirItem)
+	const possibleCommandName = process.argv[2]
 
-			if ((await fs.lstat(commandsDirItemPath)).isDirectory()) {
-				const nestedDirItems = await fs.readdir(commandsDirItemPath)
-
-				const commandFile = nestedDirItems.find((nestedDirItem) => nestedDirItem.endsWith(".command.ts"))
-
-				if (commandFile) {
-					commands.push(require(path.resolve(commandsDirItemPath, commandFile)).default)
-				}
-			}
-		})
+	let matchingFiles = getMatchingFilePathsSync(
+		path.resolve(commandsDirPath, "**", `${possibleCommandName}.command.ts`)
 	)
+
+	if (matchingFiles.length !== 1) {
+		matchingFiles = getSubCommandsPaths(__dirname)
+	}
+
+	const commands = matchingFiles.map<CommandModule<unknown, unknown>>((matchingFilePath) => {
+		return require(matchingFilePath).default
+	})
 
 	const _yargs = yargs.scriptName("node cli")
 

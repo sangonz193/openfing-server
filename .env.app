@@ -15,8 +15,7 @@ DATABASE_BACKUP_REPO_PATH=
 
 # Whether any database backup attempt should be skipped.
 # Can be left unset.
-# default: true
-SKIP_DATABASE_BACKUP=
+SKIP_DATABASE_BACKUP=true
 
 # Encryption key used to enrypt a disabled video's name.
 # Can be left unset.
