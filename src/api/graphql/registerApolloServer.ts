@@ -1,8 +1,6 @@
-import { formatError } from "apollo-errors"
 import { ContextFunction } from "apollo-server-core"
 import { ApolloServer, ExpressContext } from "apollo-server-express"
 import type express from "express"
-import { GraphQLFormattedError } from "graphql"
 import KeycloakAdminClient from "keycloak-admin"
 import KeycloakConnect from "keycloak-connect"
 import { Pool } from "pg"
@@ -45,8 +43,7 @@ export const registerApolloServer = (options: RegisterApolloServerOptions) => {
 		playground: true,
 		formatError: (e) => {
 			console.error(e)
-
-			return formatError(e) as GraphQLFormattedError
+			return new Error("Internal server error")
 		},
 		context,
 	})

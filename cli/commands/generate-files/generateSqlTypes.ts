@@ -8,6 +8,7 @@ import { databaseConfig } from "../../../src/database/database.config"
 
 export async function generateSqlTypes() {
 	const zapatosOutDirOption = path.resolve(projectPath, "src", "database")
+	const outExt = ".generated.d.ts"
 	await zg.generate({
 		db: {
 			database: databaseConfig.typeormConfig.database,
@@ -18,14 +19,10 @@ export async function generateSqlTypes() {
 			ssl: undefined,
 		},
 		outDir: zapatosOutDirOption,
-		outExt: ".generated.d.ts",
+		outExt: outExt,
 		schemas: {
 			openfing: {
 				include: "*",
-				exclude: [],
-			},
-			information_schema: {
-				include: ["tables"],
 				exclude: [],
 			},
 		},
@@ -35,7 +32,7 @@ export async function generateSqlTypes() {
 	const generatedEslintIgnoreFilePath = path.resolve(zapatosOutDirOption, "zapatos", ".eslintrc.json")
 	await fs.unlink(generatedEslintIgnoreFilePath)
 
-	await spawn("npx", ["eslint", path.resolve(zapatosOutDirOption, "zapatos"), "--fix"], {
+	await spawn("npx", ["eslint", path.resolve(zapatosOutDirOption, "zapatos", "**", `*${outExt}`), "--fix"], {
 		cwd: projectPath,
-	})
+	}).catch(() => null)
 }

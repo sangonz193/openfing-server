@@ -12,8 +12,8 @@ import { registerRestEndpoints } from "./api/rest/registerRestEndpoints"
 import { testPublicUrl } from "./api/rest/testPublicUrl"
 import { appConfig } from "./config/app.config"
 import { getOrmConnection } from "./database/getOrmConnection"
+import { getPoolWithSchema } from "./database/getPoolWithSchema"
 import { getRepositories } from "./database/repositories"
-import { getDatabasePool } from "./dataloaders/getDatabasePool"
 import { getKeycloakAdminClientRef } from "./modules/keycloak/getKeycloakAdminClientRef"
 import { getKeycloakConnect } from "./modules/keycloak/getKeycloakConnect"
 
@@ -26,7 +26,7 @@ const run = async () => {
 		}),
 		getKeycloakAdminClientRef(),
 		getKeycloakConnect(),
-		ormConnectionPromise.then((connection) => getDatabasePool(connection)),
+		ormConnectionPromise.then(() => getPoolWithSchema()),
 	])
 
 	const expressApp = express()

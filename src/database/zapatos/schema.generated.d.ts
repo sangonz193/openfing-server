@@ -9,640 +9,10 @@ Released under the MIT licence: see LICENCE file
 
 declare module "zapatos/schema" {
 	import type * as db from "zapatos/db"
-	import type * as c from "zapatos/custom"
 
 	// got a type error on schemaVersionCanary below? update by running `npx zapatos`
 	export interface schemaVersionCanary extends db.SchemaVersionCanary {
 		version: 102
-	}
-
-	/* === schema: information_schema === */
-
-	/* --- enums --- */
-
-	/* --- tables --- */
-
-	export namespace tables {
-		export type Table = "tables"
-		export interface Selectable {
-			/**
-			 * **tables.table_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_catalog: c.PgSql_identifier | null
-			/**
-			 * **tables.table_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_schema: c.PgSql_identifier | null
-			/**
-			 * **tables.table_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_name: c.PgSql_identifier | null
-			/**
-			 * **tables.table_type**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			table_type: c.PgCharacter_data | null
-			/**
-			 * **tables.self_referencing_column_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			self_referencing_column_name: c.PgSql_identifier | null
-			/**
-			 * **tables.reference_generation**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			reference_generation: c.PgCharacter_data | null
-			/**
-			 * **tables.user_defined_type_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_catalog: c.PgSql_identifier | null
-			/**
-			 * **tables.user_defined_type_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_schema: c.PgSql_identifier | null
-			/**
-			 * **tables.user_defined_type_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_name: c.PgSql_identifier | null
-			/**
-			 * **tables.is_insertable_into**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_insertable_into: c.PgYes_or_no | null
-			/**
-			 * **tables.is_typed**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_typed: c.PgYes_or_no | null
-			/**
-			 * **tables.commit_action**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			commit_action: c.PgCharacter_data | null
-		}
-		export interface JSONSelectable {
-			/**
-			 * **tables.table_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_catalog: c.PgSql_identifier | null
-			/**
-			 * **tables.table_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_schema: c.PgSql_identifier | null
-			/**
-			 * **tables.table_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_name: c.PgSql_identifier | null
-			/**
-			 * **tables.table_type**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			table_type: c.PgCharacter_data | null
-			/**
-			 * **tables.self_referencing_column_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			self_referencing_column_name: c.PgSql_identifier | null
-			/**
-			 * **tables.reference_generation**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			reference_generation: c.PgCharacter_data | null
-			/**
-			 * **tables.user_defined_type_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_catalog: c.PgSql_identifier | null
-			/**
-			 * **tables.user_defined_type_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_schema: c.PgSql_identifier | null
-			/**
-			 * **tables.user_defined_type_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_name: c.PgSql_identifier | null
-			/**
-			 * **tables.is_insertable_into**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_insertable_into: c.PgYes_or_no | null
-			/**
-			 * **tables.is_typed**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_typed: c.PgYes_or_no | null
-			/**
-			 * **tables.commit_action**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			commit_action: c.PgCharacter_data | null
-		}
-		export interface Whereable {
-			/**
-			 * **tables.table_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.table_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.table_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.table_type**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			table_type?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.self_referencing_column_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			self_referencing_column_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.reference_generation**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			reference_generation?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.user_defined_type_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.user_defined_type_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.user_defined_type_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | db.SQLFragment | db.ParentColumn
-				  >
-			/**
-			 * **tables.is_insertable_into**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_insertable_into?:
-				| c.PgYes_or_no
-				| db.Parameter<c.PgYes_or_no>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<any, c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | db.SQLFragment | db.ParentColumn>
-			/**
-			 * **tables.is_typed**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_typed?:
-				| c.PgYes_or_no
-				| db.Parameter<c.PgYes_or_no>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<any, c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | db.SQLFragment | db.ParentColumn>
-			/**
-			 * **tables.commit_action**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			commit_action?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| db.SQLFragment
-				| db.ParentColumn
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | db.SQLFragment | db.ParentColumn
-				  >
-		}
-		export interface Insertable {
-			/**
-			 * **tables.table_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.table_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.table_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_name?: c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-			/**
-			 * **tables.table_type**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			table_type?: c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | null | db.DefaultType | db.SQLFragment
-			/**
-			 * **tables.self_referencing_column_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			self_referencing_column_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.reference_generation**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			reference_generation?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.user_defined_type_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.user_defined_type_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.user_defined_type_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-			/**
-			 * **tables.is_insertable_into**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_insertable_into?: c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | null | db.DefaultType | db.SQLFragment
-			/**
-			 * **tables.is_typed**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_typed?: c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | null | db.DefaultType | db.SQLFragment
-			/**
-			 * **tables.commit_action**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			commit_action?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-		}
-		export interface Updatable {
-			/**
-			 * **tables.table_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.table_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.table_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			table_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.table_type**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			table_type?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.self_referencing_column_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			self_referencing_column_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.reference_generation**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			reference_generation?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.user_defined_type_catalog**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_catalog?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.user_defined_type_schema**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_schema?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.user_defined_type_name**
-			 * - `sql_identifier` (base type: `name`) in database
-			 * - Nullable, no default
-			 */
-			user_defined_type_name?:
-				| c.PgSql_identifier
-				| db.Parameter<c.PgSql_identifier>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgSql_identifier | db.Parameter<c.PgSql_identifier> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.is_insertable_into**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_insertable_into?:
-				| c.PgYes_or_no
-				| db.Parameter<c.PgYes_or_no>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.is_typed**
-			 * - `yes_or_no` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			is_typed?:
-				| c.PgYes_or_no
-				| db.Parameter<c.PgYes_or_no>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgYes_or_no | db.Parameter<c.PgYes_or_no> | null | db.DefaultType | db.SQLFragment
-				  >
-			/**
-			 * **tables.commit_action**
-			 * - `character_data` (base type: `varchar`) in database
-			 * - Nullable, no default
-			 */
-			commit_action?:
-				| c.PgCharacter_data
-				| db.Parameter<c.PgCharacter_data>
-				| null
-				| db.DefaultType
-				| db.SQLFragment
-				| db.SQLFragment<
-						any,
-						c.PgCharacter_data | db.Parameter<c.PgCharacter_data> | null | db.DefaultType | db.SQLFragment
-				  >
-		}
-		export type UniqueIndex = never
-		export type Column = keyof Selectable
-		export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>
-		export type SQLExpression =
-			| db.GenericSQLExpression
-			| db.ColumnNames<Updatable | Array<keyof Updatable>>
-			| db.ColumnValues<Updatable>
-			| Table
-			| Whereable
-			| Column
-		export type SQL = SQLExpression | SQLExpression[]
 	}
 
 	/* === schema: openfing === */
@@ -6661,7 +6031,6 @@ declare module "zapatos/schema" {
 		| email_validation.Table
 		| faq.Table
 		| migrations.Table
-		| tables.Table
 		| user.Table
 		| user_role.Table
 		| user_to_user_role.Table
@@ -6678,7 +6047,6 @@ declare module "zapatos/schema" {
 		| email_validation.Selectable
 		| faq.Selectable
 		| migrations.Selectable
-		| tables.Selectable
 		| user.Selectable
 		| user_role.Selectable
 		| user_to_user_role.Selectable
@@ -6695,7 +6063,6 @@ declare module "zapatos/schema" {
 		| email_validation.JSONSelectable
 		| faq.JSONSelectable
 		| migrations.JSONSelectable
-		| tables.JSONSelectable
 		| user.JSONSelectable
 		| user_role.JSONSelectable
 		| user_to_user_role.JSONSelectable
@@ -6712,7 +6079,6 @@ declare module "zapatos/schema" {
 		| email_validation.Whereable
 		| faq.Whereable
 		| migrations.Whereable
-		| tables.Whereable
 		| user.Whereable
 		| user_role.Whereable
 		| user_to_user_role.Whereable
@@ -6729,7 +6095,6 @@ declare module "zapatos/schema" {
 		| email_validation.Insertable
 		| faq.Insertable
 		| migrations.Insertable
-		| tables.Insertable
 		| user.Insertable
 		| user_role.Insertable
 		| user_to_user_role.Insertable
@@ -6746,7 +6111,6 @@ declare module "zapatos/schema" {
 		| email_validation.Updatable
 		| faq.Updatable
 		| migrations.Updatable
-		| tables.Updatable
 		| user.Updatable
 		| user_role.Updatable
 		| user_to_user_role.Updatable
@@ -6763,7 +6127,6 @@ declare module "zapatos/schema" {
 		| email_validation.UniqueIndex
 		| faq.UniqueIndex
 		| migrations.UniqueIndex
-		| tables.UniqueIndex
 		| user.UniqueIndex
 		| user_role.UniqueIndex
 		| user_to_user_role.UniqueIndex
@@ -6780,7 +6143,6 @@ declare module "zapatos/schema" {
 		| email_validation.Column
 		| faq.Column
 		| migrations.Column
-		| tables.Column
 		| user.Column
 		| user_role.Column
 		| user_to_user_role.Column
@@ -6797,7 +6159,6 @@ declare module "zapatos/schema" {
 		email_validation.Table,
 		faq.Table,
 		migrations.Table,
-		tables.Table,
 		user.Table,
 		user_role.Table,
 		user_to_user_role.Table
@@ -6817,7 +6178,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.Selectable
 		faq: faq.Selectable
 		migrations: migrations.Selectable
-		tables: tables.Selectable
 		user: user.Selectable
 		user_role: user_role.Selectable
 		user_to_user_role: user_to_user_role.Selectable
@@ -6836,7 +6196,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.JSONSelectable
 		faq: faq.JSONSelectable
 		migrations: migrations.JSONSelectable
-		tables: tables.JSONSelectable
 		user: user.JSONSelectable
 		user_role: user_role.JSONSelectable
 		user_to_user_role: user_to_user_role.JSONSelectable
@@ -6855,7 +6214,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.Whereable
 		faq: faq.Whereable
 		migrations: migrations.Whereable
-		tables: tables.Whereable
 		user: user.Whereable
 		user_role: user_role.Whereable
 		user_to_user_role: user_to_user_role.Whereable
@@ -6874,7 +6232,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.Insertable
 		faq: faq.Insertable
 		migrations: migrations.Insertable
-		tables: tables.Insertable
 		user: user.Insertable
 		user_role: user_role.Insertable
 		user_to_user_role: user_to_user_role.Insertable
@@ -6893,7 +6250,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.Updatable
 		faq: faq.Updatable
 		migrations: migrations.Updatable
-		tables: tables.Updatable
 		user: user.Updatable
 		user_role: user_role.Updatable
 		user_to_user_role: user_to_user_role.Updatable
@@ -6912,7 +6268,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.UniqueIndex
 		faq: faq.UniqueIndex
 		migrations: migrations.UniqueIndex
-		tables: tables.UniqueIndex
 		user: user.UniqueIndex
 		user_role: user_role.UniqueIndex
 		user_to_user_role: user_to_user_role.UniqueIndex
@@ -6931,7 +6286,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.Column
 		faq: faq.Column
 		migrations: migrations.Column
-		tables: tables.Column
 		user: user.Column
 		user_role: user_role.Column
 		user_to_user_role: user_to_user_role.Column
@@ -6950,7 +6304,6 @@ declare module "zapatos/schema" {
 		email_validation: email_validation.SQL
 		faq: faq.SQL
 		migrations: migrations.SQL
-		tables: tables.SQL
 		user: user.SQL
 		user_role: user_role.SQL
 		user_to_user_role: user_to_user_role.SQL
