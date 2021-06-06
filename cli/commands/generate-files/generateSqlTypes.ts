@@ -5,21 +5,14 @@ import { spawn } from "promisify-child-process"
 import * as zg from "zapatos/generate"
 
 import { projectPath } from "../../../src/_utils/projectPath"
-import { databaseConfig } from "../../../src/database/database.config"
+import { databasePoolConfig } from "../../../src/database/databasePool.config"
 
 export async function generateSqlTypes() {
 	const zapatosOutDirOption = path.resolve(projectPath, "src", "database")
 	const outExt = ".generated.d.ts"
 	try {
 		await zg.generate({
-			db: {
-				database: databaseConfig.typeormConfig.database,
-				host: databaseConfig.typeormConfig.host,
-				user: databaseConfig.typeormConfig.username,
-				password: databaseConfig.typeormConfig.password,
-				port: databaseConfig.typeormConfig.port,
-				ssl: undefined,
-			},
+			db: databasePoolConfig,
 			outDir: zapatosOutDirOption,
 			outExt: outExt,
 			schemas: {
