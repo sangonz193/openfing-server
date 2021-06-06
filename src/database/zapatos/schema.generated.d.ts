@@ -5223,7 +5223,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **migrations.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.migrations_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5243,7 +5243,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **migrations.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.migrations_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5263,7 +5263,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **migrations.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.migrations_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
 			 */
 			id?:
 				| number
@@ -5304,7 +5304,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **migrations.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.migrations_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
 			 */
 			id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment
 			/**
@@ -5324,7 +5324,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **migrations.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.migrations_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
 			 */
 			id?:
 				| number
@@ -5773,7 +5773,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_role_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5787,7 +5787,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_role_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5801,7 +5801,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_role_id_seq'::regclass)`
 			 */
 			id?:
 				| number
@@ -5825,7 +5825,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_role_id_seq'::regclass)`
 			 */
 			id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment
 			/**
@@ -5839,7 +5839,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_role_id_seq'::regclass)`
 			 */
 			id?:
 				| number
@@ -5877,7 +5877,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_to_user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_to_user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_to_user_role_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5897,7 +5897,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_to_user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_to_user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_to_user_role_id_seq'::regclass)`
 			 */
 			id: number
 			/**
@@ -5917,7 +5917,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_to_user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_to_user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_to_user_role_id_seq'::regclass)`
 			 */
 			id?:
 				| number
@@ -5952,7 +5952,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_to_user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_to_user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_to_user_role_id_seq'::regclass)`
 			 */
 			id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment
 			/**
@@ -5972,7 +5972,7 @@ declare module "zapatos/schema" {
 			/**
 			 * **user_to_user_role.id**
 			 * - `int4` in database
-			 * - `NOT NULL`, default: `nextval('openfing.user_to_user_role_id_seq'::regclass)`
+			 * - `NOT NULL`, default: `nextval('user_to_user_role_id_seq'::regclass)`
 			 */
 			id?:
 				| number

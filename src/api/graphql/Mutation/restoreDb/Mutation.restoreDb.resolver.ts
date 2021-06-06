@@ -85,8 +85,7 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 		[["PGPASSWORD", typeormConfig.password]].map(([key, value]) => `${key}="${value}"`).join("\n") + "\n"
 	)
 
-	const commonDockerCommandArgs = ["exec", "-t", ...["--env-file", tmpEnvFilePath], "--", dbContainerName]
-	const dockerCommands = ["docker"]
+	const dockerCommands = ["docker", "exec", "-t", ...["--env-file", tmpEnvFilePath], "--", dbContainerName]
 
 	if (dockerConfig.useSudo) {
 		dockerCommands.unshift("sudo")
@@ -97,7 +96,6 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 			dockerCommands[0],
 			[
 				...dockerCommands.slice(1),
-				...commonDockerCommandArgs,
 				"psql",
 				...psqlCommandAuthArgs,
 				...["-c", `drop schema if exists "${typeormConfig.schema}" cascade`],
@@ -110,7 +108,6 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 			dockerCommands[0],
 			[
 				...dockerCommands.slice(1),
-				...commonDockerCommandArgs,
 				"psql",
 				...psqlCommandAuthArgs,
 				...["-c", `create schema "${typeormConfig.schema}"`],
@@ -125,7 +122,6 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 		dockerCommands[0],
 		[
 			...dockerCommands.slice(1),
-			...commonDockerCommandArgs,
 			"psql",
 			...psqlCommandAuthArgs,
 			...(input.includeSchema && !input.includeData ? ["--schema-only"] : []),
