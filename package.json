@@ -92,6 +92,7 @@
 		"nodemailer": "^6.6.0",
 		"pg": "^8.5.1",
 		"pg-copy-streams": "^5.1.1",
+		"plop": "^2.7.4",
 		"promisify-child-process": "^4.1.1",
 		"reflect-metadata": "^0.1.13",
 		"simple-git": "^2.37.0",

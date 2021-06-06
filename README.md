@@ -16,7 +16,7 @@ Este es el proyecto server de la plataforma de OpenFING.
 
 -   Clonar este repositorio y abrir una terminal dentro de la carpeta creada.
 -   Correr el comando `npm i` para instalar dependencias.
--   Crear un archivo _.env_ en la carpeta del proyecto que contenga las variables contenidas en _.env.example_. Puedes copiar el archivo _.env.example_ y modificar los valores de las variables como creas necesario. `cp .env.example .env`.
+-   Crear un archivo _.env_ dentro de la carpeta del proyecto. El archivo debe contener las mismas variables de entorno definidas en los archivos _.env.app_ y _.env.cli_. Se puede empezar por correr el comando `node cli create env-file`, y luego modificando los valores según necesite.
 
 ### Ejecutando el servidor
 
