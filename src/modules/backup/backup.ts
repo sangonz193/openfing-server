@@ -53,11 +53,11 @@ export const backup = async () => {
 		)
 	} catch (error: unknown) {
 		console.log(error)
-		backupDbConfigs.forEach((list) => list.cleanUp())
+		backupDbConfigs.forEach((config) => config.cleanUp())
 		throw error
 	}
 
-	await Promise.all(backupDbConfigs.map((list) => list.cleanUp()))
+	await Promise.all(backupDbConfigs.map((config) => config.cleanUp()))
 
 	const git = simpleGit({
 		baseDir: backupRepoPath,
