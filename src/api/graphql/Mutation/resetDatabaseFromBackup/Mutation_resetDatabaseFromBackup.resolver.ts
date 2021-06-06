@@ -4,13 +4,12 @@ import { from as copyFrom } from "pg-copy-streams"
 
 import { databaseConfig } from "../../../../database/database.config"
 import { entities } from "../../../../database/entities"
-import { getDatabasePool } from "../../../../dataloaders/getDatabasePool"
 import { backupConfig } from "../../../../modules/backup-db/backupDb.config"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { Resolvers } from "../../schemas.types"
 
 const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, args, context) => {
-	const { ormConnection } = context
+	const { ormConnection, pool } = context
 	const { typeormConfig } = databaseConfig
 
 	const user = await getUserFromSecret(args.secret, context)
@@ -24,8 +23,6 @@ const resolver: Resolvers["Mutation"]["resetDatabaseFromBackup"] = async (_, arg
 	}
 
 	const tableNames = entities.map((entity) => ormConnection.getRepository(entity).metadata.tableName)
-
-	const pool = await getDatabasePool(ormConnection)
 	const { schema } = typeormConfig
 
 	await ormConnection.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`)

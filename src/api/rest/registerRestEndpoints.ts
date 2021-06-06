@@ -33,6 +33,7 @@ export const registerRestEndpoints = (options: RegisterRestEndpointsOptions) => 
 			repositories,
 			keycloakAdminClientRef,
 			keycloakConnect: keycloakConnect,
+			pool,
 		}
 	}
 

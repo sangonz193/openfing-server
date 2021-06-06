@@ -3,16 +3,17 @@ import { _fs, fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import csvStringify from "csv-stringify"
 import path from "path"
+import { Pool } from "pg"
 import { from as copyFrom } from "pg-copy-streams"
 import { getRepository } from "typeorm"
 import { CommandModule } from "yargs"
 
 import { hashPassword } from "../../../src/_utils/hashPassword"
 import { databaseConfig } from "../../../src/database/database.config"
+import { databasePoolConfig } from "../../../src/database/databasePool.config"
 import { entities } from "../../../src/database/entities"
 import { getOrmConnection } from "../../../src/database/getOrmConnection"
 import { getUserRepository } from "../../../src/database/User"
-import { getDatabasePool } from "../../../src/dataloaders/getDatabasePool"
 import { valueToCSV } from "./valueToCSV"
 
 // TODO: add keycloak seed data.
@@ -82,7 +83,7 @@ const command: CommandModule<{}, {}> = {
 				await fs.writeFile(filePath, await stringify(records.map((record) => valuesFrom(record, keys))))
 				const fileStream = _fs.createReadStream(filePath)
 
-				const pool = await getDatabasePool(connection)
+				const pool = new Pool(databasePoolConfig)
 				const repository = getRepository(entityToCopy)
 				const schema = repository.metadata.schema ?? ""
 				const tableName = repository.metadata.tableName

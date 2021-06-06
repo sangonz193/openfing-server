@@ -34,6 +34,7 @@ export const registerApolloServer = (options: RegisterApolloServerOptions) => {
 			repositories,
 			keycloakAdminClientRef,
 			keycloakConnect: keycloakConnect,
+			pool,
 		}
 	}
 
