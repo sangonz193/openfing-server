@@ -7,7 +7,7 @@ import { spawn } from "promisify-child-process"
 
 import { projectPath } from "../../../../_utils/projectPath"
 import { databaseConfig } from "../../../../database/database.config"
-import { backupConfig } from "../../../../modules/backup-db/backupDb.config"
+import { backupConfig } from "../../../../modules/backup/backup.config"
 import { dockerConfig } from "../../../../modules/docker/docker.config"
 import { getDbDockerContainerName } from "../../../../modules/docker/getDbDockerContainerName"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
@@ -39,20 +39,11 @@ const resolver: Resolvers["Mutation"]["restoreDb"] = async (_, args, context) =>
 		throw new Error(uuid)
 	}
 
-	const databaseSchemaFilePath = path.resolve(backupRepoPath, typeormConfig.database, typeormConfig.schema + ".sql")
-
-	if (!(await fsExists(databaseSchemaFilePath))) {
-		const uuid = getUuid()
-		console.log(uuid, "databaseSchemaFilePath does not exist:", databaseSchemaFilePath)
-		throw new Error(uuid)
-	}
-
 	const matchingFilePaths = await getMatchingFilePaths(
 		path.resolve(backupRepoPath, typeormConfig.database, `${typeormConfig.schema}.*.sql`)
 	)
-	matchingFilePaths.unshift(databaseSchemaFilePath)
 
-	const mergedBackupContentFilePath = path.resolve(projectPath, "docker", "db-data-gitignore", `.${getUuid()}.sql`)
+	const mergedBackupContentFilePath = path.resolve(dockerConfig.volumePath, `.${getUuid()}.sql`)
 	const backupFileContents = await Promise.all(
 		matchingFilePaths.map(async (matchingFilePath) => fs.readFile(matchingFilePath, "utf8"))
 	)

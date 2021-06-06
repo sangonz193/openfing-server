@@ -1,6 +1,6 @@
 import * as yup from "yup"
 
-import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { backup } from "../../../../modules/backup/backup"
 import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
@@ -93,7 +93,7 @@ const resolver: Resolvers["Mutation"]["createCourseClassList"] = async (_, args,
 		// TODO: necessary?
 		dataLoaders.courseClassList.clearAll()
 
-		await backupDb()
+		await backup()
 
 		return getCreateCourseClassListPayloadParent({
 			courseClassList: courseClassListWithSameCode,
