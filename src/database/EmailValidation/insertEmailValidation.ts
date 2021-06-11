@@ -1,9 +1,11 @@
+import { dangerousKeysOf } from "@sangonz193/utils/dangerousKeysOf"
 import { getUuid } from "@sangonz193/utils/getUuid"
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
-import identity from "lodash/identity"
-import { Connection } from "typeorm"
+import { pick } from "lodash"
+import { Pool } from "pg"
 
-import { emailValidationEntitySchema } from "./EmailValidation.entity"
+import { db } from "../zapatos/zapatos.db"
+import { s } from "../zapatos/zapatos.s"
 import { EmailValidationRow } from "./EmailValidation.entity.types"
 
 type NullableInsertEmailValidationDataKeys = "id"
@@ -11,25 +13,29 @@ export type InsertEmailValidationData = SafeOmit<EmailValidationRow, NullableIns
 	Partial<Pick<EmailValidationRow, NullableInsertEmailValidationDataKeys>>
 
 export type InsertEmailValidationOptions = {
-	connection: Connection
+	pool: Pool
 	data: InsertEmailValidationData
 }
 
 export async function insertEmailValidation(options: InsertEmailValidationOptions): Promise<EmailValidationRow> {
-	const { connection, data } = options
+	const { pool, data } = options
 
-	const { generatedMaps } = await connection
-		.createQueryBuilder()
-		.insert()
-		.into<EmailValidationRow>(emailValidationEntitySchema)
-		.values(
-			identity<EmailValidationRow>({
-				...data,
-				id: data.id ?? getUuid(),
-			})
-		)
-		.returning("*")
-		.execute()
+	const cleanData = pick<s.email_validation.Insertable, keyof typeof data>(
+		{
+			...data,
+			id: data.id ?? getUuid(),
+		},
+		dangerousKeysOf<Record<keyof s.email_validation.Insertable, 0>>({
+			id: 0,
+			issued_at: 0,
+			user_id: 0,
+		})
+	)
 
-	return generatedMaps[0] as EmailValidationRow
+	const insertResult = await db.insert("email_validation", cleanData).run(pool)
+
+	return {
+		...insertResult,
+		issued_at: db.toDate(insertResult.issued_at),
+	}
 }

@@ -35,7 +35,7 @@ const handler: RestEndpoint["handler"] = async (context) => {
 		)
 		sendResponse(true)
 		context.repositories.emailValidation.delete({ userId: emailValidation.user_id })
-	} catch (error) {
+	} catch (error: unknown) {
 		sendResponse(false)
 		console.log(error)
 	}

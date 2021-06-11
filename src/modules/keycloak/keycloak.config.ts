@@ -11,10 +11,11 @@ const validatedEnv = validateEnv({
 	KEYCLOAK_DB_NAME: yup.string().required().min(1),
 })
 
-const typeormConfig = {
+const typeormConfig: typeof databaseConfig.typeormConfig = {
 	...databaseConfig.typeormConfig,
+	database: validatedEnv.KEYCLOAK_DB_NAME,
+	schema: "public",
 }
-typeormConfig.database = validatedEnv.KEYCLOAK_DB_NAME
 
 export const keycloakConfig = {
 	port: validatedEnv.KEYCLOAK_PORT,
@@ -23,5 +24,5 @@ export const keycloakConfig = {
 	realm: validatedEnv.KEYCLOAK_REALM,
 	serverUrl: `http://localhost:${validatedEnv.KEYCLOAK_PORT}/auth`,
 	clientId: "admin-cli",
-	typeormConfig,
+	typeormConfig: typeormConfig,
 }

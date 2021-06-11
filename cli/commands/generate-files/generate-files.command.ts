@@ -12,6 +12,7 @@ import { generateResolversIndex } from "./generateResolversIndex"
 import { generateRestEndpointsMap } from "./generateRestEndpointsMap"
 import { generateSchemasIndex } from "./generateSchemasIndex"
 import { generateSchemasTypesIndex } from "./generateSchemasTypesIndex"
+import { generateSqlTypes } from "./generateSqlTypes"
 
 // TODO: Rename generate* files.
 
@@ -64,6 +65,7 @@ const command: CommandModule<{}, { watch: boolean; skipInitial: boolean }> = {
 				loadSchemaPromise.then(generateSchemasTypesIndex),
 				generateSchemasIndex(),
 				generateRestEndpointsMap(),
+				generateSqlTypes(),
 			])
 		}
 	},

@@ -29,7 +29,7 @@ export const uploadRecursive = async (options: { fromPath: string; toPath: strin
 			} else {
 				shouldCreateFolder = false
 			}
-		} catch (e) {}
+		} catch {}
 
 		const [folderContent] = await Promise.all([
 			fs.readdir(fromPath),

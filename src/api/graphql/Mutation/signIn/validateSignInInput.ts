@@ -60,7 +60,7 @@ export async function validateSignInInput(args: MutationSignInArgs): Promise<Val
 			success: true,
 			input: validatedInput,
 		}
-	} catch (error) {
+	} catch (error: unknown) {
 		const validationErrorParentOptions: Parameters<typeof getSignInValidationErrorsParent>[0] = {
 			email: null,
 			password: null,

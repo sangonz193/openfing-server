@@ -10,6 +10,7 @@ import { CommandModule } from "yargs"
 
 import { hashPassword } from "../../../src/_utils/hashPassword"
 import { databaseConfig } from "../../../src/database/database.config"
+import { databasePoolConfig } from "../../../src/database/databasePool.config"
 import { entities } from "../../../src/database/entities"
 import { getOrmConnection } from "../../../src/database/getOrmConnection"
 import { getUserRepository } from "../../../src/database/User"
@@ -82,14 +83,7 @@ const command: CommandModule<{}, {}> = {
 				await fs.writeFile(filePath, await stringify(records.map((record) => valuesFrom(record, keys))))
 				const fileStream = _fs.createReadStream(filePath)
 
-				const pool = new Pool({
-					database: databaseConfig.typeormConfig.database,
-					password: databaseConfig.typeormConfig.password,
-					port: databaseConfig.typeormConfig.port,
-					user: databaseConfig.typeormConfig.username,
-					host: databaseConfig.typeormConfig.host,
-				})
-
+				const pool = new Pool(databasePoolConfig)
 				const repository = getRepository(entityToCopy)
 				const schema = repository.metadata.schema ?? ""
 				const tableName = repository.metadata.tableName
@@ -136,7 +130,7 @@ const command: CommandModule<{}, {}> = {
 							`SELECT setval(pg_get_serial_sequence('${schema}.${tableName}', 'id'), max(id)) FROM ${schema}.${tableName}; `
 						)
 					}
-				} catch (e) {
+				} catch (e: unknown) {
 					console.log(e)
 					process.exit(1)
 				}

@@ -52,7 +52,7 @@ export class UserIdToUuid1608109356011 implements MigrationInterface {
 					["created_by_id", "updated_by_id", "deleted_by_id", "user_id"].map(async (column) => {
 						try {
 							await queryRunner.renameColumn(tableName, column, "_" + column)
-						} catch (e) {
+						} catch {
 							return
 						}
 

@@ -4,7 +4,7 @@ import * as yup from "yup"
 import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types"
 import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types"
 import { Repositories } from "../../../../database/repositories"
-import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { backup } from "../../../../modules/backup/backup"
 import { RequestContext } from "../../../RequestContext"
 import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef"
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
@@ -44,7 +44,7 @@ const resolver: ResolverFn<
 	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
 		validatedData = await validatedDataPromise
-	} catch (e) {
+	} catch (e: unknown) {
 		console.log(e)
 		return getGenericErrorParent()
 	}
@@ -79,7 +79,7 @@ const resolver: ResolverFn<
 			validatedData,
 			prevCourseClassLiveState
 		)
-		await backupDb()
+		await backup()
 
 		return getSetCourseClassLiveStatePayloadParent(courseClassLiveState)
 	}

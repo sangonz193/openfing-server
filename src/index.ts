@@ -12,22 +12,25 @@ import { registerRestEndpoints } from "./api/rest/registerRestEndpoints"
 import { testPublicUrl } from "./api/rest/testPublicUrl"
 import { appConfig } from "./config/app.config"
 import { getOrmConnection } from "./database/getOrmConnection"
+import { getPoolWithSchema } from "./database/getPoolWithSchema"
 import { getRepositories } from "./database/repositories"
 import { getKeycloakAdminClientRef } from "./modules/keycloak/getKeycloakAdminClientRef"
 import { getKeycloakConnect } from "./modules/keycloak/getKeycloakConnect"
 
 const run = async () => {
-	const [ormConnection, keycloakAdminClientRef, keycloakConnect] = await Promise.all([
-		getOrmConnection().then(async (connection) => {
+	const ormConnectionPromise = getOrmConnection()
+	const [ormConnection, keycloakAdminClientRef, keycloakConnect, pool] = await Promise.all([
+		ormConnectionPromise.then(async (connection) => {
 			await connection.runMigrations()
 			return connection
 		}),
 		getKeycloakAdminClientRef(),
 		getKeycloakConnect(),
+		ormConnectionPromise.then(() => getPoolWithSchema()),
 	])
 
 	const expressApp = express()
-	const repositories = getRepositories(ormConnection)
+	const repositories = getRepositories(ormConnection, pool)
 
 	expressApp.use(cors())
 	registerApolloServer({
@@ -36,6 +39,7 @@ const run = async () => {
 		ormConnection,
 		repositories,
 		keycloakConnect,
+		pool,
 	})
 	registerRestEndpoints({
 		expressApp,
@@ -43,6 +47,7 @@ const run = async () => {
 		ormConnection,
 		repositories,
 		keycloakConnect,
+		pool,
 	})
 
 	const server = expressApp.listen(

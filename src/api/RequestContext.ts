@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import KeycloakAdminClient from "keycloak-admin"
 import KeycloakConnect from "keycloak-connect"
+import { Pool } from "pg"
 import { Connection } from "typeorm"
 
 import { Repositories } from "../database/repositories"
@@ -13,6 +14,7 @@ export type RequestContext = {
 	res: Response
 	includeHidden?: boolean
 	user?: UserRow
+	pool: Pool
 
 	dataLoaders: DataLoaders
 	repositories: Repositories

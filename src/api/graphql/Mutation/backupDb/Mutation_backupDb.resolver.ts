@@ -1,4 +1,4 @@
-import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { backup } from "../../../../modules/backup/backup"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { Resolvers } from "../../schemas.types"
 
@@ -8,7 +8,7 @@ const resolver: Resolvers["Mutation"]["backupDb"] = async (_, args, context) => 
 		throw new Error("Unauthenticated")
 	}
 
-	await backupDb()
+	await backup()
 }
 
 export default resolver

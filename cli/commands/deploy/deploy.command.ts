@@ -103,15 +103,14 @@ const command: CommandModule<{}, {}> = {
 		await fs.unlink(pm2ConfigPath)
 
 		for (const command of [
-			"rm -rf node_modules",
 			`npm ci`,
 			{
-				command: `pm2 stop ${deployConfig.PM2_PROCESS_NAME} && pm2 delete ${deployConfig.PM2_PROCESS_NAME}`,
+				command: `pm2 stop ${pm2ConfigFilename} && pm2 delete ${pm2ConfigFilename}`,
 				ignore: true,
 			},
+			`sudo docker-compose up -d`,
 			`npm i node@15`,
 			`npx pm2 start ${pm2ConfigFilename}`,
-			// `npx pm2 start ${pm2ConfigFilename}`, // run twice because, for some reason the first time it runs with an old version of node.
 		]) {
 			try {
 				console.log(`running`, command)
@@ -130,8 +129,12 @@ const command: CommandModule<{}, {}> = {
 					commandSpawn.on("exit", resolve)
 				})
 				console.log(`finish`, command)
-			} catch (e) {
-				console.log(e.toString("utf8"))
+			} catch (e: unknown) {
+				if (e instanceof Buffer) {
+					console.log(e.toString("utf8"))
+				} else {
+					console.log(e)
+				}
 
 				if (typeof command === "string" || !command.ignore) {
 					throw e

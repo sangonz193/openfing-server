@@ -1,7 +1,7 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 import * as yup from "yup"
 
-import { backupDb } from "../../../../modules/backup-db/backupDb"
+import { backup } from "../../../../modules/backup/backup"
 import { getResolutionFromVideoUrl } from "../../../../modules/miscellaneous/getResolutionFromVideoUrl"
 import { RequestContext } from "../../../RequestContext"
 import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef"
@@ -37,7 +37,7 @@ const resolver: ResolverFn<
 	let validatedData: typeof validatedDataPromise extends Promise<infer T> ? T : unknown
 	try {
 		validatedData = await validatedDataPromise
-	} catch (e) {
+	} catch (e: unknown) {
 		console.log(e)
 		return getGenericErrorParent()
 	}
@@ -82,7 +82,7 @@ const resolver: ResolverFn<
 	// TODO: necessary?
 	dataLoaders.courseClass.clearAll()
 
-	await backupDb()
+	await backup()
 
 	const baseVideoUrl = courseClassList.code
 		? `https://openfing-video.fing.edu.uy/media/${courseClassList.code}/${

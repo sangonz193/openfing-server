@@ -13,6 +13,7 @@ services:
       - server
     ports:
       - "${DB_PORT}:5432"
+    restart: unless-stopped
 
   keycloak:
     image: quay.io/keycloak/keycloak:12.0.4
@@ -24,6 +25,7 @@ services:
       DB_USER: "${DB_USERNAME}"
       DB_PORT: 5432
       DB_DATABASE: "${KEYCLOAK_DB_NAME}"
+      DB_SCHEMA: public
       DB_PASSWORD: "${DB_PASSWORD}"
     networks:
       - server
