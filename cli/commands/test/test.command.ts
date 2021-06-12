@@ -7,7 +7,7 @@ import { projectPath } from "../../_utils/projectPath"
 const command: CommandModule<{}, {}> = {
 	command: "test",
 
-	describe: "Runs jest.",
+	describe: false,
 
 	handler: async () => {
 		run(["--config", path.resolve(__dirname, "jest.config.ts")], projectPath)
