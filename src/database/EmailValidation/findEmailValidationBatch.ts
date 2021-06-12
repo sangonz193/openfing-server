@@ -2,12 +2,12 @@ import DataLoader from "dataloader"
 import { Pool } from "pg"
 
 import { zapatosDb } from "../zapatos/zapatos.db"
-import { s } from "../zapatos/zapatos.s"
+import { zapatosSchema } from "../zapatos/zapatos.schema"
 import { EmailValidationRow } from "./EmailValidation.entity.types"
 
 export type FindEmailValidationBatchOptions = {
 	pool: Pool
-	emailValidationIds: Array<s.email_validation.Selectable["id"]>
+	emailValidationIds: Array<zapatosSchema.email_validation.Selectable["id"]>
 }
 
 export async function findEmailValidationBatch(

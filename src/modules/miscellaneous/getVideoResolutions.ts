@@ -1,5 +1,5 @@
-import { CourseClassListRow } from "../database/CourseClassList/CourseClassList.entity.types"
-import { getResolutionFromVideoUrl } from "../modules/miscellaneous/getResolutionFromVideoUrl"
+import { CourseClassListRow } from "../../database/CourseClassList/CourseClassList.entity.types"
+import { getResolutionFromVideoUrl } from "./getResolutionFromVideoUrl"
 
 export type VideoResolution = {
 	formats: VideoResolutionFormat[]

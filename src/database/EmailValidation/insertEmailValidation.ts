@@ -4,8 +4,8 @@ import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 import { pick } from "lodash"
 import { Pool } from "pg"
 
-import { db } from "../zapatos/zapatos.db"
-import { s } from "../zapatos/zapatos.s"
+import { zapatosDb } from "../zapatos/zapatos.db"
+import { zapatosSchema } from "../zapatos/zapatos.schema"
 import { EmailValidationRow } from "./EmailValidation.entity.types"
 
 type NullableInsertEmailValidationDataKeys = "id"
@@ -20,22 +20,22 @@ export type InsertEmailValidationOptions = {
 export async function insertEmailValidation(options: InsertEmailValidationOptions): Promise<EmailValidationRow> {
 	const { pool, data } = options
 
-	const cleanData = pick<s.email_validation.Insertable, keyof typeof data>(
+	const cleanData = pick<zapatosSchema.email_validation.Insertable, keyof typeof data>(
 		{
 			...data,
 			id: data.id ?? getUuid(),
 		},
-		dangerousKeysOf<Record<keyof s.email_validation.Insertable, 0>>({
+		dangerousKeysOf<Record<keyof zapatosSchema.email_validation.Insertable, 0>>({
 			id: 0,
 			issued_at: 0,
 			user_id: 0,
 		})
 	)
 
-	const insertResult = await db.insert("email_validation", cleanData).run(pool)
+	const insertResult = await zapatosDb.insert("email_validation", cleanData).run(pool)
 
 	return {
 		...insertResult,
-		issued_at: db.toDate(insertResult.issued_at),
+		issued_at: zapatosDb.toDate(insertResult.issued_at),
 	}
 }

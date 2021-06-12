@@ -25,7 +25,7 @@ export const generateSchemasIndex = async () => {
 
 				return letter.toUpperCase()
 			})
-			.replace(/[\.]/, "")}Doc`
+			.replace(/[\.]/, "_")}Doc`
 
 	const imports = [
 		`import { DocumentNode } from "graphql";\n`,

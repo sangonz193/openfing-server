@@ -1,6 +1,6 @@
-import { VideoResolution } from "../../../../_helpers/getVideoResolutions"
 import { CourseClassVideoQualityRow } from "../../../../database/CourseClassVideoQuality/CourseClassVideoQuality.entity.types"
 import { Repositories } from "../../../../database/repositories"
+import { VideoResolution } from "../../../../modules/miscellaneous/getVideoResolutions"
 import { syncFormats } from "./syncFormats"
 
 export async function syncQuality(options: {
