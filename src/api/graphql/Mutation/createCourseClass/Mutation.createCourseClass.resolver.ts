@@ -5,9 +5,7 @@ import { RequestContext } from "../../../../context/RequestContext"
 import { backup } from "../../../../modules/backup/backup"
 import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef"
 import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
-import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { syncCourseClassVideosForClass } from "../../_utils/syncCourseClassVideosForClass"
-import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
 import { withUserFromSecret } from "../../middlewares/withUserFromSecret"
 import {
@@ -25,12 +23,7 @@ const resolver: ResolverFn<
 	RequestContext & Required<Pick<RequestContext, "user">>,
 	RequireFields<MutationCreateCourseClassArgs, "input" | "secret">
 > = async (_, args, context) => {
-	const user = await getUserFromSecret(args.secret, context)
-	if (!user) {
-		return getAuthenticationErrorParent()
-	}
-
-	const { repositories } = context
+	const { dataLoaders, repositories, user } = context
 
 	const validatedArgs = await getValidatedArgs(args)
 	if (!validatedArgs) {
@@ -72,6 +65,8 @@ const resolver: ResolverFn<
 		visibility: getDbCommonVisibilityValue(validatedArgs.visibility || "PUBLIC"),
 		number: validatedArgs.number,
 	})
+	// TODO: necessary?
+	dataLoaders.courseClass.clearAll()
 
 	await syncCourseClassVideosForClass({
 		courseClassList: courseClassList,
