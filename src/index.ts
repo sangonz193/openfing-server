@@ -9,8 +9,8 @@ import express from "express"
 
 import { registerApolloServer } from "./api/graphql/registerApolloServer"
 import { registerAuthHandler } from "./api/registerAuthHandler"
+import { testPublicUrl } from "./api/rest/_utils/testPublicUrl"
 import { registerRestEndpoints } from "./api/rest/registerRestEndpoints"
-import { testPublicUrl } from "./api/rest/testPublicUrl"
 import { appConfig } from "./config/app.config"
 
 const run = async () => {
