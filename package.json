@@ -7,7 +7,6 @@
 		"start": "node cli start",
 		"generate-files": "node cli generate-files",
 		"tsc": "npx tsc",
-		"test": "node cli test",
 		"lint:fix": "eslint . --fix",
 		"build": "node cli build",
 		"docker-compose": "docker-compose up -d",
