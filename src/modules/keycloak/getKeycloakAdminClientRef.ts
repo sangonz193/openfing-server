@@ -1,10 +1,28 @@
+import { wait } from "@sangonz193/utils/wait"
 import KeycloakAdminClient from "keycloak-admin"
 
 import { keycloakConfig } from "./keycloak.config"
 
 export const getKeycloakAdminClientRef = async (): Promise<{ current: KeycloakAdminClient }> => {
+	const maxRetries = 15
+	let tries = 0
+	let adminClient: KeycloakAdminClient | undefined = undefined
+
+	while (!adminClient && tries < maxRetries) {
+		tries++
+		adminClient = await createAdminClient().catch((error) => {
+			console.log(error)
+			return undefined
+		})
+		await wait(5000)
+	}
+
+	if (!adminClient) {
+		throw new Error(`Could not connect to keycloak after ${maxRetries} attempts`)
+	}
+
 	const ref = {
-		current: await createAdminClient(),
+		current: adminClient,
 	}
 
 	setInterval(async () => {

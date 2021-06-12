@@ -1,7 +1,6 @@
+import { getMatchingFilePathsSync } from "@sangonz193/utils/node/getMatchingFilePaths"
 import path from "path"
 import type { NodePlopAPI } from "plop"
-
-import { getMatchingFilePathsSync } from "../../../_utils/getMatchingFilePaths"
 
 export default (plop: NodePlopAPI) => {
 	const matchingFilePaths = getMatchingFilePathsSync(

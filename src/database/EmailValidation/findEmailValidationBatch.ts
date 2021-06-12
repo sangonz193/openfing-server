@@ -1,7 +1,7 @@
 import DataLoader from "dataloader"
 import { Pool } from "pg"
 
-import { db } from "../zapatos/zapatos.db"
+import { zapatosDb } from "../zapatos/zapatos.db"
 import { s } from "../zapatos/zapatos.s"
 import { EmailValidationRow } from "./EmailValidation.entity.types"
 
@@ -15,9 +15,9 @@ export async function findEmailValidationBatch(
 ): Promise<Array<EmailValidationRow | null>> {
 	const { pool, emailValidationIds } = options
 
-	const rows = await db
+	const rows = await zapatosDb
 		.select("email_validation", {
-			id: db.sql<db.SQL>`${db.self} IN (${db.vals(emailValidationIds)})`,
+			id: zapatosDb.sql<zapatosDb.SQL>`${zapatosDb.self} IN (${zapatosDb.vals(emailValidationIds)})`,
 		})
 		.run(pool)
 
@@ -29,7 +29,7 @@ export async function findEmailValidationBatch(
 
 		return {
 			...row,
-			issued_at: db.toDate(row.issued_at),
+			issued_at: zapatosDb.toDate(row.issued_at),
 		}
 	})
 }

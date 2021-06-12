@@ -1,6 +1,5 @@
+import { getMatchingFilePathsSync } from "@sangonz193/utils/node/getMatchingFilePaths"
 import path from "path"
-
-import { getMatchingFilePathsSync } from "./getMatchingFilePaths"
 
 export const getSubCommandsPaths = (directoryPath: string): string[] => {
 	const matchingFiles = getMatchingFilePathsSync(path.resolve(directoryPath, "*.command.ts")).concat(

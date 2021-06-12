@@ -2,11 +2,10 @@ import { arrayMapLimit } from "@sangonz193/utils/arrayMapLimit"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import simpleGit from "simple-git"
 
-import { databaseConfig } from "../../database/database.config"
 import { getDbDockerContainerName } from "../docker/getDbDockerContainerName"
-import { keycloakConfig } from "../keycloak/keycloak.config"
 import { backupConfig } from "./backup.config"
 import { backupTableData } from "./backupTableData"
+import { databaseConfigs } from "./databaseConfigs"
 import { getBackupDatabaseConfig } from "./getBackupDatabaseConfig"
 
 export const backup = async () => {
@@ -29,9 +28,8 @@ export const backup = async () => {
 		throw new Error(message)
 	}
 
-	const configs = [databaseConfig.typeormConfig, keycloakConfig.typeormConfig]
 	const backupDbConfigs = await Promise.all(
-		configs.map((config) =>
+		databaseConfigs.map((config) =>
 			getBackupDatabaseConfig({
 				backupRepoPath,
 				config: config,

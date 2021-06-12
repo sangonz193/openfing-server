@@ -8,7 +8,7 @@ import type { CommandModule } from "yargs"
 import { projectPath } from "../../../../_utils/projectPath"
 
 const command: CommandModule<{}, { useProcess: boolean }> = {
-	command: "env-file",
+	command: "create-env-file",
 
 	describe: "Creates the .env file.",
 

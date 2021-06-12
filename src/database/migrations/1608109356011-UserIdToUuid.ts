@@ -22,7 +22,9 @@ export class UserIdToUuid1608109356011 implements MigrationInterface {
 
 		const idMap = new Map<number, string>()
 		await Promise.all(
-			(await queryRunner.query(`SELECT * FROM ${tableName}`)).map(async (row: { _id: number }) => {
+			(
+				await queryRunner.query(`SELECT * FROM ${tableName}`)
+			).map(async (row: { _id: number }) => {
 				const newRow = {
 					id: getUuid(),
 					_id: row._id,

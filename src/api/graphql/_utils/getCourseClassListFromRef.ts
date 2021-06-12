@@ -1,6 +1,6 @@
+import { RequestContext } from "../../../context/RequestContext"
 import { CourseClassListRow } from "../../../database/CourseClassList/CourseClassList.entity.types"
 import { CourseClassListAccessOptions } from "../../../database/CourseClassList/CourseClassList.repository.types"
-import { RequestContext } from "../../RequestContext"
 import { CourseClassListRef } from "../schemas.types"
 
 export const getCourseClassListFromRef = async (
