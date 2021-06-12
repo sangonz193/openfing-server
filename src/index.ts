@@ -8,6 +8,7 @@ import cors from "cors"
 import express from "express"
 
 import { registerApolloServer } from "./api/graphql/registerApolloServer"
+import { registerAuthHandler } from "./api/registerAuthHandler"
 import { registerRestEndpoints } from "./api/rest/registerRestEndpoints"
 import { testPublicUrl } from "./api/rest/testPublicUrl"
 import { appConfig } from "./config/app.config"
@@ -18,6 +19,7 @@ const run = async () => {
 	expressApp.use(cors())
 	registerApolloServer(expressApp)
 	registerRestEndpoints(expressApp)
+	registerAuthHandler(expressApp)
 
 	const server = expressApp.listen(
 		{
