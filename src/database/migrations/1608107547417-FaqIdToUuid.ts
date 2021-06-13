@@ -21,7 +21,9 @@ export class FaqIdToUuid1608107547417 implements MigrationInterface {
 		)
 
 		await Promise.all(
-			(await queryRunner.query(`SELECT * FROM ${tableName}`)).map(async (row: { _id: number }) => {
+			(
+				await queryRunner.query(`SELECT * FROM ${tableName}`)
+			).map(async (row: { _id: number }) => {
 				const newRow = {
 					id: getUuid(),
 					_id: row._id,

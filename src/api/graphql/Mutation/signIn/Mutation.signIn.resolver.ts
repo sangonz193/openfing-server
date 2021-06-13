@@ -23,9 +23,9 @@ const resolver: Resolvers["Mutation"]["signIn"] = async (_, args, context) => {
 			throw error
 		})
 
-	const { token: accessToken } = (grant.access_token as unknown) as { token: string }
-	const { token: refreshToken } = (grant.refresh_token as unknown) as { token: string }
-	const { token: idToken } = (grant.id_token as unknown) as { token: string }
+	const { token: accessToken } = grant.access_token as unknown as { token: string }
+	const { token: refreshToken } = grant.refresh_token as unknown as { token: string }
+	const { token: idToken } = grant.id_token as unknown as { token: string }
 
 	return getSignInPayloadParent({
 		accessToken,
