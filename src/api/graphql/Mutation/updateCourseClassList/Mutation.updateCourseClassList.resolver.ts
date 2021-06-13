@@ -2,7 +2,7 @@ import * as yup from "yup"
 
 import { getCourseClassListFromRef } from "../../_utils/getCourseClassListFromRef"
 import { getDbCommonVisibilityValue } from "../../_utils/getDbCommonVisibilityValue"
-import { getUserFromSecret } from "../../_utils/getUserFromSecret"
+import { validateSecret } from "../../_utils/validateSecret"
 import { getAuthenticationErrorParent } from "../../AuthenticationError/AuthenticationError.parent"
 import { getNotFoundErrorParent } from "../../NotFoundError/NotFoundError.parent"
 import { MutationUpdateCourseClassListArgs, Resolvers } from "../../schemas.types"
@@ -11,8 +11,7 @@ import { getUpdateCourseClassListPayload } from "./UpdateCourseClassListPayload.
 const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args, context) => {
 	const { repositories } = context
 
-	const user = await getUserFromSecret(args.secret, context)
-	if (!user) {
+	if (!validateSecret(args.secret)) {
 		return getAuthenticationErrorParent()
 	}
 

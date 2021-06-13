@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { ExpressContext } from "apollo-server-express"
 import KeycloakAdminClient from "keycloak-admin"
 import KeycloakConnect from "keycloak-connect"
 import { Pool } from "pg"
@@ -8,16 +8,14 @@ import { Repositories } from "../database/repositories"
 import { UserRow } from "../database/User"
 import { DataLoaders } from "../dataloaders"
 
-export type RequestContext = {
+export type RequestContext = ExpressContext & {
 	ormConnection: Connection
-	req: Request
-	res: Response
 	includeHidden?: boolean
 	user?: UserRow
 	pool: Pool
 
 	dataLoaders: DataLoaders
 	repositories: Repositories
-	keycloakAdminClientRef: { current: KeycloakAdminClient }
+	keycloakAdminClient: { current: KeycloakAdminClient }
 	keycloakConnect: KeycloakConnect.Keycloak
 }

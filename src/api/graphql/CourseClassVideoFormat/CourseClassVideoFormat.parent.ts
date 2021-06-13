@@ -6,7 +6,7 @@ import { CourseClassVideoFormat } from "../schemas.types"
 export type CourseClassVideoFormatParent = Required<
 	SafeOmit<CourseClassVideoFormatRow, "created_at" | "updated_at" | "deleted_at">
 > &
-	Pick<Required<CourseClassVideoFormat>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">
+	Pick<Required<CourseClassVideoFormat>, "__typename" | "id" | "createdAt" | "updatedAt" | "deletedAt">
 
 export const getCourseClassVideoFormatParent = (
 	courseClassVideoFormatRow: CourseClassVideoFormatRow

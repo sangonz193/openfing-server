@@ -25,7 +25,7 @@ const handler: RestEndpoint["handler"] = async (context) => {
 	}
 
 	try {
-		await context.keycloakAdminClientRef.current.users.update(
+		await context.keycloakAdminClient.current.users.update(
 			{
 				id: emailValidation.user_id,
 			},

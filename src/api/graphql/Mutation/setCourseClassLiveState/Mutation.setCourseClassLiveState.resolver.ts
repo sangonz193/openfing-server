@@ -1,11 +1,11 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 import * as yup from "yup"
 
+import { RequestContext } from "../../../../context/RequestContext"
 import { CourseClassRow } from "../../../../database/CourseClass/CourseClass.entity.types"
 import { CourseClassLiveStateRow } from "../../../../database/CourseClassLiveState/CourseClassLiveState.entity.types"
 import { Repositories } from "../../../../database/repositories"
 import { backup } from "../../../../modules/backup/backup"
-import { RequestContext } from "../../../RequestContext"
 import { getCourseClassFromRef } from "../../_utils/getCourseClassFromRef"
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
 import { withUserFromSecret } from "../../middlewares/withUserFromSecret"

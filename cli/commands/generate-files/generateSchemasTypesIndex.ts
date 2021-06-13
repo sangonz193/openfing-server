@@ -2,6 +2,7 @@ import { executeCodegen } from "@graphql-codegen/cli"
 import * as typescriptPlugin from "@graphql-codegen/typescript"
 import * as typescriptResolversPlugin from "@graphql-codegen/typescript-resolvers"
 import { fs } from "@sangonz193/utils/node/fs"
+import { getMatchingFilePaths } from "@sangonz193/utils/node/getMatchingFilePaths"
 import { GraphQLSchema, printSchema } from "graphql"
 import identity from "lodash/identity"
 import path from "path"
@@ -10,13 +11,12 @@ import { projectPath } from "../../_utils/projectPath"
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
 import { getFormattedCode } from "./_utils/getFormatCode"
 import { getImportPath } from "./_utils/getImportPath"
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
 import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
 export const generateSchemasTypesIndex = async (schema: GraphQLSchema) => {
 	const typesFilePath = generatedFilesGlobs.schemasTypeIndex
 	const parentFilesGlob = path.resolve(projectPath, "src", "api", "graphql", "**", "*.parent.ts")
-	const contextFilePath = path.resolve(projectPath, "src", "api", "RequestContext.ts")
+	const contextFilePath = path.resolve(projectPath, "src", "context", "RequestContext.ts")
 
 	const stringSchema = printSchema(schema)
 	const parentFilesPaths = (await getMatchingFilePaths(parentFilesGlob)).sort()

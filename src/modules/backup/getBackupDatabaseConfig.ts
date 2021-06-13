@@ -1,4 +1,3 @@
-import { getUuid } from "@sangonz193/utils/getUuid"
 import { fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
 import path from "path"
@@ -7,6 +6,7 @@ import { Pool } from "pg"
 import { getTableNames } from "../../database/_utils/getTableNames"
 import { databaseConfig } from "../../database/database.config"
 import { BackupTableOptions } from "./backupTableData"
+import { writeTmpEnvFile } from "./writeTmpEnvFile"
 
 export type GetBackupTableOptionsListOptions = {
 	config: typeof databaseConfig.typeormConfig
@@ -71,15 +71,4 @@ export async function getBackupDatabaseConfig({
 			await Promise.all([fs.unlink(tmpEnvFilePath), pool.end()])
 		},
 	}
-}
-
-async function writeTmpEnvFile(config: typeof databaseConfig.typeormConfig) {
-	const tmpEnvFilePath = path.resolve(__dirname, `backupDb-tmpEnvFile-${getUuid()}`)
-
-	await fs.writeFile(
-		tmpEnvFilePath,
-		[["PGPASSWORD", config.password]].map(([key, value]) => `${key}="${value}"`).join("\n") + "\n"
-	)
-
-	return tmpEnvFilePath
 }

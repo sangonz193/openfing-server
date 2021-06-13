@@ -1,10 +1,10 @@
 import { fs } from "@sangonz193/utils/node/fs"
+import { getMatchingFilePaths } from "@sangonz193/utils/node/getMatchingFilePaths"
 import path from "path"
 
 import { projectPath } from "../../../src/_utils/projectPath"
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
 import { getFormattedCode } from "./_utils/getFormatCode"
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
 import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
 export const generateSchemasIndex = async () => {
@@ -25,7 +25,7 @@ export const generateSchemasIndex = async () => {
 
 				return letter.toUpperCase()
 			})
-			.replace(/[\.]/, "")}Doc`
+			.replace(/[\.]/, "_")}Doc`
 
 	const imports = [
 		`import { DocumentNode } from "graphql";\n`,

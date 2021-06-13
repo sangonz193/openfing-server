@@ -1,4 +1,4 @@
-import { RequestContext } from "../RequestContext"
+import { RequestContext } from "../../context/RequestContext"
 
 export type RestEndpoint = {
 	httpMethod: "get"

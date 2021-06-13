@@ -1,5 +1,6 @@
 import { fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
+import { getMatchingFilePaths } from "@sangonz193/utils/node/getMatchingFilePaths"
 import path from "path"
 import { Project, SyntaxKind } from "ts-morph"
 
@@ -7,7 +8,6 @@ import { projectPath } from "../../_utils/projectPath"
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
 import { getFormattedCode } from "./_utils/getFormatCode"
 import { getImportPath } from "./_utils/getImportPath"
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
 import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
 export const generateRepositoriesIndex = async () => {

@@ -1,7 +1,7 @@
+import { getMatchingFilePathsSync } from "@sangonz193/utils/node/getMatchingFilePaths"
 import path from "path"
 import yargs, { CommandModule } from "yargs"
 
-import { getMatchingFilePathsSync } from "./_utils/getMatchingFilePaths"
 import { getSubCommandsPaths } from "./_utils/getSubCommandsPaths"
 
 const run = async () => {

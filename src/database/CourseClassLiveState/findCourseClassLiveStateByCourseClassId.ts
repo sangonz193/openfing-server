@@ -27,7 +27,7 @@ export async function findCourseClassLiveStateByCourseClassIdBatch(
 	})
 }
 
-export function getFindCourseClassLiveStateByCourseClassIdDataLoader(connection: Connection) {
+export function getFindCourseClassLiveStateByCourseClassIdBatchDataLoader(connection: Connection) {
 	return new DataLoader<string, CourseClassLiveStateRow | null>(
 		(courseClassIds) =>
 			findCourseClassLiveStateByCourseClassIdBatch({

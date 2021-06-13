@@ -8,47 +8,18 @@ import cors from "cors"
 import express from "express"
 
 import { registerApolloServer } from "./api/graphql/registerApolloServer"
+import { registerAuthHandler } from "./api/registerAuthHandler"
+import { testPublicUrl } from "./api/rest/_utils/testPublicUrl"
 import { registerRestEndpoints } from "./api/rest/registerRestEndpoints"
-import { testPublicUrl } from "./api/rest/testPublicUrl"
 import { appConfig } from "./config/app.config"
-import { getOrmConnection } from "./database/getOrmConnection"
-import { getPoolWithSchema } from "./database/getPoolWithSchema"
-import { getRepositories } from "./database/repositories"
-import { getKeycloakAdminClientRef } from "./modules/keycloak/getKeycloakAdminClientRef"
-import { getKeycloakConnect } from "./modules/keycloak/getKeycloakConnect"
 
 const run = async () => {
-	const ormConnectionPromise = getOrmConnection()
-	const [ormConnection, keycloakAdminClientRef, keycloakConnect, pool] = await Promise.all([
-		ormConnectionPromise.then(async (connection) => {
-			await connection.runMigrations()
-			return connection
-		}),
-		getKeycloakAdminClientRef(),
-		getKeycloakConnect(),
-		ormConnectionPromise.then(() => getPoolWithSchema()),
-	])
-
 	const expressApp = express()
-	const repositories = getRepositories(ormConnection, pool)
 
 	expressApp.use(cors())
-	registerApolloServer({
-		expressApp,
-		keycloakAdminClientRef,
-		ormConnection,
-		repositories,
-		keycloakConnect,
-		pool,
-	})
-	registerRestEndpoints({
-		expressApp,
-		keycloakAdminClientRef,
-		ormConnection,
-		repositories,
-		keycloakConnect,
-		pool,
-	})
+	registerApolloServer(expressApp)
+	registerRestEndpoints(expressApp)
+	registerAuthHandler(expressApp)
 
 	const server = expressApp.listen(
 		{
@@ -56,20 +27,18 @@ const run = async () => {
 			host: appConfig.host,
 		},
 		async () => {
-			console.log(`Listening on port ${appConfig.port.toString()} with cors enabled`)
+			console.log(`Listening on port ${appConfig.port.toString()} with cors enabled.`)
 			testPublicUrl()
 		}
 	)
 
 	server.addListener("error", (error) => {
 		console.error(error)
-
 		process.exit(1)
 	})
 }
 
 run().catch((error) => {
 	console.error(error)
-
 	process.exit(1)
 })

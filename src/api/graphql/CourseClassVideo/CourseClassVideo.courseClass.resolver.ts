@@ -1,4 +1,3 @@
-// import { Resolvers } from "../schemas.types";
 import { getCourseClassParent } from "../CourseClass/CourseClass.parent"
 import { Resolvers } from "../schemas.types"
 

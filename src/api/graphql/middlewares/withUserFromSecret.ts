@@ -1,6 +1,6 @@
 import { SafeOmit } from "@sangonz193/utils/SafeOmit"
 
-import { RequestContext } from "../../RequestContext"
+import { RequestContext } from "../../../context/RequestContext"
 import { getUserFromSecret } from "../_utils/getUserFromSecret"
 import {
 	AuthenticationErrorParent,

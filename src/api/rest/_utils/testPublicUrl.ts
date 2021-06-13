@@ -1,8 +1,8 @@
 import axios from "axios"
 import chalk from "chalk"
 
-import { appConfig } from "../../config/app.config"
-import { testUuid } from "./test/test.endpoint"
+import { appConfig } from "../../../config/app.config"
+import { testUuid } from "../test/test.endpoint"
 
 export async function testPublicUrl() {
 	const response = await axios.get(`${appConfig.publicUrl}/rest/test`).catch(() => null)

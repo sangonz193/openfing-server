@@ -18,7 +18,7 @@ const resolver: Resolvers["Mutation"]["signIn"] = async (_, args, context) => {
 	const { input } = validationResult
 	const grant = await context.keycloakConnect.grantManager
 		.obtainDirectly(input.email, input.password)
-		.catch((error) => {
+		.catch((error: unknown) => {
 			console.log(error)
 			throw error
 		})

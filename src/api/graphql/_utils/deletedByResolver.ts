@@ -1,4 +1,4 @@
-import { RequestContext } from "../../RequestContext"
+import { RequestContext } from "../../../context/RequestContext"
 import { ResolverFn } from "../schemas.types"
 import { getUserParent, UserParent } from "../User/User.parent"
 

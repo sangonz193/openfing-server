@@ -4,7 +4,7 @@ import { CourseEditionRow } from "../../../database/CourseEdition/CourseEdition.
 import { CourseEdition } from "../schemas.types"
 
 export type CourseEditionParent = Required<SafeOmit<CourseEditionRow, "created_at" | "updated_at" | "deleted_at">> &
-	Pick<Required<CourseEdition>, "__typename" | "createdAt" | "updatedAt" | "deletedAt">
+	Pick<Required<CourseEdition>, "__typename" | "id" | "createdAt" | "updatedAt" | "deletedAt">
 
 export const getCourseEditionParent = (courseEditionRow: CourseEditionRow): CourseEditionParent => ({
 	__typename: "CourseEdition",

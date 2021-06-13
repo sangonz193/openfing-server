@@ -1,6 +1,6 @@
+import { RequestContext } from "../../../context/RequestContext"
 import { CourseClassRow } from "../../../database/CourseClass/CourseClass.entity.types"
 import { CourseClassAccessOptions } from "../../../database/CourseClass/CourseClass.repository.types"
-import { RequestContext } from "../../RequestContext"
 import { CourseClassRef } from "../schemas.types"
 import { getCourseClassListFromRef } from "./getCourseClassListFromRef"
 

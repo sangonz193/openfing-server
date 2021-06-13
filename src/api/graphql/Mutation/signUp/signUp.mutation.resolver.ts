@@ -1,5 +1,6 @@
 import { appConfig } from "../../../../config/app.config"
 import { createEmailValidationToken } from "../../../../modules/keycloak/createEmailValidationToken"
+import { createUser } from "../../../../modules/keycloak/createUser"
 import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNodemailerTransporter"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent"
@@ -22,25 +23,19 @@ const resolver: Resolvers["Mutation"]["signUp"] = async (_, args, context) => {
 	const { input } = validationResult
 	let userWithId: { id: string } | undefined
 	try {
-		userWithId = await context.keycloakAdminClientRef.current.users.create({
+		userWithId = await createUser({
+			email: input.email,
 			firstName: input.firstName,
 			lastName: input.lastName ?? undefined,
-			email: input.email,
-			username: input.email,
-			credentials: [
-				{
-					temporary: false,
-					type: "password",
-					value: args.input.password,
-				},
-			],
+			keycloakAdminClient: context.keycloakAdminClient.current,
+			password: args.input.password,
 		})
 	} catch (error: unknown) {
 		console.log(error)
 		return getGenericErrorParent()
 	}
 
-	const user = await context.keycloakAdminClientRef.current.users.findOne({
+	const user = await context.keycloakAdminClient.current.users.findOne({
 		id: userWithId.id,
 	})
 

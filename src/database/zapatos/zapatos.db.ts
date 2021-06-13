@@ -1,2 +1,2 @@
-import * as db from "zapatos/db"
-export { db }
+import * as zapatosDb from "zapatos/db"
+export { zapatosDb }

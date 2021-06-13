@@ -1,5 +1,6 @@
 import { fs } from "@sangonz193/utils/node/fs"
 import { fsExists } from "@sangonz193/utils/node/fsExists"
+import { getMatchingFilePaths } from "@sangonz193/utils/node/getMatchingFilePaths"
 import {
 	GraphQLEnumType,
 	GraphQLInputObjectType,
@@ -12,7 +13,6 @@ import path from "path"
 
 import { generatedFileHeaderContent } from "./_utils/generatedFileHeaderContent"
 import { getFormattedCode } from "./_utils/getFormatCode"
-import { getMatchingFilePaths } from "./_utils/getMatchingFilePaths"
 import { generatedFilesGlobs } from "./generatedFilesGlobs"
 
 const ignoredScalars = ["ID", "Int", "Float", "Boolean", "String"]
@@ -173,7 +173,8 @@ export const generateResolversIndex = async (schema: GraphQLSchema) => {
 												name: field.name,
 												symbolName: `${path
 													.relative(resolversFolderPath, resolverFilePath)
-													.replace(/\..+/, "")
+													.replace(/\.resolver.+/, "")
+													.replace(/\./g, "_")
 													.replace(/.+\//g, "")}Resolver`,
 											}
 										})
