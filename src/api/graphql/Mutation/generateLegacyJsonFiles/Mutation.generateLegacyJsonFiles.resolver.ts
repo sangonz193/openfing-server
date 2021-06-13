@@ -1,6 +1,6 @@
 import { tryCreateLegacyJsonFiles } from "../../../../modules/miscellaneous/tryCreateLegacyJsonFiles"
-import { getGenerateLegacyJsonFilesPayload } from "../../GenerateLegacyJsonFilesPayload/GenerateLegacyJsonFilesPayload.parent"
 import { Resolvers } from "../../schemas.types"
+import { getGenerateLegacyJsonFilesPayloadParent } from "./GenerateLegacyJsonFilesPayload.parent"
 
 const resolver: Resolvers["Mutation"]["generateLegacyJsonFiles"] = async (_, __, { repositories }) => {
 	const { modifiedFilesCount } = await tryCreateLegacyJsonFiles({
@@ -10,7 +10,7 @@ const resolver: Resolvers["Mutation"]["generateLegacyJsonFiles"] = async (_, __,
 		courseEditionRepository: repositories.courseEdition,
 	})
 
-	return getGenerateLegacyJsonFilesPayload(modifiedFilesCount)
+	return getGenerateLegacyJsonFilesPayloadParent(modifiedFilesCount)
 }
 
 export default resolver
