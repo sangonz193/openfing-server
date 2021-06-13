@@ -48,7 +48,6 @@ const resolver: Resolvers["Mutation"]["updateCourseClassList"] = async (_, args,
 		courseClassList: await repositories.courseClassList.update(courseClassList.id, {
 			name: validatedData.name,
 			visibility: validatedData.visibility && getDbCommonVisibilityValue(validatedData.visibility),
-			
 		}),
 	})
 }

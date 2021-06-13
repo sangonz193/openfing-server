@@ -19,7 +19,10 @@ export const createUpdate = <TEntityRow extends { id: string | number }>(
 					return value === undefined
 				}) as any
 			)
-			.where(`id = :id`, identity<{ id: TEntityRow["id"] }>({ id }))
+			.where(
+				`id = :id`,
+				identity<{ id: TEntityRow["id"] }>({ id })
+			)
 			.returning("*")
 			.execute()
 

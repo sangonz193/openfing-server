@@ -13,7 +13,7 @@ export class AddSchemaToSearchPath1623008101935 implements MigrationInterface {
 		)
 	}
 
-	public async down(queryRunner: QueryRunner): Promise<void> {
+	public async down(): Promise<void> {
 		//
 	}
 }

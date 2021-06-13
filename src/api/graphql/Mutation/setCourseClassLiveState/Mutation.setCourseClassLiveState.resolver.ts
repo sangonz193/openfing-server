@@ -63,8 +63,9 @@ const resolver: ResolverFn<
 		return getGenericErrorParent()
 	}
 
-	const prevCourseClassLiveState =
-		await dataLoaders.courseClassLiveState.findCourseClassLiveStateByCourseClassId.load(courseClass.id)
+	const prevCourseClassLiveState = await dataLoaders.courseClassLiveState.findCourseClassLiveStateByCourseClassId.load(
+		courseClass.id
+	)
 	if (prevCourseClassLiveState?.course_class_id) {
 		repositories.courseClassLiveState.deleteCourseClassLiveStateByCourseClassId({
 			courseClassId: prevCourseClassLiveState.course_class_id,
