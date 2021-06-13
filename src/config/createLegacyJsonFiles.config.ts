@@ -1,0 +1,17 @@
+import * as yup from "yup"
+
+import { validateEnv } from "../_utils/validateEnv"
+
+const validatedEnv = validateEnv({
+	LEGACY_JSON_DATA_FOLDER_PATH: yup.string().notRequired(),
+})
+
+export const createLegacyJsonFilesConfig = validatedEnv.LEGACY_JSON_DATA_FOLDER_PATH
+	? ({
+			enable: true,
+			dataFolderPath: validatedEnv.LEGACY_JSON_DATA_FOLDER_PATH,
+	  } as const)
+	: ({
+			enable: false,
+			dataFolderPath: validatedEnv.LEGACY_JSON_DATA_FOLDER_PATH,
+	  } as const)
