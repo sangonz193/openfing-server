@@ -178,13 +178,8 @@ async function handleCourseEdition(
 		course: CourseRow
 	}
 ): Promise<Array<{ course: LegacyCourse | undefined; courseDetail: LegacyCourseDetail }>> {
-	const {
-		courseClassListRepository,
-		course,
-		courseClassRepository,
-		courseRepository,
-		courseEditionRepository,
-	} = options
+	const { courseClassListRepository, course, courseClassRepository, courseRepository, courseEditionRepository } =
+		options
 
 	const courseClassLists = await courseClassListRepository.findAll({
 		includeDisabled: false,

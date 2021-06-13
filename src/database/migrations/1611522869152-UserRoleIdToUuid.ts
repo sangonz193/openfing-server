@@ -27,7 +27,9 @@ export class UserRoleIdToUuid1611522869152 implements MigrationInterface {
 		)
 
 		const rows: Array<{ id: string; _id: number }> = await Promise.all(
-			(await queryRunner.query(`SELECT * FROM ${tableName}`)).map(async (row: { _id: number }) => {
+			(
+				await queryRunner.query(`SELECT * FROM ${tableName}`)
+			).map(async (row: { _id: number }) => {
 				const newRow = {
 					id: getUuid(),
 					_id: row._id,
