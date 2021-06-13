@@ -1,6 +1,6 @@
 import { appConfig } from "../../../../config/app.config"
-import { createEmailValidationToken } from "../../../../modules/keycloak/createEmailValidationToken"
-import { createUser } from "../../../../modules/keycloak/createUser"
+import { createEmailValidationToken } from "../../../../keycloak/createEmailValidationToken"
+import { createUser } from "../../../../keycloak/createUser"
 import { getNodemailerTransporter } from "../../../../modules/nodemailer/getNodemailerTransporter"
 import { getUserFromSecret } from "../../_utils/getUserFromSecret"
 import { getGenericErrorParent } from "../../GenericError/GenericError.parent"

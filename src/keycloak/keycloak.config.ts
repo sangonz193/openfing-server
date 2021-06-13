@@ -1,7 +1,7 @@
 import * as yup from "yup"
 
-import { validateEnv } from "../../_utils/validateEnv"
-import { databaseConfig } from "../../database/database.config"
+import { validateEnv } from "../_utils/validateEnv"
+import { databaseConfig } from "../database/database.config"
 
 const validatedEnv = validateEnv({
 	KEYCLOAK_PORT: yup.number().required().integer(),

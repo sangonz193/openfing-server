@@ -1,4 +1,4 @@
-import { getEmailValidationIdFromEmailValidationToken } from "../../../modules/keycloak/getUserIdFromEmailValidationToken"
+import { getEmailValidationIdFromEmailValidationToken } from "../../../keycloak/getUserIdFromEmailValidationToken"
 import { RestEndpoint } from "../RestEndpoint"
 
 const handler: RestEndpoint["handler"] = async (context) => {

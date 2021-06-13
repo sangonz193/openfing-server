@@ -1,7 +1,7 @@
 import express from "express"
 import { createProxyMiddleware } from "http-proxy-middleware"
 
-import { keycloakConfig } from "../modules/keycloak/keycloak.config"
+import { keycloakConfig } from "../keycloak/keycloak.config"
 
 export const registerAuthHandler = (expressApp: express.Application) => {
 	expressApp.use(

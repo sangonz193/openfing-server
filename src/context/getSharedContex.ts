@@ -3,8 +3,8 @@ import { Pool } from "pg"
 import { databaseConfig } from "../database/database.config"
 import { getOrmConnection } from "../database/getOrmConnection"
 import { getRepositories } from "../database/repositories"
-import { getKeycloakAdminClientRef } from "../modules/keycloak/getKeycloakAdminClientRef"
-import { getKeycloakConnect } from "../modules/keycloak/getKeycloakConnect"
+import { getKeycloakAdminClientRef } from "../keycloak/getKeycloakAdminClientRef"
+import { getKeycloakConnect } from "../keycloak/getKeycloakConnect"
 import { RequestContext } from "./RequestContext"
 
 export type SharedContext = Pick<
