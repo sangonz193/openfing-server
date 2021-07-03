@@ -1,17 +1,18 @@
-import { CourseClassEntitySchema } from "../../database/CourseClass/CourseClass.entity.types"
-import { FaqEntitySchema } from "../../database/Faq/Faq.entity.types"
 import { BidirectionalRelation } from "../_utils/BidirectionalRelation"
 import { FieldColumn, PrimaryColumn } from "../_utils/Column"
 import { EntityRow, TypedEntitySchema } from "../_utils/createTypedEntitySchema"
 import { NamedColumns } from "../_utils/NamedColumns"
 import { NamedRelations } from "../_utils/NamedRelations"
 import { CourseEntitySchema } from "../Course/Course.entity.types"
+import { CourseClassEntitySchema } from "../CourseClass/CourseClass.entity.types"
 import { CourseClassChapterCueEntitySchema } from "../CourseClassChapterCue/CourseClassChapterCue.entity.types"
 import { CourseClassListEntitySchema } from "../CourseClassList/CourseClassList.entity.types"
 import { CourseClassVideoEntitySchema } from "../CourseClassVideo/CourseClassVideo.entity.types"
 import { CourseClassVideoFormatEntitySchema } from "../CourseClassVideoFormat/CourseClassVideoFormat.entity.types"
 import { CourseClassVideoQualityEntitySchema } from "../CourseClassVideoQuality/CourseClassVideoQuality.entity.types"
 import { CourseEditionEntitySchema } from "../CourseEdition/CourseEdition.entity.types"
+import { FaqEntitySchema } from "../Faq/Faq.entity.types"
+import { PostEntitySchema } from "../Post/Post.entity.types"
 import { UserToUserRoleEntitySchema } from "../UserToUserRole/UserToUserRole.entity.types"
 
 export type User_id = PrimaryColumn<"uuid">
@@ -368,6 +369,45 @@ export type UserToFaq_deletedBy = BidirectionalRelation<{
 	}
 	to: {
 		entity: FaqEntitySchema
+		columnName: "deleted_by_id"
+		relationName: "deletedBy"
+		nullable: true
+	}
+}>
+
+export type UserToPost_createdBy = BidirectionalRelation<{
+	from: {
+		entity: UserEntitySchema
+		relationName: "createdPosts"
+	}
+	to: {
+		entity: PostEntitySchema
+		columnName: "created_by_id"
+		relationName: "createdBy"
+		nullable: true
+	}
+}>
+
+export type UserToPost_deletedBy = BidirectionalRelation<{
+	from: {
+		entity: UserEntitySchema
+		relationName: "updatedPosts"
+	}
+	to: {
+		entity: PostEntitySchema
+		columnName: "updated_by_id"
+		relationName: "updatedBy"
+		nullable: true
+	}
+}>
+
+export type UserToPost_updatedBy = BidirectionalRelation<{
+	from: {
+		entity: UserEntitySchema
+		relationName: "deletedPosts"
+	}
+	to: {
+		entity: PostEntitySchema
 		columnName: "deleted_by_id"
 		relationName: "deletedBy"
 		nullable: true

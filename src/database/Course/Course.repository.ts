@@ -31,22 +31,52 @@ export const getCourseRepository = (connection: Connection): CourseRepository =>
 	return {
 		_typedRepository: repo,
 
-		findAll: () => {
+		findAll: (options = {}) => {
 			const queryBuilder = repo.createQueryBuilder("c")
 
 			queryBuilder.andWhere(`c.${courseColumns.deleted_at.name} is null`)
 
-			queryBuilder.andWhere(
-				new Brackets((qb) => {
-					qb.orWhere(
-						`c.${courseColumns.visibility.name} = :publicVisibility`,
-						identity<{ publicVisibility: CourseRow["visibility"] }>({
-							publicVisibility: "public",
-						})
-					)
-					qb.orWhere(`c.${courseColumns.visibility.name} is null`)
-				})
-			)
+			const { includeDisabled, includeHidden } = options
+
+			if (includeHidden && includeDisabled) {
+				// Don't add where conditions
+			} else {
+				queryBuilder.andWhere(
+					new Brackets((queryBuilder) => {
+						queryBuilder.andWhere(
+							new Brackets((queryBuilder) => {
+								queryBuilder.orWhere(`c.${courseColumns.visibility.name} is null`).orWhere(
+									`c.${courseColumns.visibility.name} = :visibilityPublic`,
+									identity<{ visibilityPublic: CourseRow["visibility"] }>({
+										visibilityPublic: "public",
+									})
+								)
+							})
+						)
+
+						if (includeHidden) {
+							queryBuilder.orWhere(
+								`c.${courseColumns.visibility.name} = :visibilityHidden`,
+								identity<{ visibilityHidden: CourseRow["visibility"] }>({
+									visibilityHidden: "hidden",
+								})
+							)
+						} else if (includeDisabled) {
+							queryBuilder.andWhere(
+								new Brackets((queryBuilder) => {
+									queryBuilder.orWhere(
+										`c.${courseColumns.visibility.name} = :visibilityDisabled`,
+										identity<{ visibilityDisabled: CourseRow["visibility"] }>({
+											visibilityDisabled: "disabled",
+										})
+									)
+								})
+							)
+						}
+					})
+				)
+			}
+
 			queryBuilder.orderBy(courseColumns.name.name, "ASC")
 
 			return queryBuilder.getMany()

@@ -18,6 +18,8 @@ export type CourseFindOneOptions = CourseAccessOptions &
 		  }
 	)
 
+export type CourseFindAllOptions = CourseAccessOptions
+
 export type InsertCourseData = CourseRow
 
 export type CreateCourseData = SafeOmit<
@@ -29,7 +31,7 @@ export type CreateCourseData = SafeOmit<
 export type CourseRepository = {
 	_typedRepository: TypedRepository<CourseEntitySchema>
 
-	findAll: () => Promise<CourseRow[]>
+	findAll: (options?: CourseFindAllOptions) => Promise<CourseRow[]>
 	findBatch: (options: readonly CourseFindOneOptions[]) => Promise<Array<CourseRow | null>>
 
 	is: (course: CourseRow, findOptions: CourseFindOneOptions) => boolean
