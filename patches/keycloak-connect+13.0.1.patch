@@ -1,0 +1,28 @@
+diff --git a/node_modules/keycloak-connect/keycloak.d.ts b/node_modules/keycloak-connect/keycloak.d.ts
+index 0cf6e6b..d4ff74e 100644
+--- a/node_modules/keycloak-connect/keycloak.d.ts
++++ b/node_modules/keycloak-connect/keycloak.d.ts
+@@ -58,7 +58,7 @@ declare namespace KeycloakConnect {
+      * @param {String} username The username.
+      * @param {String} password The cleartext password.
+      */
+-    obtainDirectly(username: string, password: string): Promise<Grant>
++    obtainDirectly(username: string, password: string, callback?: undefined, scope: string): Promise<Grant>
+ 
+     /**
+      * Obtain a grant from a previous interactive login which results in a code.
+diff --git a/node_modules/keycloak-connect/test/fixtures/node-console/index.js b/node_modules/keycloak-connect/test/fixtures/node-console/index.js
+index 5bfa7ab..844e171 100644
+--- a/node_modules/keycloak-connect/test/fixtures/node-console/index.js
++++ b/node_modules/keycloak-connect/test/fixtures/node-console/index.js
+@@ -29,8 +29,8 @@ Keycloak.prototype.redirectToLogin = function (req) {
+   return !apiMatcher.test(req.baseUrl);
+ };
+ 
+-Keycloak.prototype.obtainDirectly = function (user, pass) {
+-  return this.grantManager.obtainDirectly(user, pass);
++Keycloak.prototype.obtainDirectly = function (user, pass, callback, scope) {
++  return this.grantManager.obtainDirectly(user, pass, callback, scope);
+ };
+ 
+ function NodeApp () {

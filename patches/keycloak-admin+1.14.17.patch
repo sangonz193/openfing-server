@@ -1,0 +1,24 @@
+diff --git a/node_modules/keycloak-admin/lib/defs/policyRepresentation.d.ts b/node_modules/keycloak-admin/lib/defs/policyRepresentation.d.ts
+index 58eca48..e202339 100644
+--- a/node_modules/keycloak-admin/lib/defs/policyRepresentation.d.ts
++++ b/node_modules/keycloak-admin/lib/defs/policyRepresentation.d.ts
+@@ -15,6 +15,7 @@ export default interface PolicyRepresentation {
+     logic?: Logic;
+     name?: string;
+     owner?: string;
++    roles: {id: string}[];
+     policies?: string[];
+     resources?: string[];
+     scopes?: string[];
+diff --git a/node_modules/keycloak-admin/lib/defs/resourceEvaluation.d.ts b/node_modules/keycloak-admin/lib/defs/resourceEvaluation.d.ts
+index 142af89..2709cd2 100644
+--- a/node_modules/keycloak-admin/lib/defs/resourceEvaluation.d.ts
++++ b/node_modules/keycloak-admin/lib/defs/resourceEvaluation.d.ts
+@@ -1,6 +1,6 @@
+ import ResourceRepresentation from './resourceRepresentation';
+ export default interface ResourceEvaluation {
+-    rolesIds?: string[];
++    roleIds?: string[];
+     userId: string;
+     resources?: ResourceRepresentation[];
+     entitlements: boolean;

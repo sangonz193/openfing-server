@@ -1,0 +1,11 @@
+diff --git a/node_modules/typeorm/migration/MigrationInterface.d.ts b/node_modules/typeorm/migration/MigrationInterface.d.ts
+index 49d17ba..1bdd58b 100644
+--- a/node_modules/typeorm/migration/MigrationInterface.d.ts
++++ b/node_modules/typeorm/migration/MigrationInterface.d.ts
+@@ -14,5 +14,5 @@ export interface MigrationInterface {
+     /**
+      * Reverse the migrations.
+      */
+-    down(queryRunner: QueryRunner): Promise<any>;
++    down?(queryRunner: QueryRunner): Promise<any>;
+ }

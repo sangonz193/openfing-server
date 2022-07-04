@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:13.2
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_DB: "${DB_NAME}"
+    volumes:
+      - ./docker/db-data-gitignore:/var/lib/postgresql/data
+    networks:
+      - server
+    ports:
+      - "${DB_PORT}:5432"
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:12.0.4
+    environment:
+      KEYCLOAK_USER: "${KEYCLOAK_USER}"
+      KEYCLOAK_PASSWORD: "${KEYCLOAK_PASSWORD}"
+      DB_VENDOR: postgres
+      DB_ADDR: db
+      DB_USER: "${DB_USERNAME}"
+      DB_PORT: 5432
+      DB_DATABASE: "${KEYCLOAK_DB_NAME}"
+      DB_SCHEMA: public
+      DB_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - server
+    depends_on: 
+      - db
+    ports:
+      - "${KEYCLOAK_PORT}:8080"
+    restart: unless-stopped
+
+networks: 
+  server:
+    name: openfing-server
